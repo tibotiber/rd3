@@ -4,6 +4,8 @@
   "private": true,
   "dependencies": {
     "d3": "^3.5.17",
+    "d3-scale-chromatic": "^1.1.1",
+    "lodash": "^4.17.4",
     "lorem-ipsum": "^1.0.3",
     "react": "^15.4.2",
     "react-dom": "^15.4.2",

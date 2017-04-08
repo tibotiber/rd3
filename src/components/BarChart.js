@@ -2,13 +2,14 @@ import React, { PropTypes } from 'react'
 import Faux from 'react-faux-dom'
 import * as d3 from 'd3'
 
-const { arrayOf, array } = PropTypes
+const { arrayOf, array, string } = PropTypes
 
 const BarChart = React.createClass({
   mixins: [Faux.mixins.core, Faux.mixins.anim],
   propTypes: {
     data: arrayOf(array),
-    xDomain: array
+    xDomain: array,
+    colors: arrayOf(string)
   },
   getInitialState () {
     return { look: 'stacked' }
@@ -49,7 +50,7 @@ const BarChart = React.createClass({
     var height = 500 - margin.top - margin.bottom
     var x = d3.scale.ordinal().domain(this.props.xDomain).rangeRoundBands([0, width], 0.08)
     var y = d3.scale.linear().domain([0, yStackMax]).range([height, 0])
-    var color = d3.scale.linear().domain([0, n - 1]).range(['#aad', '#556'])
+    var color = d3.scale.linear().domain([0, n - 1]).range(this.props.colors)
     var xAxis = d3.svg.axis().scale(x).tickSize(0).tickPadding(5).orient('bottom')
 
     var svg = d3
