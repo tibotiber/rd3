@@ -1,8 +1,10 @@
-import { NB_OF_LAYERS, NB_OF_SAMPLES_PER_LAYER } from './constants'
-import bumpLayer from './bumpLayer'
+import lorem from 'lorem-ipsum'
 
 const defaultState = {
-  data: Array(NB_OF_LAYERS).fill(0).map(() => bumpLayer(NB_OF_SAMPLES_PER_LAYER, 0.1))
+  text: {
+    user1: lorem(),
+    user2: lorem()
+  }
 }
 
 function rootReducer (state = defaultState, action) {

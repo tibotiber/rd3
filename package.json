@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "d3": "^3.5.17",
+    "lorem-ipsum": "^1.0.3",
     "react": "^15.4.2",
     "react-dom": "^15.4.2",
     "react-faux-dom": "^3.0.1",

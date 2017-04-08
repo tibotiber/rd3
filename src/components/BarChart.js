@@ -2,12 +2,13 @@ import React, { PropTypes } from 'react'
 import Faux from 'react-faux-dom'
 import * as d3 from 'd3'
 
-const { array } = PropTypes
+const { arrayOf, array } = PropTypes
 
 const BarChart = React.createClass({
   mixins: [Faux.mixins.core, Faux.mixins.anim],
   propTypes: {
-    data: array
+    data: arrayOf(array),
+    xDomain: array
   },
   getInitialState () {
     return { look: 'stacked' }
@@ -30,19 +31,11 @@ const BarChart = React.createClass({
     }
   },
   componentDidMount () {
-    // This will create a faux div and store its virtual DOM
-    // in state.chart
+    // create a faux div and store its virtual DOM in state.chart
     var faux = this.connectFauxDOM('div', 'chart')
     var component = this
 
-    // see https://bl.ocks.org/mbostock/3943967 + changes:
-    // - feeding D3 the faux node created above
-    // - calling this.animateFauxDOM(duration) after each animation kickoff
-    // - attaching the radio button callbacks to the component
-    // - deleting the radio button (as we do the toggling through the react button)
-
     var n = this.props.data.length // number of layers
-    var m = this.props.data[0].length // number of samples per layer
     var stack = d3.layout.stack()
     var layers = stack(this.props.data)
     var yGroupMax = d3.max(layers, layer => {
@@ -54,10 +47,10 @@ const BarChart = React.createClass({
     var margin = { top: 40, right: 10, bottom: 20, left: 10 }
     var width = 960 - margin.left - margin.right
     var height = 500 - margin.top - margin.bottom
-    var x = d3.scale.ordinal().domain(d3.range(m)).rangeRoundBands([0, width], 0.08)
+    var x = d3.scale.ordinal().domain(this.props.xDomain).rangeRoundBands([0, width], 0.08)
     var y = d3.scale.linear().domain([0, yStackMax]).range([height, 0])
     var color = d3.scale.linear().domain([0, n - 1]).range(['#aad', '#556'])
-    var xAxis = d3.svg.axis().scale(x).tickSize(0).tickPadding(6).orient('bottom')
+    var xAxis = d3.svg.axis().scale(x).tickSize(0).tickPadding(5).orient('bottom')
 
     var svg = d3
       .select(faux)
