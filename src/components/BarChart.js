@@ -1,10 +1,14 @@
-import React from 'react'
+import React, { PropTypes } from 'react'
 import Faux from 'react-faux-dom'
 import * as d3 from 'd3'
-import bumpLayer from './bumpLayer'
 
-const App = React.createClass({
+const { array } = PropTypes
+
+const BarChart = React.createClass({
   mixins: [Faux.mixins.core, Faux.mixins.anim],
+  propTypes: {
+    data: array
+  },
   getInitialState () {
     return { look: 'stacked' }
   },
@@ -37,10 +41,10 @@ const App = React.createClass({
     // - attaching the radio button callbacks to the component
     // - deleting the radio button (as we do the toggling through the react button)
 
-    var n = 4 // number of layers
-    var m = 58 // number of samples per layer
+    var n = this.props.data.length // number of layers
+    var m = this.props.data[0].length // number of samples per layer
     var stack = d3.layout.stack()
-    var layers = stack(d3.range(n).map(() => bumpLayer(m, 0.1)))
+    var layers = stack(this.props.data)
     var yGroupMax = d3.max(layers, layer => {
       return d3.max(layer, d => d.y)
     })
@@ -105,7 +109,7 @@ const App = React.createClass({
         .attr('height', d => height - y(d.y))
 
       component.animateFauxDOM(2000)
-    };
+    }
 
     this.transitionStacked = () => {
       y.domain([0, yStackMax])
@@ -121,8 +125,8 @@ const App = React.createClass({
         .attr('width', x.rangeBand())
 
       component.animateFauxDOM(2000)
-    };
+    }
   }
 })
 
-export default App
+export default BarChart
