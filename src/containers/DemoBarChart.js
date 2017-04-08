@@ -1,10 +1,8 @@
 import React, { PropTypes } from 'react'
 import { connect } from 'react-redux'
-import * as d3Chroma from 'd3-scale-chromatic'
-import _ from 'lodash'
+import { getColorWithDefaultSaturation } from '../utils/colors'
 import BarChart from '../components/BarChart'
 import { ALPHABET, countLettersOccurrences } from '../utils/stringStats'
-import { DEFAULT_SATURATION } from '../constants'
 
 const { arrayOf, array, string } = PropTypes
 
@@ -26,7 +24,7 @@ const mapStateToProps = (state, ownProps) => {
       })
     }),
     colors: Object.keys(state.colors).sort().map(user => {
-      return d3Chroma[`interpolate${_.capitalize(state.colors[user])}s`](DEFAULT_SATURATION)
+      return getColorWithDefaultSaturation(state.colors[user])
     })
   }
 }
