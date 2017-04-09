@@ -12,7 +12,8 @@ const DemoText = React.createClass({
     users: arrayOf(string),
     texts: arrayOf(string),
     colors: arrayOf(string),
-    generateText: func
+    generateText: func,
+    updateText: func
   },
   componentDidMount () {
     this.props.generateText()
@@ -22,12 +23,25 @@ const DemoText = React.createClass({
       <div>
         <div>
           {this.props.users.map((user, index) => {
-            return <Text key={user} text={this.props.texts[index]} color={this.props.colors[index]} />
+            return (
+              <Text
+                key={user}
+                user={user}
+                text={this.props.texts[index]}
+                color={this.props.colors[index]}
+                width={450}
+                height={100}
+                onChange={this.handleChange}
+              />
+            )
           })}
         </div>
         <button onClick={this.props.generateText}>Generate new text</button>
       </div>
     )
+  },
+  handleChange (user, e) {
+    this.props.updateText({ [user]: e.target.value })
   }
 })
 
@@ -50,6 +64,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
           user2: lorem()
         })
       )
+    },
+    updateText: text => {
+      dispatch(newText(text))
     }
   }
 }
