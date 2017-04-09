@@ -18,7 +18,18 @@ const BarChart = React.createClass({
     height: number
   },
   getInitialState () {
-    return { look: 'stacked' }
+    return {
+      look: 'stacked',
+      chart: 'loading...'
+    }
+  },
+  componentDidMount () {
+    this.renderD3()
+  },
+  componentDidUpdate (prevProps, prevState) {
+    if (this.props !== prevProps) {
+      this.renderD3()
+    }
   },
   render () {
     return (
@@ -37,7 +48,7 @@ const BarChart = React.createClass({
       this.transitionStacked()
     }
   },
-  componentDidMount () {
+  renderD3 () {
     // create a faux div and store its virtual DOM in state.chart
     var faux = this.connectFauxDOM('div', 'chart')
     var n = this.props.data.length // number of layers
@@ -49,7 +60,7 @@ const BarChart = React.createClass({
     var yStackMax = d3.max(layers, layer => {
       return d3.max(layer, d => d.y0 + d.y)
     })
-    var margin = { top: 40, right: 10, bottom: 50, left: 50 }
+    var margin = { top: 20, right: 10, bottom: 50, left: 50 }
     var width = this.props.width - margin.left - margin.right
     var height = this.props.height - margin.top - margin.bottom
     var x = d3.scale.ordinal().domain(this.props.xDomain).rangeRoundBands([0, width], 0.08)
@@ -84,13 +95,10 @@ const BarChart = React.createClass({
       .attr('y', height)
       .attr('width', x.rangeBand())
       .attr('height', 0)
-
-    rect
       .transition()
       .delay((d, i) => i * 10)
       .attr('y', d => y(d.y0 + d.y))
       .attr('height', d => y(d.y0) - y(d.y0 + d.y))
-
     this.animateFauxDOM(800)
 
     svg.append('g').attr('class', 'x axis').attr('transform', `translate(0, ${height})`).call(xAxis)

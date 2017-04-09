@@ -1,25 +1,35 @@
 import React, { PropTypes } from 'react'
 import { connect } from 'react-redux'
+import lorem from 'lorem-ipsum'
 import Text from '../components/Text'
 import { getColorWithDefaultSaturation } from '../utils/colors'
+import { newText } from '../actions'
 
-const { arrayOf, string } = PropTypes
+const { arrayOf, string, func } = PropTypes
 
-const DemoText = props => {
-  return (
-    <div>
-      {props.users.map((user, index) => {
-        return <Text key={user} text={props.texts[index]} color={props.colors[index]} />
-      })}
-    </div>
-  )
-}
-
-DemoText.propTypes = {
-  users: arrayOf(string),
-  texts: arrayOf(string),
-  colors: arrayOf(string)
-}
+const DemoText = React.createClass({
+  propTypes: {
+    users: arrayOf(string),
+    texts: arrayOf(string),
+    colors: arrayOf(string),
+    generateText: func
+  },
+  componentDidMount () {
+    this.props.generateText()
+  },
+  render () {
+    return (
+      <div>
+        <div>
+          {this.props.users.map((user, index) => {
+            return <Text key={user} text={this.props.texts[index]} color={this.props.colors[index]} />
+          })}
+        </div>
+        <button onClick={this.props.generateText}>Generate new text</button>
+      </div>
+    )
+  }
+})
 
 const mapStateToProps = (state, ownProps) => {
   return {
@@ -31,4 +41,17 @@ const mapStateToProps = (state, ownProps) => {
   }
 }
 
-export default connect(mapStateToProps)(DemoText)
+const mapDispatchToProps = (dispatch, ownProps) => {
+  return {
+    generateText: () => {
+      dispatch(
+        newText({
+          user1: lorem(),
+          user2: lorem()
+        })
+      )
+    }
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(DemoText)
