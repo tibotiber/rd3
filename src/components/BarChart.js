@@ -1,15 +1,21 @@
 import React, { PropTypes } from 'react'
 import Faux from 'react-faux-dom'
 import * as d3 from 'd3'
+import styled from 'styled-components'
 
-const { arrayOf, array, string } = PropTypes
+const { arrayOf, array, string, number } = PropTypes
 
 const BarChart = React.createClass({
   mixins: [Faux.mixins.core, Faux.mixins.anim],
   propTypes: {
     data: arrayOf(array),
     xDomain: array,
-    colors: arrayOf(string)
+    colors: arrayOf(string),
+    className: string,
+    xLabel: string,
+    yLabel: string,
+    width: number,
+    height: number
   },
   getInitialState () {
     return { look: 'stacked' }
@@ -34,8 +40,6 @@ const BarChart = React.createClass({
   componentDidMount () {
     // create a faux div and store its virtual DOM in state.chart
     var faux = this.connectFauxDOM('div', 'chart')
-    var component = this
-
     var n = this.props.data.length // number of layers
     var stack = d3.layout.stack()
     var layers = stack(this.props.data)
@@ -45,17 +49,19 @@ const BarChart = React.createClass({
     var yStackMax = d3.max(layers, layer => {
       return d3.max(layer, d => d.y0 + d.y)
     })
-    var margin = { top: 40, right: 10, bottom: 20, left: 10 }
-    var width = 960 - margin.left - margin.right
-    var height = 500 - margin.top - margin.bottom
+    var margin = { top: 40, right: 10, bottom: 50, left: 50 }
+    var width = this.props.width - margin.left - margin.right
+    var height = this.props.height - margin.top - margin.bottom
     var x = d3.scale.ordinal().domain(this.props.xDomain).rangeRoundBands([0, width], 0.08)
     var y = d3.scale.linear().domain([0, yStackMax]).range([height, 0])
     var color = d3.scale.linear().domain([0, n - 1]).range(this.props.colors)
-    var xAxis = d3.svg.axis().scale(x).tickSize(0).tickPadding(5).orient('bottom')
+    var xAxis = d3.svg.axis().scale(x).orient('bottom')
+    var yAxis = d3.svg.axis().scale(y).orient('left')
 
     var svg = d3
       .select(faux)
       .append('svg')
+      .attr('class', this.props.className)
       .attr('width', width + margin.left + margin.right)
       .attr('height', height + margin.top + margin.bottom)
       .append('g')
@@ -87,11 +93,25 @@ const BarChart = React.createClass({
 
     this.animateFauxDOM(800)
 
-    svg.append('g').attr('class', 'x axis').attr('transform', 'translate(0,' + height + ')').call(xAxis)
+    svg.append('g').attr('class', 'x axis').attr('transform', `translate(0, ${height})`).call(xAxis)
+    svg
+      .append('text')
+      .attr('transform', `translate(${width / 2} ,${height + margin.bottom - 5})`)
+      .style('text-anchor', 'middle')
+      .text(this.props.xLabel)
+
+    svg.append('g').attr('class', 'y axis').attr('transform', 'translate(0, 0)').call(yAxis)
+    svg
+      .append('text')
+      .attr('transform', 'rotate(-90)')
+      .attr('y', 0 - margin.left)
+      .attr('x', 0 - height / 2)
+      .attr('dy', '1em')
+      .style('text-anchor', 'middle')
+      .text(this.props.yLabel)
 
     this.transitionGrouped = () => {
       y.domain([0, yGroupMax])
-
       rect
         .transition()
         .duration(500)
@@ -101,13 +121,11 @@ const BarChart = React.createClass({
         .transition()
         .attr('y', d => y(d.y))
         .attr('height', d => height - y(d.y))
-
-      component.animateFauxDOM(2000)
+      this.animateFauxDOM(2000)
     }
 
     this.transitionStacked = () => {
       y.domain([0, yStackMax])
-
       rect
         .transition()
         .duration(500)
@@ -117,10 +135,19 @@ const BarChart = React.createClass({
         .transition()
         .attr('x', d => x(d.x))
         .attr('width', x.rangeBand())
-
-      component.animateFauxDOM(2000)
+      this.animateFauxDOM(2000)
     }
   }
 })
 
-export default BarChart
+const StyledBarChart = styled(BarChart)`
+  .x.axis line,
+  .x.axis path,
+  .y.axis line,
+  .y.axis path {
+    fill: none;
+    stroke: #000;
+  }
+`
+
+export default StyledBarChart

@@ -7,7 +7,17 @@ import { ALPHABET, countLettersOccurrences } from '../utils/stringStats'
 const { arrayOf, array, string } = PropTypes
 
 const DemoBarChart = props => {
-  return <BarChart data={props.data} xDomain={ALPHABET} colors={props.colors} />
+  return (
+    <BarChart
+      data={props.data}
+      xDomain={ALPHABET}
+      xLabel='Characters'
+      yLabel='Occurrences'
+      colors={props.colors}
+      width={960}
+      height={500}
+    />
+  )
 }
 
 DemoBarChart.propTypes = {
