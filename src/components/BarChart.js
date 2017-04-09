@@ -95,6 +95,8 @@ const BarChart = React.createClass({
       .attr('y', height)
       .attr('width', x.rangeBand())
       .attr('height', 0)
+
+    rect
       .transition()
       .delay((d, i) => i * 10)
       .attr('y', d => y(d.y0 + d.y))
