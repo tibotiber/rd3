@@ -1,14 +1,14 @@
 import React from 'react'
 import { Provider } from 'react-redux'
 import store from '../store'
-import DemoBarChart from './DemoBarChart'
+import Dashboard from './Dashboard'
 import DemoText from './DemoText'
 
 const App = () => {
   return (
     <Provider store={store}>
       <div>
-        <DemoBarChart />
+        <Dashboard />
         <DemoText />
       </div>
     </Provider>

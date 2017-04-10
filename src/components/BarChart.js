@@ -3,7 +3,7 @@ import Faux from 'react-faux-dom'
 import * as d3 from 'd3'
 import styled from 'styled-components'
 
-const { arrayOf, array, string, number } = PropTypes
+const { arrayOf, array, string, number, func } = PropTypes
 
 const BarChart = React.createClass({
   mixins: [Faux.mixins.core, Faux.mixins.anim],
@@ -15,7 +15,9 @@ const BarChart = React.createClass({
     xLabel: string,
     yLabel: string,
     width: number,
-    height: number
+    height: number,
+    hover: string,
+    setHover: func
   },
   getInitialState () {
     return {
@@ -33,7 +35,7 @@ const BarChart = React.createClass({
   },
   render () {
     return (
-      <div>
+      <div className='barchart'>
         <button onClick={this.toggle}>Toggle</button>
         {this.state.chart}
       </div>
@@ -80,7 +82,16 @@ const BarChart = React.createClass({
     layer.enter().append('g').attr('class', 'layer').style('fill', (d, i) => color(i))
 
     let rect = layer.selectAll('rect').data(d => d)
-    rect.enter().append('rect').attr('x', d => x(d.x)).attr('y', height).attr('width', x.rangeBand()).attr('height', 0)
+    rect.classed('disabled', d => this.props.hover && d.x !== this.props.hover)
+    rect
+      .enter()
+      .append('rect')
+      .attr('x', d => x(d.x))
+      .attr('y', height)
+      .attr('width', x.rangeBand())
+      .attr('height', 0)
+      .on('mouseover', d => this.props.setHover(d.x))
+      .on('mouseout', d => this.props.setHover(null))
     if (this.state.look === 'stacked') {
       rect
         .transition()
@@ -149,6 +160,9 @@ const StyledBarChart = styled(BarChart)`
   .y.axis path {
     fill: none;
     stroke: #000;
+  }
+  rect.disabled {
+    opacity: 0.3;
   }
 `
 

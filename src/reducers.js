@@ -1,11 +1,12 @@
-import { NEW_TEXT } from './constants'
+import { NEW_TEXT, SET_HOVER } from './constants'
 
 const defaultState = {
   text: {},
   colors: {
     user1: 'blue',
     user2: 'orange'
-  }
+  },
+  hover: null
 }
 
 function newText (state, action) {
@@ -16,10 +17,18 @@ function newText (state, action) {
   return s
 }
 
+function setHover (state, action) {
+  return Object.assign({}, state, {
+    hover: action.letter
+  })
+}
+
 function rootReducer (state = defaultState, action) {
   switch (action.type) {
     case NEW_TEXT:
       return newText(state, action)
+    case SET_HOVER:
+      return setHover(state, action)
     default:
       return state
   }
