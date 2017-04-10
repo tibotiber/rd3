@@ -82,11 +82,19 @@ const BarChart = React.createClass({
 
     let rect = layer.selectAll('rect').data(d => d)
     rect.enter().append('rect').attr('x', d => x(d.x)).attr('y', height).attr('width', x.rangeBand()).attr('height', 0)
-    rect
-      .transition()
-      .delay((d, i) => i * 10)
-      .attr('y', d => y(d.y0 + d.y))
-      .attr('height', d => y(d.y0) - y(d.y0 + d.y))
+    if (this.state.look === 'stacked') {
+      rect
+        .transition()
+        .delay((d, i) => i * 10)
+        .attr('y', d => y(d.y0 + d.y))
+        .attr('height', d => y(d.y0) - y(d.y0 + d.y))
+    } else {
+      rect
+        .transition()
+        .delay((d, i) => i * 10)
+        .attr('y', d => y(d.y))
+        .attr('height', d => height - y(d.y))
+    }
     this.animateFauxDOM(800)
 
     if (firstRender) {
