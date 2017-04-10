@@ -52,7 +52,6 @@ const BarChart = React.createClass({
     const n = this.props.data.length // number of layers
     const stack = d3.layout.stack()
     const layers = stack(this.props.data)
-    const yGroupMax = d3.max(layers, layer => d3.max(layer, d => d.y))
     const yStackMax = d3.max(layers, layer => d3.max(layer, d => d.y0 + d.y))
     const margin = { top: 20, right: 10, bottom: 50, left: 50 }
     const width = this.props.width - margin.left - margin.right
@@ -89,11 +88,7 @@ const BarChart = React.createClass({
         .attr('y', d => y(d.y0 + d.y))
         .attr('height', d => y(d.y0) - y(d.y0 + d.y))
     } else {
-      rect
-        .transition()
-        .delay((d, i) => i * 10)
-        .attr('y', d => y(d.y))
-        .attr('height', d => height - y(d.y))
+      rect.transition().delay((d, i) => i * 10).attr('y', d => y(d.y)).attr('height', d => height - y(d.y))
     }
     this.animateFauxDOM(800)
 
@@ -120,7 +115,6 @@ const BarChart = React.createClass({
     }
 
     this.transitionGrouped = () => {
-      y.domain([0, yGroupMax])
       rect
         .transition()
         .duration(500)
@@ -134,7 +128,6 @@ const BarChart = React.createClass({
     }
 
     this.transitionStacked = () => {
-      y.domain([0, yStackMax])
       rect
         .transition()
         .duration(500)
