@@ -2,6 +2,7 @@ import React, { PropTypes } from 'react'
 import Faux from 'react-faux-dom'
 import * as d3 from 'd3'
 import styled from 'styled-components'
+import _ from 'lodash'
 
 const { arrayOf, array, string, number, func } = PropTypes
 
@@ -35,7 +36,7 @@ const BarChart = React.createClass({
   },
   render () {
     return (
-      <div className='barchart'>
+      <div className='barchart' style={{ position: 'relative' }}>
         <button onClick={this.toggle}>Toggle</button>
         {this.state.chart}
       </div>
@@ -102,6 +103,31 @@ const BarChart = React.createClass({
       rect.transition().delay((d, i) => i * 10).attr('y', d => y(d.y)).attr('height', d => height - y(d.y))
     }
     this.animateFauxDOM(800)
+
+    let tooltip = firstRender
+      ? d3
+          .select(faux)
+          .append('div')
+          .attr('class', 'tooltip')
+          .style('position', 'absolute')
+          .style('z-index', '10')
+          .style('display', 'inline-block')
+          .style('border', 'solid grey 1px')
+          .style('border-radius', '2px')
+          .style('padding', '5px')
+          .style('color', 'grey')
+      : d3.select(faux).select('.tooltip')
+    if (this.props.hover !== null) {
+      const hoveredData = this.props.data.map(l => _.find(l, { x: this.props.hover }))
+      const top = this.state.look === 'stacked' ? arr => y(_.sum(arr)) : arr => y(_.max(arr))
+      tooltip
+        .style('visibility', 'visible')
+        .style('left', x(this.props.hover) + 40)
+        .style('top', top(_.map(hoveredData, 'y')) + margin.top - 15)
+        .html(`${this.props.hover}: ${_.map(hoveredData, 'y').join(', ')}`)
+    } else {
+      tooltip.style('visibility', 'hidden')
+    }
 
     if (firstRender) {
       svg.append('g').attr('class', 'x axis').attr('transform', `translate(0, ${height})`).call(xAxis)
