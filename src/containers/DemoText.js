@@ -1,11 +1,11 @@
-import React, { PropTypes } from 'react'
-import { connect } from 'react-redux'
+import React, {PropTypes} from 'react'
+import {connect} from 'react-redux'
 import lorem from 'lorem-ipsum'
 import Text from '../components/Text'
-import { getColorWithDefaultSaturation } from '../utils/colors'
-import { newText } from '../actions'
+import {getColorWithDefaultSaturation} from '../utils/colors'
+import {newText} from '../actions'
 
-const { arrayOf, string, func } = PropTypes
+const {arrayOf, string, func} = PropTypes
 
 const DemoText = React.createClass({
   propTypes: {
@@ -41,7 +41,7 @@ const DemoText = React.createClass({
     )
   },
   handleChange (user, e) {
-    this.props.updateText({ [user]: e.target.value })
+    this.props.updateText({[user]: e.target.value})
   }
 })
 

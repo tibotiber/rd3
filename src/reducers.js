@@ -1,4 +1,4 @@
-import { NEW_TEXT, SET_HOVER } from './constants'
+import {NEW_TEXT, SET_HOVER} from './constants'
 
 const defaultState = {
   text: {},

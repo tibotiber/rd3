@@ -1,10 +1,10 @@
-import React, { PropTypes } from 'react'
+import React, {PropTypes} from 'react'
 import Faux from 'react-faux-dom'
 import * as d3 from 'd3'
 import styled from 'styled-components'
 import _ from 'lodash'
 
-const { arrayOf, array, string, number, func } = PropTypes
+const {arrayOf, array, string, number, func} = PropTypes
 
 const BarChart = React.createClass({
   mixins: [Faux.mixins.core, Faux.mixins.anim],
@@ -36,7 +36,7 @@ const BarChart = React.createClass({
   },
   render () {
     return (
-      <div className='barchart' style={{ position: 'relative' }}>
+      <div className='barchart' style={{position: 'relative'}}>
         <button onClick={this.toggle}>Toggle</button>
         {this.state.chart}
       </div>
@@ -44,10 +44,10 @@ const BarChart = React.createClass({
   },
   toggle () {
     if (this.state.look === 'stacked') {
-      this.setState({ look: 'grouped' })
+      this.setState({look: 'grouped'})
       this.transitionGrouped()
     } else {
-      this.setState({ look: 'stacked' })
+      this.setState({look: 'stacked'})
       this.transitionStacked()
     }
   },
@@ -56,7 +56,7 @@ const BarChart = React.createClass({
     const stack = d3.layout.stack()
     const layers = stack(this.props.data)
     const yStackMax = d3.max(layers, layer => d3.max(layer, d => d.y0 + d.y))
-    const margin = { top: 20, right: 10, bottom: 50, left: 50 }
+    const margin = {top: 20, right: 10, bottom: 50, left: 50}
     const width = this.props.width - margin.left - margin.right
     const height = this.props.height - margin.top - margin.bottom
     const x = d3.scale.ordinal().domain(this.props.xDomain).rangeRoundBands([0, width], 0.08)
@@ -118,7 +118,7 @@ const BarChart = React.createClass({
           .style('color', 'grey')
       : d3.select(faux).select('.tooltip')
     if (this.props.hover !== null) {
-      const hoveredData = this.props.data.map(l => _.find(l, { x: this.props.hover }))
+      const hoveredData = this.props.data.map(l => _.find(l, {x: this.props.hover}))
       const top = this.state.look === 'stacked' ? arr => y(_.sum(arr)) : arr => y(_.max(arr))
       tooltip
         .style('visibility', 'visible')

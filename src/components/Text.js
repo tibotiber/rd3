@@ -1,7 +1,7 @@
-import React, { PropTypes } from 'react'
+import React, {PropTypes} from 'react'
 import styled from 'styled-components'
 
-const { string, number, func } = PropTypes
+const {string, number, func} = PropTypes
 
 const LeftBorder = styled.textarea`
   border: solid 1px #ddd;
