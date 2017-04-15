@@ -5,6 +5,7 @@ import styled from 'styled-components'
 import _ from 'lodash'
 
 const {arrayOf, array, string, number, func} = PropTypes
+const LOADING = 'loading...'
 
 const BarChart = React.createClass({
   mixins: [Faux.mixins.core, Faux.mixins.anim],
@@ -23,22 +24,39 @@ const BarChart = React.createClass({
   getInitialState () {
     return {
       look: 'stacked',
-      chart: 'loading...'
+      chart: LOADING
     }
   },
   componentDidMount () {
     this.renderD3(true)
   },
   componentDidUpdate (prevProps, prevState) {
-    if (this.props !== prevProps) {
+    const stripProps = p => _.omit(p, ['hover', 'className'])
+    if (!_.isEqual(stripProps(this.props), stripProps(prevProps))) {
       this.renderD3(false)
     }
   },
   render () {
+    let tooltip = <div className='tooltip' />
+    if (this.state.chart !== LOADING && this.props.hover) {
+      const hoveredData = this.props.data.map(l => _.find(l, {x: this.props.hover}))
+      const computeTop = this.state.look === 'stacked' ? arr => this.y(_.sum(arr)) : arr => this.y(_.max(arr))
+      const tooltipStyle = {
+        top: computeTop(_.map(hoveredData, 'y')) + 5,
+        left: this.x(this.props.hover) + 40
+      }
+      tooltip = (
+        <div className='tooltip' style={tooltipStyle}>
+          {this.props.hover}: {_.map(hoveredData, 'y').join(', ')}
+        </div>
+      )
+    }
+
     return (
       <div className={`barchart ${this.props.className}`}>
         <button onClick={this.toggle}>Toggle</button>
         {this.state.chart}
+        {tooltip}
       </div>
     )
   },
@@ -52,15 +70,18 @@ const BarChart = React.createClass({
     }
   },
   renderD3 (firstRender) {
+    let data = _.cloneDeep(this.props.data) // stack() mutates data
     const n = this.props.data.length // number of layers
     const stack = d3.layout.stack()
-    const layers = stack(this.props.data)
+    const layers = stack(data)
     const yStackMax = d3.max(layers, layer => d3.max(layer, d => d.y0 + d.y))
     const margin = {top: 20, right: 10, bottom: 50, left: 50}
     const width = this.props.width - margin.left - margin.right
     const height = this.props.height - margin.top - margin.bottom
     const x = d3.scale.ordinal().domain(this.props.xDomain).rangeRoundBands([0, width], 0.08)
+    this.x = x
     const y = d3.scale.linear().domain([0, yStackMax]).range([height, 0])
+    this.y = y
     const color = d3.scale.linear().domain([0, n - 1]).range(this.props.colors)
     const xAxis = d3.svg.axis().scale(x).orient('bottom')
     const yAxis = d3.svg.axis().scale(y).orient('left')
@@ -102,18 +123,6 @@ const BarChart = React.createClass({
       rect.transition().delay((d, i) => i * 10).attr('y', d => y(d.y)).attr('height', d => height - y(d.y))
     }
     this.animateFauxDOM(800)
-
-    let tooltip = firstRender
-      ? d3.select(faux).append('div').attr('class', 'tooltip')
-      : d3.select(faux).select('.tooltip')
-    if (this.props.hover !== null) {
-      const hoveredData = this.props.data.map(l => _.find(l, {x: this.props.hover}))
-      const top = this.state.look === 'stacked' ? arr => y(_.sum(arr)) : arr => y(_.max(arr))
-      tooltip
-        .style('left', x(this.props.hover) + 40)
-        .style('top', top(_.map(hoveredData, 'y')) + margin.top - 15)
-        .html(`${this.props.hover}: ${_.map(hoveredData, 'y').join(', ')}`)
-    }
 
     if (firstRender) {
       svg.append('g').attr('class', 'x axis').attr('transform', `translate(0, ${height})`).call(xAxis)
