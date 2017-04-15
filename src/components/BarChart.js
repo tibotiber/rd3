@@ -36,7 +36,7 @@ const BarChart = React.createClass({
   },
   render () {
     return (
-      <div className='barchart' style={{position: 'relative'}}>
+      <div className={`barchart ${this.props.className}`}>
         <button onClick={this.toggle}>Toggle</button>
         {this.state.chart}
       </div>
@@ -72,7 +72,6 @@ const BarChart = React.createClass({
       ? d3
           .select(faux)
           .append('svg')
-          .attr('class', this.props.className)
           .attr('width', width + margin.left + margin.right)
           .attr('height', height + margin.top + margin.bottom)
           .append('g')
@@ -83,10 +82,10 @@ const BarChart = React.createClass({
     layer.enter().append('g').attr('class', 'layer').style('fill', (d, i) => color(i))
 
     let rect = layer.selectAll('rect').data(d => d)
-    rect.classed('disabled', d => this.props.hover && d.x !== this.props.hover)
     rect
       .enter()
       .append('rect')
+      .attr('class', d => `data-${d.x}`)
       .attr('x', d => x(d.x))
       .attr('y', height)
       .attr('width', x.rangeBand())
@@ -105,28 +104,15 @@ const BarChart = React.createClass({
     this.animateFauxDOM(800)
 
     let tooltip = firstRender
-      ? d3
-          .select(faux)
-          .append('div')
-          .attr('class', 'tooltip')
-          .style('position', 'absolute')
-          .style('z-index', '10')
-          .style('display', 'inline-block')
-          .style('border', 'solid grey 1px')
-          .style('border-radius', '2px')
-          .style('padding', '5px')
-          .style('color', 'grey')
+      ? d3.select(faux).append('div').attr('class', 'tooltip')
       : d3.select(faux).select('.tooltip')
     if (this.props.hover !== null) {
       const hoveredData = this.props.data.map(l => _.find(l, {x: this.props.hover}))
       const top = this.state.look === 'stacked' ? arr => y(_.sum(arr)) : arr => y(_.max(arr))
       tooltip
-        .style('visibility', 'visible')
         .style('left', x(this.props.hover) + 40)
         .style('top', top(_.map(hoveredData, 'y')) + margin.top - 15)
         .html(`${this.props.hover}: ${_.map(hoveredData, 'y').join(', ')}`)
-    } else {
-      tooltip.style('visibility', 'hidden')
     }
 
     if (firstRender) {
@@ -187,8 +173,22 @@ const StyledBarChart = styled(BarChart)`
     fill: none;
     stroke: #000;
   }
-  rect.disabled {
-    opacity: 0.3;
+  rect {
+    opacity: ${props => props.hover ? 0.3 : 1};
+  }
+  rect.data-${props => props.hover} {
+    opacity: 1;
+  }
+  position: relative;
+  .tooltip {
+    position: absolute;
+    z-index: 10;
+    display: inline-block;
+    border: solid 1px grey;
+    border-radius: 2px;
+    padding: 5px;
+    color: grey;
+    visibility: ${props => props.hover ? 'visible' : 'hidden'};
   }
 `
 
