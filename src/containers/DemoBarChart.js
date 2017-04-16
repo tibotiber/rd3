@@ -1,11 +1,12 @@
 import React, {PropTypes} from 'react'
 import {connect} from 'react-redux'
 import {createSelector} from 'reselect'
+import _ from 'lodash'
 import BarChart from '../components/BarChart'
 import {ALPHABET, countLettersOccurrences} from '../utils/stringStats'
 import {setHover} from '../actions'
 
-const {arrayOf, array, string, func} = PropTypes
+const {arrayOf, array, shape, string, func} = PropTypes
 
 const DemoBarChart = props => {
   return (
@@ -23,19 +24,41 @@ const DemoBarChart = props => {
 }
 
 DemoBarChart.propTypes = {
-  data: arrayOf(array),
+  data: arrayOf(
+    shape({
+      name: string,
+      values: array
+    })
+  ),
   hover: string,
   setHover: func
 }
 
 const getText = state => state.text
 
-const selectData = createSelector(getText, text => Object.keys(text).sort().map(user => {
-  const occurrences = countLettersOccurrences(text[user])
-  return Object.keys(occurrences).map((letter, index) => {
-    return {x: letter, y: occurrences[letter]}
-  })
-}))
+const selectData = createSelector(getText, text => {
+  return _.reduce(
+    text,
+    (result, userText, user) => {
+      result.push({
+        name: user,
+        values: _.reduce(
+          countLettersOccurrences(userText),
+          (r, occurrences, letter) => {
+            r.push({
+              x: letter,
+              y: occurrences
+            })
+            return r
+          },
+          []
+        )
+      })
+      return result
+    },
+    []
+  )
+})
 
 const mapStateToProps = (state, ownProps) => {
   return {

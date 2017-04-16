@@ -2,10 +2,11 @@ import React, {PropTypes} from 'react'
 import {connect} from 'react-redux'
 import styled from 'styled-components'
 import {createSelector} from 'reselect'
+import _ from 'lodash'
 import {getColorWithDefaultSaturation} from '../utils/colors'
 import DemoBarChart from './DemoBarChart'
 
-const {string} = PropTypes
+const {string, object} = PropTypes
 
 const Dashboard = props => {
   return (
@@ -19,12 +20,19 @@ Dashboard.propTypes = {
   className: string // for styled components
 }
 
+const generateDataGroupCSS = props => {
+  return _.reduce(
+    props.colors,
+    (result, color, user) => {
+      result += `.data-group-${user} { fill: ${color}; }`
+      return result
+    },
+    ''
+  )
+}
+
 const StyledDashboard = styled(Dashboard)`
-  ${props => props.colors.map((color, index) => {
-    return `.data-group-${index} { 
-      fill: ${color};
-    }`
-  })}
+  ${props => generateDataGroupCSS(props)}
   .data {
     opacity: ${props => props.hover ? 0.3 : 1};
     -webkit-transition: opacity .2s ease-in;
@@ -35,11 +43,16 @@ const StyledDashboard = styled(Dashboard)`
   }
 `
 
+StyledDashboard.propTypes = {
+  colors: object,
+  hover: string
+}
+
 const getColors = state => state.colors
 
-const selectColors = createSelector(getColors, colors => Object.keys(colors).sort().map(user => {
-  return getColorWithDefaultSaturation(colors[user])
-}))
+const selectColors = createSelector(getColors, colors => {
+  return _.mapValues(colors, color => getColorWithDefaultSaturation(color))
+})
 
 const mapStateToProps = (state, ownProps) => {
   return {

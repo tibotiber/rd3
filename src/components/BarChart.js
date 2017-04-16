@@ -5,13 +5,18 @@ import styled from 'styled-components'
 import _ from 'lodash'
 import {shallowEqual} from 'recompose'
 
-const {arrayOf, array, string, number, func} = PropTypes
+const {arrayOf, array, string, number, func, shape} = PropTypes
 const LOADING = 'loading...'
 
 const BarChart = React.createClass({
   mixins: [Faux.mixins.core, Faux.mixins.anim],
   propTypes: {
-    data: arrayOf(array),
+    data: arrayOf(
+      shape({
+        name: string,
+        values: array
+      })
+    ),
     xDomain: array,
     className: string,
     xLabel: string,
@@ -40,7 +45,7 @@ const BarChart = React.createClass({
     console.log('render barchart: component')
     let tooltip = <div className='tooltip' />
     if (this.state.chart !== LOADING && this.props.hover) {
-      const hoveredData = this.props.data.map(l => _.find(l, {x: this.props.hover}))
+      const hoveredData = _.map(this.props.data, 'values').map(l => _.find(l, {x: this.props.hover}))
       const computeTop = this.state.look === 'stacked' ? arr => this.y(_.sum(arr)) : arr => this.y(_.max(arr))
       const tooltipStyle = {
         top: computeTop(_.map(hoveredData, 'y')) + 5,
@@ -74,9 +79,9 @@ const BarChart = React.createClass({
     console.log('render barchart: D3')
     let data = _.cloneDeep(this.props.data) // stack() mutates data
     const n = this.props.data.length // number of layers
-    const stack = d3.layout.stack()
+    const stack = d3.layout.stack().values(d => d.values)
     const layers = stack(data)
-    const yStackMax = d3.max(layers, layer => d3.max(layer, d => d.y0 + d.y))
+    const yStackMax = d3.max(layers, layer => d3.max(layer.values, d => d.y0 + d.y))
     const margin = {top: 20, right: 10, bottom: 50, left: 50}
     const width = this.props.width - margin.left - margin.right
     const height = this.props.height - margin.top - margin.bottom
@@ -101,9 +106,9 @@ const BarChart = React.createClass({
       : d3.select(faux).select('svg').select('g')
 
     let layer = svg.selectAll('.layer').data(layers)
-    layer.enter().append('g').attr('class', (d, i) => `layer data-group data-group-${i}`)
+    layer.enter().append('g').attr('class', d => `layer data-group data-group-${d.name}`)
 
-    let rect = layer.selectAll('rect').data(d => d)
+    let rect = layer.selectAll('rect').data(d => d.values)
     rect
       .enter()
       .append('rect')
