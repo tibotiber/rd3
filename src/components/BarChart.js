@@ -3,6 +3,7 @@ import Faux from 'react-faux-dom'
 import * as d3 from 'd3'
 import styled from 'styled-components'
 import _ from 'lodash'
+import {shallowEqual} from 'recompose'
 
 const {arrayOf, array, string, number, func} = PropTypes
 const LOADING = 'loading...'
@@ -32,7 +33,7 @@ const BarChart = React.createClass({
   },
   componentDidUpdate (prevProps, prevState) {
     const stripProps = p => _.omit(p, ['hover', 'className'])
-    if (!_.isEqual(stripProps(this.props), stripProps(prevProps))) {
+    if (!shallowEqual(stripProps(this.props), stripProps(prevProps))) {
       this.renderD3(false)
     }
   },
