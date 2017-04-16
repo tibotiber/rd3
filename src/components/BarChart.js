@@ -108,7 +108,7 @@ const BarChart = React.createClass({
     rect
       .enter()
       .append('rect')
-      .attr('class', d => `data-${d.x}`)
+      .attr('class', d => `data data-${d.x}`)
       .attr('x', d => x(d.x))
       .attr('y', height)
       .attr('width', x.rangeBand())
@@ -188,14 +188,6 @@ const StyledBarChart = styled(BarChart)`
   .y.axis path {
     fill: none;
     stroke: #000;
-  }
-  rect {
-    opacity: ${props => props.hover ? 0.3 : 1};
-    -webkit-transition: opacity .2s ease-in;
-  }
-  rect.data-${props => props.hover} {
-    opacity: 1;
-    -webkit-transition: opacity .2s ease-in;
   }
   position: relative;
   .tooltip {
