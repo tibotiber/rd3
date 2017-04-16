@@ -6,6 +6,7 @@ import Text from '../components/Text'
 import Pallet from '../components/Pallet'
 import {getColorWithDefaultSaturation} from '../utils/colors'
 import {newText, setColor} from '../actions'
+import {COLOR_PALLET} from '../constants'
 
 const {arrayOf, shape, string, func} = PropTypes
 
@@ -67,7 +68,7 @@ const mapStateToProps = (state, ownProps) => {
     colors: Object.keys(state.colors).sort().map(user => {
       return getColorWithDefaultSaturation(state.colors[user])
     }),
-    pallet: state.pallet.map(color => {
+    pallet: COLOR_PALLET.map(color => {
       return {
         name: color,
         value: getColorWithDefaultSaturation(color)
