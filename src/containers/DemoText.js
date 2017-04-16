@@ -1,11 +1,17 @@
 import React, {PropTypes} from 'react'
 import {connect} from 'react-redux'
 import lorem from 'lorem-ipsum'
+import styled from 'styled-components'
 import Text from '../components/Text'
+import Pallet from '../components/Pallet'
 import {getColorWithDefaultSaturation} from '../utils/colors'
-import {newText} from '../actions'
+import {newText, setColor} from '../actions'
 
-const {arrayOf, string, func} = PropTypes
+const {arrayOf, shape, string, func} = PropTypes
+
+const InlineDiv = styled.div`
+  display: inline-block;
+`
 
 const DemoText = React.createClass({
   propTypes: {
@@ -13,7 +19,14 @@ const DemoText = React.createClass({
     texts: arrayOf(string),
     colors: arrayOf(string),
     generateText: func,
-    updateText: func
+    updateText: func,
+    pallet: arrayOf(
+      shape({
+        name: string,
+        value: string
+      })
+    ),
+    setUserColor: func
   },
   componentDidMount () {
     this.props.generateText()
@@ -24,15 +37,17 @@ const DemoText = React.createClass({
         <div>
           {this.props.users.map((user, index) => {
             return (
-              <Text
-                key={user}
-                user={user}
-                text={this.props.texts[index]}
-                color={this.props.colors[index]}
-                width={450}
-                height={100}
-                onChange={this.handleChange}
-              />
+              <InlineDiv key={user}>
+                <Text
+                  user={user}
+                  text={this.props.texts[index]}
+                  color={this.props.colors[index]}
+                  width={450}
+                  height={100}
+                  onChange={this.handleChange}
+                />
+                <Pallet colors={this.props.pallet} scope={user} pickColor={this.props.setUserColor} />
+              </InlineDiv>
             )
           })}
         </div>
@@ -51,6 +66,12 @@ const mapStateToProps = (state, ownProps) => {
     texts: Object.keys(state.text).sort().map(user => state.text[user]),
     colors: Object.keys(state.colors).sort().map(user => {
       return getColorWithDefaultSaturation(state.colors[user])
+    }),
+    pallet: state.pallet.map(color => {
+      return {
+        name: color,
+        value: getColorWithDefaultSaturation(color)
+      }
     })
   }
 }
@@ -65,9 +86,8 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         })
       )
     },
-    updateText: text => {
-      dispatch(newText(text))
-    }
+    updateText: text => dispatch(newText(text)),
+    setUserColor: (user, color) => dispatch(setColor(user, color))
   }
 }
 

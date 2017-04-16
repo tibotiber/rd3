@@ -13,7 +13,6 @@ const BarChart = React.createClass({
   propTypes: {
     data: arrayOf(array),
     xDomain: array,
-    colors: arrayOf(string),
     className: string,
     xLabel: string,
     yLabel: string,
@@ -85,7 +84,6 @@ const BarChart = React.createClass({
     this.x = x
     const y = d3.scale.linear().domain([0, yStackMax]).range([height, 0])
     this.y = y
-    const color = d3.scale.linear().domain([0, n - 1]).range(this.props.colors)
     const xAxis = d3.svg.axis().scale(x).orient('bottom')
     const yAxis = d3.svg.axis().scale(y).orient('left')
 
@@ -103,7 +101,7 @@ const BarChart = React.createClass({
       : d3.select(faux).select('svg').select('g')
 
     let layer = svg.selectAll('.layer').data(layers)
-    layer.enter().append('g').attr('class', 'layer').style('fill', (d, i) => color(i))
+    layer.enter().append('g').attr('class', (d, i) => `layer data-group data-group-${i}`)
 
     let rect = layer.selectAll('rect').data(d => d)
     rect

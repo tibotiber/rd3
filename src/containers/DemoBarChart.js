@@ -1,7 +1,6 @@
 import React, {PropTypes} from 'react'
 import {connect} from 'react-redux'
 import {createSelector} from 'reselect'
-import {getColorWithDefaultSaturation} from '../utils/colors'
 import BarChart from '../components/BarChart'
 import {ALPHABET, countLettersOccurrences} from '../utils/stringStats'
 import {setHover} from '../actions'
@@ -15,7 +14,6 @@ const DemoBarChart = props => {
       xDomain={ALPHABET}
       xLabel='Characters'
       yLabel='Occurrences'
-      colors={props.colors}
       width={960}
       height={500}
       hover={props.hover}
@@ -26,13 +24,11 @@ const DemoBarChart = props => {
 
 DemoBarChart.propTypes = {
   data: arrayOf(array),
-  colors: arrayOf(string),
   hover: string,
   setHover: func
 }
 
 const getText = state => state.text
-const getColors = state => state.colors
 
 const selectData = createSelector(getText, text => Object.keys(text).sort().map(user => {
   const occurrences = countLettersOccurrences(text[user])
@@ -41,14 +37,9 @@ const selectData = createSelector(getText, text => Object.keys(text).sort().map(
   })
 }))
 
-const selectColors = createSelector(getColors, colors => Object.keys(colors).sort().map(user => {
-  return getColorWithDefaultSaturation(colors[user])
-}))
-
 const mapStateToProps = (state, ownProps) => {
   return {
     data: selectData(state),
-    colors: selectColors(state),
     hover: state.hover
   }
 }
