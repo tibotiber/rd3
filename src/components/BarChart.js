@@ -111,8 +111,13 @@ const BarChart = React.createClass({
       .attr('y', height)
       .attr('width', x.rangeBand())
       .attr('height', 0)
-      .on('mouseover', d => this.props.setHover(d.x))
-      .on('mouseout', d => this.props.setHover(null))
+      .on('mouseover', d => {
+        clearTimeout(this.unsetHoverTimeout)
+        this.props.setHover(d.x)
+      })
+      .on('mouseout', d => {
+        this.unsetHoverTimeout = setTimeout(() => this.props.setHover(null), 200)
+      })
     if (this.state.look === 'stacked') {
       rect
         .transition()
@@ -184,9 +189,11 @@ const StyledBarChart = styled(BarChart)`
   }
   rect {
     opacity: ${props => props.hover ? 0.3 : 1};
+    -webkit-transition: opacity .2s ease-in;
   }
   rect.data-${props => props.hover} {
     opacity: 1;
+    -webkit-transition: opacity .2s ease-in;
   }
   position: relative;
   .tooltip {
@@ -197,7 +204,9 @@ const StyledBarChart = styled(BarChart)`
     border-radius: 2px;
     padding: 5px;
     color: grey;
+    background-color: rgba(255, 255, 255, 0.75);
     visibility: ${props => props.hover ? 'visible' : 'hidden'};
+    -webkit-transition: top .2s ease-out, left .2s ease-out;
   }
 `
 
