@@ -37,6 +37,7 @@ const BarChart = React.createClass({
     }
   },
   render () {
+    console.log('render barchart: component')
     let tooltip = <div className='tooltip' />
     if (this.state.chart !== LOADING && this.props.hover) {
       const hoveredData = this.props.data.map(l => _.find(l, {x: this.props.hover}))
@@ -70,6 +71,7 @@ const BarChart = React.createClass({
     }
   },
   renderD3 (firstRender) {
+    console.log('render barchart: D3')
     let data = _.cloneDeep(this.props.data) // stack() mutates data
     const n = this.props.data.length // number of layers
     const stack = d3.layout.stack()

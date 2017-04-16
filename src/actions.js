@@ -1,4 +1,4 @@
-import {NEW_TEXT, SET_HOVER} from './constants'
+import {NEW_TEXT, SET_HOVER, TICK} from './constants'
 
 export function newText (text) {
   return {
@@ -11,5 +11,11 @@ export function setHover (letter) {
   return {
     type: SET_HOVER,
     letter
+  }
+}
+
+export function tick () {
+  return {
+    type: TICK
   }
 }
