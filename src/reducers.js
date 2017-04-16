@@ -1,3 +1,4 @@
+import {fromJS} from 'immutable'
 import {NEW_TEXT, SET_HOVER, TICK} from './constants'
 
 const defaultState = {
@@ -11,11 +12,8 @@ const defaultState = {
 }
 
 function newText (state, action) {
-  let s = Object.assign({}, state)
-  Object.keys(action.text).forEach(user => {
-    s.text[user] = action.text[user]
-  })
-  return s
+  let s = fromJS(state)
+  return s.mergeDeep({text: action.text}).toJS()
 }
 
 function setHover (state, action) {

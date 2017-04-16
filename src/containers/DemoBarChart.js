@@ -1,5 +1,6 @@
 import React, {PropTypes} from 'react'
 import {connect} from 'react-redux'
+import {createSelector} from 'reselect'
 import {getColorWithDefaultSaturation} from '../utils/colors'
 import BarChart from '../components/BarChart'
 import {ALPHABET, countLettersOccurrences} from '../utils/stringStats'
@@ -30,26 +31,31 @@ DemoBarChart.propTypes = {
   setHover: func
 }
 
+const getText = state => state.text
+const getColors = state => state.colors
+
+const selectData = createSelector(getText, text => Object.keys(text).sort().map(user => {
+  const occurrences = countLettersOccurrences(text[user])
+  return Object.keys(occurrences).map((letter, index) => {
+    return {x: letter, y: occurrences[letter]}
+  })
+}))
+
+const selectColors = createSelector(getColors, colors => Object.keys(colors).sort().map(user => {
+  return getColorWithDefaultSaturation(colors[user])
+}))
+
 const mapStateToProps = (state, ownProps) => {
   return {
-    data: Object.keys(state.text).sort().map(user => {
-      const occurrences = countLettersOccurrences(state.text[user])
-      return Object.keys(occurrences).map((letter, index) => {
-        return {x: letter, y: occurrences[letter]}
-      })
-    }),
-    colors: Object.keys(state.colors).sort().map(user => {
-      return getColorWithDefaultSaturation(state.colors[user])
-    }),
+    data: selectData(state),
+    colors: selectColors(state),
     hover: state.hover
   }
 }
 
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
-    setHover: letter => {
-      dispatch(setHover(letter))
-    }
+    setHover: letter => dispatch(setHover(letter))
   }
 }
 
