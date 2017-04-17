@@ -1,6 +1,6 @@
 {
   "name": "rd3",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "dependencies": {
     "d3": "^3.5.17",
@@ -9,12 +9,13 @@
     "lodash": "^4.17.4",
     "lorem-ipsum": "^1.0.3",
     "react": "^15.4.2",
-    "react-dom": "git://github.com/tibotiber/react-faux-dom.git#fix/render-updates",
-    "react-faux-dom": "^3.0.1",
+    "react-dom": "^15.4.2",
+    "react-faux-dom": "git://github.com/tibotiber/react-faux-dom.git#fix/render-updates",
     "react-redux": "^5.0.3",
     "recompose": "^0.23.1",
     "redux": "^3.6.0",
     "reselect": "^3.0.0",
+    "serve": "^5.1.4",
     "styled-components": "^1.4.4"
   },
   "devDependencies": {
@@ -28,7 +29,8 @@
     "react-scripts": "0.9.5"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "serve -s build",
+    "dev": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
