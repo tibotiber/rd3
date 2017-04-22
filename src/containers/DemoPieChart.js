@@ -12,8 +12,8 @@ const DemoBarChart = props => {
   return (
     <PieChart
       data={props.data}
-      width={960}
-      height={500}
+      width={props.width}
+      height={props.height}
       thickness={30}
       incrementRenderCount={props.incrementRenderCount}
     />
@@ -27,7 +27,9 @@ DemoBarChart.propTypes = {
       value: number
     })
   ),
-  incrementRenderCount: func
+  incrementRenderCount: func,
+  width: number,
+  height: number
 }
 
 const getText = state => state.text

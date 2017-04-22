@@ -226,6 +226,7 @@ const StyledBarChart = styled(BarChart)`
     stroke: #000;
   }
   position: relative;
+  display: inline-block;
   .tooltip {
     visibility: ${props => (props.hover ? 'visible' : 'hidden')};
     -webkit-transition: top .2s ease-out, left .2s ease-out;

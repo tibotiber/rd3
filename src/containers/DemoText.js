@@ -8,7 +8,7 @@ import {getColorWithDefaultSaturation} from '../utils/colors'
 import {newText, setColor} from '../actions'
 import {COLOR_PALLET} from '../constants'
 
-const {arrayOf, shape, string, func} = PropTypes
+const {arrayOf, shape, string, func, number} = PropTypes
 
 const InlineDiv = styled.div`
   display: inline-block;
@@ -27,14 +27,16 @@ const DemoText = React.createClass({
         value: string
       })
     ),
-    setUserColor: func
+    setUserColor: func,
+    width: number,
+    height: number
   },
   componentDidMount () {
     this.props.generateText()
   },
   render () {
     return (
-      <div>
+      <InlineDiv style={{textAlign: 'center'}}>
         <div>
           {this.props.users.map((user, index) => {
             return (
@@ -43,8 +45,8 @@ const DemoText = React.createClass({
                   user={user}
                   text={this.props.texts[index]}
                   color={this.props.colors[index]}
-                  width={450}
-                  height={100}
+                  width={this.props.width / 2}
+                  height={this.props.height / 2}
                   onChange={this.handleChange}
                 />
                 <Pallet
@@ -57,7 +59,7 @@ const DemoText = React.createClass({
           })}
         </div>
         <button onClick={this.props.generateText}>Generate new text</button>
-      </div>
+      </InlineDiv>
     )
   },
   handleChange (user, e) {

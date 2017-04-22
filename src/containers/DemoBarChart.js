@@ -6,7 +6,7 @@ import BarChart from '../components/BarChart'
 import {ALPHABET, countLettersOccurrences} from '../utils/stringStats'
 import {setHover, incrementRenderCount} from '../actions'
 
-const {arrayOf, array, shape, string, func} = PropTypes
+const {arrayOf, array, shape, string, func, number} = PropTypes
 
 const DemoBarChart = props => {
   return (
@@ -15,8 +15,8 @@ const DemoBarChart = props => {
       xDomain={ALPHABET}
       xLabel='Characters'
       yLabel='Occurrences'
-      width={960}
-      height={500}
+      width={props.width}
+      height={props.height}
       hover={props.hover}
       setHover={props.setHover}
       incrementRenderCount={props.incrementRenderCount}
@@ -33,7 +33,9 @@ DemoBarChart.propTypes = {
   ),
   hover: string,
   setHover: func,
-  incrementRenderCount: func
+  incrementRenderCount: func,
+  height: number,
+  width: number
 }
 
 const getText = state => state.text

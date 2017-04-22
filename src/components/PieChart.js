@@ -126,6 +126,7 @@ const PieChart = React.createClass({
 
 const StyledPieChart = styled(PieChart)`
   position: relative;
+  display: inline-block;
   .tooltip {
     width: ${props => props.width / 5}px;
     left: ${props => props.width * 4 / 10}px;

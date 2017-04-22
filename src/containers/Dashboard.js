@@ -6,9 +6,15 @@ import _ from 'lodash'
 import {getColorWithDefaultSaturation} from '../utils/colors'
 import DemoBarChart from './DemoBarChart'
 import DemoPieChart from './DemoPieChart'
+import DemoText from './DemoText'
 import {incrementRenderCount} from '../actions'
 
 const {string, object, func} = PropTypes
+
+const Row = styled.div`
+  margin-top: 20px;
+  margin-bottom: 30px;
+`
 
 const Dashboard = React.createClass({
   propTypes: {
@@ -24,8 +30,14 @@ const Dashboard = React.createClass({
   render () {
     return (
       <div className={`dashboard ${this.props.className}`}>
-        <DemoBarChart />
-        <DemoPieChart />
+        <Row>
+          <DemoBarChart width={window.innerWidth / 2} height={window.innerHeight / 2} />
+          <div style={{display: 'inline-block', width: window.innerWidth / 2 - 50}} />
+        </Row>
+        <Row>
+          <DemoPieChart width={window.innerWidth / 3} height={window.innerHeight / 3} />
+          <DemoText width={window.innerWidth * 2 / 3 - 100} height={window.innerHeight / 2} />
+        </Row>
       </div>
     )
   }
