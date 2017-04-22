@@ -45,8 +45,12 @@ const BarChart = React.createClass({
     console.log('render barchart: component')
     let tooltip = <div className='tooltip' />
     if (this.state.chart !== LOADING && this.props.hover) {
-      const hoveredData = _.map(this.props.data, 'values').map(l => _.find(l, {x: this.props.hover}))
-      const computeTop = this.state.look === 'stacked' ? arr => this.y(_.sum(arr)) : arr => this.y(_.max(arr))
+      const hoveredData = _.map(this.props.data, 'values').map(l =>
+        _.find(l, {x: this.props.hover})
+      )
+      const computeTop = this.state.look === 'stacked'
+        ? arr => this.y(_.sum(arr))
+        : arr => this.y(_.max(arr))
       const tooltipStyle = {
         top: computeTop(_.map(hoveredData, 'y')) + 5,
         left: this.x(this.props.hover) + 40
@@ -81,11 +85,16 @@ const BarChart = React.createClass({
     const n = this.props.data.length // number of layers
     const stack = d3.layout.stack().values(d => d.values)
     const layers = stack(data)
-    const yStackMax = d3.max(layers, layer => d3.max(layer.values, d => d.y0 + d.y))
+    const yStackMax = d3.max(layers, layer =>
+      d3.max(layer.values, d => d.y0 + d.y)
+    )
     const margin = {top: 20, right: 10, bottom: 50, left: 50}
     const width = this.props.width - margin.left - margin.right
     const height = this.props.height - margin.top - margin.bottom
-    const x = d3.scale.ordinal().domain(this.props.xDomain).rangeRoundBands([0, width], 0.08)
+    const x = d3.scale
+      .ordinal()
+      .domain(this.props.xDomain)
+      .rangeRoundBands([0, width], 0.08)
     this.x = x
     const y = d3.scale.linear().domain([0, yStackMax]).range([height, 0])
     this.y = y
@@ -106,7 +115,10 @@ const BarChart = React.createClass({
       : d3.select(faux).select('svg').select('g')
 
     let layer = svg.selectAll('.layer').data(layers)
-    layer.enter().append('g').attr('class', d => `layer data-group data-group-${d.name}`)
+    layer
+      .enter()
+      .append('g')
+      .attr('class', d => `layer data-group data-group-${d.name}`)
 
     let rect = layer.selectAll('rect').data(d => d.values)
     rect
@@ -122,7 +134,10 @@ const BarChart = React.createClass({
         this.props.setHover(d.x)
       })
       .on('mouseout', d => {
-        this.unsetHoverTimeout = setTimeout(() => this.props.setHover(null), 200)
+        this.unsetHoverTimeout = setTimeout(
+          () => this.props.setHover(null),
+          200
+        )
       })
     if (this.state.look === 'stacked') {
       rect
@@ -131,19 +146,34 @@ const BarChart = React.createClass({
         .attr('y', d => y(d.y0 + d.y))
         .attr('height', d => y(d.y0) - y(d.y0 + d.y))
     } else {
-      rect.transition().delay((d, i) => i * 10).attr('y', d => y(d.y)).attr('height', d => height - y(d.y))
+      rect
+        .transition()
+        .delay((d, i) => i * 10)
+        .attr('y', d => y(d.y))
+        .attr('height', d => height - y(d.y))
     }
     this.animateFauxDOM(800)
 
     if (firstRender) {
-      svg.append('g').attr('class', 'x axis').attr('transform', `translate(0, ${height})`).call(xAxis)
+      svg
+        .append('g')
+        .attr('class', 'x axis')
+        .attr('transform', `translate(0, ${height})`)
+        .call(xAxis)
       svg
         .append('text')
-        .attr('transform', `translate(${width / 2} ,${height + margin.bottom - 5})`)
+        .attr(
+          'transform',
+          `translate(${width / 2} ,${height + margin.bottom - 5})`
+        )
         .style('text-anchor', 'middle')
         .text(this.props.xLabel)
 
-      svg.append('g').attr('class', 'y axis').attr('transform', 'translate(0, 0)').call(yAxis)
+      svg
+        .append('g')
+        .attr('class', 'y axis')
+        .attr('transform', 'translate(0, 0)')
+        .call(yAxis)
       svg
         .append('text')
         .attr('transform', 'rotate(-90)')
@@ -203,7 +233,7 @@ const StyledBarChart = styled(BarChart)`
     padding: 5px;
     color: grey;
     background-color: rgba(255, 255, 255, 0.75);
-    visibility: ${props => props.hover ? 'visible' : 'hidden'};
+    visibility: ${props => (props.hover ? 'visible' : 'hidden')};
     -webkit-transition: top .2s ease-out, left .2s ease-out;
   }
 `

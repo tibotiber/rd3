@@ -47,7 +47,11 @@ const DemoText = React.createClass({
                   height={100}
                   onChange={this.handleChange}
                 />
-                <Pallet colors={this.props.pallet} scope={user} pickColor={this.props.setUserColor} />
+                <Pallet
+                  colors={this.props.pallet}
+                  scope={user}
+                  pickColor={this.props.setUserColor}
+                />
               </InlineDiv>
             )
           })}

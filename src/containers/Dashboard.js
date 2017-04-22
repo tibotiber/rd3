@@ -34,7 +34,7 @@ const generateDataGroupCSS = props => {
 const StyledDashboard = styled(Dashboard)`
   ${props => generateDataGroupCSS(props)}
   .data {
-    opacity: ${props => props.hover ? 0.3 : 1};
+    opacity: ${props => (props.hover ? 0.3 : 1)};
     -webkit-transition: opacity .2s ease-in;
   }
   .data-${props => props.hover} {

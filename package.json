@@ -26,7 +26,8 @@
     "eslint-plugin-node": "^4.2.2",
     "eslint-plugin-promise": "^3.5.0",
     "eslint-plugin-react": "^6.10.3",
-    "eslint-plugin-standard": "^3.0.1"
+    "eslint-plugin-standard": "^3.0.1",
+    "prettier-eslint-cli": "^3.4.2"
   },
   "scripts": {
     "start": "serve -s build",
@@ -34,6 +35,6 @@
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
-    "lint": "eslint src/**/*.js"
+    "lint": "prettier-eslint --write \"src/**/*.js\""
   }
 }
