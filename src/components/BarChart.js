@@ -24,7 +24,8 @@ const BarChart = React.createClass({
     width: number,
     height: number,
     hover: string,
-    setHover: func
+    setHover: func,
+    incrementRenderCount: func
   },
   getInitialState () {
     return {
@@ -33,16 +34,17 @@ const BarChart = React.createClass({
     }
   },
   componentDidMount () {
+    this.props.incrementRenderCount('component')
     this.renderD3(true)
   },
   componentDidUpdate (prevProps, prevState) {
+    this.props.incrementRenderCount('component')
     const stripProps = p => _.omit(p, ['hover', 'className'])
     if (!shallowEqual(stripProps(this.props), stripProps(prevProps))) {
       this.renderD3(false)
     }
   },
   render () {
-    console.log('render barchart: component')
     let tooltip = <div className='tooltip' />
     if (this.state.chart !== LOADING && this.props.hover) {
       const hoveredData = _.map(this.props.data, 'values').map(l =>
@@ -80,7 +82,7 @@ const BarChart = React.createClass({
     }
   },
   renderD3 (firstRender) {
-    console.log('render barchart: D3')
+    this.props.incrementRenderCount('d3')
     let data = _.cloneDeep(this.props.data) // stack() mutates data
     const n = this.props.data.length // number of layers
     const stack = d3.layout.stack().values(d => d.values)

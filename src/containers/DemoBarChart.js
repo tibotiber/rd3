@@ -4,7 +4,7 @@ import {createSelector} from 'reselect'
 import _ from 'lodash'
 import BarChart from '../components/BarChart'
 import {ALPHABET, countLettersOccurrences} from '../utils/stringStats'
-import {setHover} from '../actions'
+import {setHover, incrementRenderCount} from '../actions'
 
 const {arrayOf, array, shape, string, func} = PropTypes
 
@@ -19,6 +19,7 @@ const DemoBarChart = props => {
       height={500}
       hover={props.hover}
       setHover={props.setHover}
+      incrementRenderCount={props.incrementRenderCount}
     />
   )
 }
@@ -31,7 +32,8 @@ DemoBarChart.propTypes = {
     })
   ),
   hover: string,
-  setHover: func
+  setHover: func,
+  incrementRenderCount: func
 }
 
 const getText = state => state.text
@@ -69,7 +71,9 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
-    setHover: letter => dispatch(setHover(letter))
+    setHover: letter => dispatch(setHover(letter)),
+    incrementRenderCount: mode =>
+      dispatch(incrementRenderCount('barchart', mode))
   }
 }
 

@@ -1,6 +1,12 @@
 import {combineReducers} from 'redux'
 import {fromJS} from 'immutable'
-import {NEW_TEXT, SET_HOVER, TICK, SET_COLOR} from './constants'
+import {
+  NEW_TEXT,
+  SET_HOVER,
+  TICK,
+  SET_COLOR,
+  INCREMENT_RENDER_COUNT
+} from './constants'
 
 const defaultState = {
   text: {},
@@ -9,7 +15,8 @@ const defaultState = {
     user2: 'orange'
   },
   hover: null,
-  tick: 0
+  tick: 0,
+  renderCount: {}
 }
 
 // ACTION REDUCER
@@ -29,6 +36,13 @@ function incrementTick (state, action) {
 function setColor (state, action) {
   const colors = fromJS(state)
   return colors.mergeDeep({[action.user]: action.color}).toJS()
+}
+
+function incrementRenderCount (state, action) {
+  const renderCount = fromJS(state)
+  return renderCount
+    .updateIn([action.component, action.mode], (value = 0) => value + 1)
+    .toJS()
 }
 
 // TOP LEVEL REDUCERS
@@ -68,4 +82,13 @@ function tick (state = defaultState.tick, action) {
   }
 }
 
-export default combineReducers({text, colors, hover, tick})
+function renderCount (state = defaultState.renderCount, action) {
+  switch (action.type) {
+    case INCREMENT_RENDER_COUNT:
+      return incrementRenderCount(state, action)
+    default:
+      return state
+  }
+}
+
+export default combineReducers({text, colors, hover, tick, renderCount})

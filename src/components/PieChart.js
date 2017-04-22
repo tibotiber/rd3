@@ -5,7 +5,7 @@ import styled from 'styled-components'
 import _ from 'lodash'
 import {shallowEqual} from 'recompose'
 
-const {arrayOf, string, number, shape} = PropTypes
+const {arrayOf, string, number, shape, func} = PropTypes
 const LOADING = 'loading...'
 
 const PieChart = React.createClass({
@@ -20,7 +20,8 @@ const PieChart = React.createClass({
     className: string,
     width: number,
     height: number,
-    thickness: number
+    thickness: number,
+    incrementRenderCount: func
   },
   getInitialState () {
     return {
@@ -29,9 +30,11 @@ const PieChart = React.createClass({
     }
   },
   componentDidMount () {
+    this.props.incrementRenderCount('component')
     this.renderD3(true)
   },
   componentDidUpdate (prevProps, prevState) {
+    this.props.incrementRenderCount('component')
     if (!shallowEqual(this.props, prevProps)) {
       this.renderD3(false)
     }
@@ -42,7 +45,6 @@ const PieChart = React.createClass({
     })
   },
   render () {
-    console.log('render piechart: component')
     let tooltip = <div className='tooltip' style={{visibility: 'hidden'}} />
     if (this.state.tooltip) {
       tooltip = (
@@ -63,7 +65,7 @@ const PieChart = React.createClass({
     )
   },
   renderD3 (firstRender) {
-    console.log('render piechart: D3')
+    this.props.incrementRenderCount('d3')
     const width = this.props.width
     const height = this.props.height
     const outerRadius = height / 2 - 10

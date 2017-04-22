@@ -4,11 +4,20 @@ import {createSelector} from 'reselect'
 import _ from 'lodash'
 import PieChart from '../components/PieChart'
 import {countLetters} from '../utils/stringStats'
+import {incrementRenderCount} from '../actions'
 
-const {arrayOf, number, shape, string} = PropTypes
+const {arrayOf, number, shape, string, func} = PropTypes
 
 const DemoBarChart = props => {
-  return <PieChart data={props.data} width={960} height={500} thickness={30} />
+  return (
+    <PieChart
+      data={props.data}
+      width={960}
+      height={500}
+      thickness={30}
+      incrementRenderCount={props.incrementRenderCount}
+    />
+  )
 }
 
 DemoBarChart.propTypes = {
@@ -17,7 +26,8 @@ DemoBarChart.propTypes = {
       name: string,
       value: number
     })
-  )
+  ),
+  incrementRenderCount: func
 }
 
 const getText = state => state.text
@@ -45,4 +55,11 @@ const mapStateToProps = (state, ownProps) => {
   }
 }
 
-export default connect(mapStateToProps)(DemoBarChart)
+const mapDispatchToProps = (dispatch, ownProps) => {
+  return {
+    incrementRenderCount: mode =>
+      dispatch(incrementRenderCount('piechart', mode))
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(DemoBarChart)

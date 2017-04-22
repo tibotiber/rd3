@@ -6,21 +6,30 @@ import _ from 'lodash'
 import {getColorWithDefaultSaturation} from '../utils/colors'
 import DemoBarChart from './DemoBarChart'
 import DemoPieChart from './DemoPieChart'
+import {incrementRenderCount} from '../actions'
 
-const {string, object} = PropTypes
+const {string, object, func} = PropTypes
 
-const Dashboard = props => {
-  return (
-    <div className={`dashboard ${props.className}`}>
-      <DemoBarChart />
-      <DemoPieChart />
-    </div>
-  )
-}
-
-Dashboard.propTypes = {
-  className: string // for styled components
-}
+const Dashboard = React.createClass({
+  propTypes: {
+    className: string, // for styled components
+    incrementRenderCount: func
+  },
+  componentDidMount () {
+    this.props.incrementRenderCount('component')
+  },
+  componentDidUpdate (prevProps, prevState) {
+    this.props.incrementRenderCount('component')
+  },
+  render () {
+    return (
+      <div className={`dashboard ${this.props.className}`}>
+        <DemoBarChart />
+        <DemoPieChart />
+      </div>
+    )
+  }
+})
 
 const generateDataGroupCSS = props => {
   return _.reduce(
@@ -74,4 +83,11 @@ const mapStateToProps = (state, ownProps) => {
   }
 }
 
-export default connect(mapStateToProps)(StyledDashboard)
+const mapDispatchToProps = (dispatch, ownProps) => {
+  return {
+    incrementRenderCount: mode =>
+      dispatch(incrementRenderCount('dashboard', mode))
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(StyledDashboard)

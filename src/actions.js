@@ -1,4 +1,10 @@
-import {NEW_TEXT, SET_HOVER, TICK, SET_COLOR} from './constants'
+import {
+  NEW_TEXT,
+  SET_HOVER,
+  TICK,
+  SET_COLOR,
+  INCREMENT_RENDER_COUNT
+} from './constants'
 
 export function newText (text) {
   return {
@@ -25,5 +31,13 @@ export function setColor (user, color) {
     type: SET_COLOR,
     user,
     color
+  }
+}
+
+export function incrementRenderCount (component, mode) {
+  return {
+    type: INCREMENT_RENDER_COUNT,
+    component,
+    mode
   }
 }
