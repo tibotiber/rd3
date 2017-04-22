@@ -225,14 +225,6 @@ const StyledBarChart = styled(BarChart)`
   }
   position: relative;
   .tooltip {
-    position: absolute;
-    z-index: 10;
-    display: inline-block;
-    border: solid 1px grey;
-    border-radius: 2px;
-    padding: 5px;
-    color: grey;
-    background-color: rgba(255, 255, 255, 0.75);
     visibility: ${props => (props.hover ? 'visible' : 'hidden')};
     -webkit-transition: top .2s ease-out, left .2s ease-out;
   }

@@ -8,3 +8,7 @@ export function countLettersOccurrences (str) {
   })
   return occurrences
 }
+
+export function countLetters (str) {
+  return (str.match(/[a-zA-Z]/gi) || []).length
+}

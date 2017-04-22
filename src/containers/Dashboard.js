@@ -5,6 +5,7 @@ import {createSelector} from 'reselect'
 import _ from 'lodash'
 import {getColorWithDefaultSaturation} from '../utils/colors'
 import DemoBarChart from './DemoBarChart'
+import DemoPieChart from './DemoPieChart'
 
 const {string, object} = PropTypes
 
@@ -12,6 +13,7 @@ const Dashboard = props => {
   return (
     <div className={`dashboard ${props.className}`}>
       <DemoBarChart />
+      <DemoPieChart />
     </div>
   )
 }
@@ -40,6 +42,17 @@ const StyledDashboard = styled(Dashboard)`
   .data-${props => props.hover} {
     opacity: 1;
     -webkit-transition: opacity .2s ease-in;
+  }
+  .tooltip {
+    position: absolute;
+    z-index: 10;
+    display: inline-block;
+    border: solid 1px grey;
+    border-radius: 2px;
+    padding: 5px;
+    color: grey;
+    background-color: rgba(255, 255, 255, 0.75);
+    text-align: center;
   }
 `
 
