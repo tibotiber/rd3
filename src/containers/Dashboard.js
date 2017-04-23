@@ -31,12 +31,23 @@ const Dashboard = React.createClass({
     return (
       <div className={`dashboard ${this.props.className}`}>
         <Row>
-          <DemoBarChart width={window.innerWidth / 2} height={window.innerHeight / 2} />
-          <div style={{display: 'inline-block', width: window.innerWidth / 2 - 50}} />
+          <DemoBarChart
+            width={window.innerWidth / 2}
+            height={window.innerHeight / 2}
+          />
+          <div
+            style={{display: 'inline-block', width: window.innerWidth / 2 - 50}}
+          />
         </Row>
         <Row>
-          <DemoPieChart width={window.innerWidth / 3} height={window.innerHeight / 3} />
-          <DemoText width={window.innerWidth * 2 / 3 - 100} height={window.innerHeight / 2} />
+          <DemoPieChart
+            width={window.innerWidth / 3}
+            height={window.innerHeight / 3}
+          />
+          <DemoText
+            width={window.innerWidth * 2 / 3 - 100}
+            height={window.innerHeight / 2}
+          />
         </Row>
       </div>
     )
@@ -55,6 +66,7 @@ const generateDataGroupCSS = props => {
 }
 
 const StyledDashboard = styled(Dashboard)`
+  font: 11px sans-serif;
   ${props => generateDataGroupCSS(props)}
   .data {
     opacity: ${props => (props.hover ? 0.3 : 1)};
