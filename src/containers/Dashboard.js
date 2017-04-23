@@ -76,7 +76,6 @@ const generateHoverCss = letter =>
 `
 
 const StyledDashboard = styled(Dashboard)`
-  font: 11px sans-serif;
   ${props => generateDataGroupCSS(props)}
   .data {
     opacity: ${props => (props.hover ? 0.25 : 1)};
