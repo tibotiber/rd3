@@ -13,6 +13,7 @@ const CodeBlock = styled.pre`
   margin: 5px;
   border: dashed 2px grey;
   color: grey;
+  background-color: rgba(255, 255, 255, 0.75);
 `
 
 const RenderCount = props => {

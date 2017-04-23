@@ -16,6 +16,7 @@ const DemoBarChart = props => {
       height={props.height}
       thickness={30}
       incrementRenderCount={props.incrementRenderCount}
+      title='Text volume by user'
     />
   )
 }

@@ -58,19 +58,19 @@ const BarChart = React.createClass({
     }
   },
   computeTooltipProps (letter) {
-      const hoveredData = _.map(this.props.data, 'values').map(l =>
+    const hoveredData = _.map(this.props.data, 'values').map(l =>
       _.find(l, {x: letter})
-      )
-      const computeTop = this.state.look === 'stacked'
-        ? arr => this.y(_.sum(arr))
-        : arr => this.y(_.max(arr))
+    )
+    const computeTop = this.state.look === 'stacked'
+      ? arr => this.y(_.sum(arr))
+      : arr => this.y(_.max(arr))
     return {
       style: {
         top: computeTop(_.map(hoveredData, 'y')) + 5,
         left: this.x(letter) + 40
       },
       content: `${letter}: ${_.map(hoveredData, 'y').join(', ')}`
-      }
+    }
   },
   render () {
     return (
@@ -175,10 +175,10 @@ const BarChart = React.createClass({
         .attr('class', 'x axis')
         .attr('transform', `translate(0, ${height})`)
         .call(xAxis)
-      svg
         .append('text')
+        .attr('class', 'label')
         .attr('x', width)
-        .attr('y', height + 30)
+        .attr('y', 35)
         .style('text-anchor', 'end')
         .text(this.props.xLabel)
 
@@ -187,8 +187,8 @@ const BarChart = React.createClass({
         .attr('class', 'y axis')
         .attr('transform', 'translate(0, 0)')
         .call(yAxis)
-      svg
         .append('text')
+        .attr('class', 'label')
         .attr('transform', 'rotate(-90)')
         .attr('y', -30)
         .style('text-anchor', 'end')
@@ -227,16 +227,14 @@ const BarChart = React.createClass({
 })
 
 const StyledBarChart = styled(BarChart)`
-  .x.axis line,
-  .x.axis path,
-  .y.axis line,
-  .y.axis path {
+  position: relative;
+  display: inline-block;
+  .axis line,
+  .axis path {
     fill: none;
     stroke: #000;
     shape-rendering: crispEdges;
   }
-  position: relative;
-  display: inline-block;
   .tooltip {
     visibility: ${props => (props.hover ? 'visible' : 'hidden')};
     -webkit-transition: top .2s ease-out, left .2s ease-out;

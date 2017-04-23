@@ -6,6 +6,7 @@ import _ from 'lodash'
 import {getColorWithDefaultSaturation} from '../utils/colors'
 import DemoBarChart from './DemoBarChart'
 import DemoPieChart from './DemoPieChart'
+import DemoScatterPlot from './DemoScatterPlot'
 import DemoText from './DemoText'
 import {incrementRenderCount} from '../actions'
 
@@ -32,11 +33,12 @@ const Dashboard = React.createClass({
       <div className={`dashboard ${this.props.className}`}>
         <Row>
           <DemoBarChart
-            width={window.innerWidth / 2}
+            width={window.innerWidth / 2 - 10}
             height={window.innerHeight / 2}
           />
-          <div
-            style={{display: 'inline-block', width: window.innerWidth / 2 - 50}}
+          <DemoScatterPlot
+            width={window.innerWidth / 2 - 10}
+            height={window.innerHeight / 2}
           />
         </Row>
         <Row>

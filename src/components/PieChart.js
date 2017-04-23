@@ -21,7 +21,8 @@ const PieChart = React.createClass({
     width: number,
     height: number,
     thickness: number,
-    incrementRenderCount: func
+    incrementRenderCount: func,
+    title: string
   },
   getInitialState () {
     return {
@@ -98,6 +99,15 @@ const PieChart = React.createClass({
           .attr('transform', `translate(${width / 2}, ${height / 2})`)
       : d3.select(faux).select('svg').select('g')
 
+    if (firstRender) {
+      svg
+        .append('text')
+        .attr('class', 'label')
+        .attr('y', height * 3 / 10)
+        .style('text-anchor', 'middle')
+        .text(this.props.title)
+    }
+
     let arcs = svg.selectAll('path').data(pie(data))
     arcs
       .enter()
@@ -126,8 +136,8 @@ const StyledPieChart = styled(PieChart)`
   display: inline-block;
   .tooltip {
     width: ${props => props.width / 5}px;
-    left: ${props => props.width * 4 / 10}px;
-    top: ${props => props.height * 7 / 10}px;
+    left: ${props => props.width * 2 / 5}px;
+    top: ${props => props.height * 2 / 5}px;
   }
 `
 
