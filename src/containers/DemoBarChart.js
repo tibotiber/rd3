@@ -31,7 +31,7 @@ DemoBarChart.propTypes = {
       values: array
     })
   ),
-  hover: string,
+  hover: arrayOf(string),
   setHover: func,
   incrementRenderCount: func,
   height: number,

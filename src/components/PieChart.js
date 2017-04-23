@@ -44,23 +44,20 @@ const PieChart = React.createClass({
       tooltip: user
     })
   },
+  computeTooltipContent () {
+    const hoveredData = _.find(this.props.data, {
+      name: this.state.tooltip
+    }).value
+    return `${this.state.tooltip}: ${hoveredData}`
+  },
   render () {
-    let tooltip = <div className='tooltip' style={{visibility: 'hidden'}} />
-    if (this.state.tooltip) {
-      tooltip = (
-        <div className='tooltip'>
-          <p>
-            User: {this.state.tooltip}<br />
-            Letters: {_.find(this.props.data, {name: this.state.tooltip}).value}
-          </p>
-        </div>
-      )
-    }
-
     return (
       <div className={`piechart ${this.props.className}`}>
         {this.state.chart}
-        {tooltip}
+        {this.state.tooltip &&
+          <div className='tooltip'>
+            {this.computeTooltipContent()}
+          </div>}
       </div>
     )
   },

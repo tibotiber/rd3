@@ -5,8 +5,21 @@ import styled from 'styled-components'
 import _ from 'lodash'
 import {shallowEqual} from 'recompose'
 
-const {arrayOf, array, string, number, func, shape} = PropTypes
+const {arrayOf, array, string, number, func, shape, object} = PropTypes
 const LOADING = 'loading...'
+
+const Tooltip = props => {
+  return (
+    <div className='tooltip' style={props.style}>
+      {props.content}
+    </div>
+  )
+}
+
+Tooltip.propTypes = {
+  content: string,
+  style: object
+}
 
 const BarChart = React.createClass({
   mixins: [Faux.mixins.core, Faux.mixins.anim],
@@ -23,7 +36,7 @@ const BarChart = React.createClass({
     yLabel: string,
     width: number,
     height: number,
-    hover: string,
+    hover: arrayOf(string),
     setHover: func,
     incrementRenderCount: func
   },
@@ -44,31 +57,31 @@ const BarChart = React.createClass({
       this.renderD3(false)
     }
   },
-  render () {
-    let tooltip = <div className='tooltip' />
-    if (this.state.chart !== LOADING && this.props.hover) {
+  computeTooltipProps (letter) {
       const hoveredData = _.map(this.props.data, 'values').map(l =>
-        _.find(l, {x: this.props.hover})
+      _.find(l, {x: letter})
       )
       const computeTop = this.state.look === 'stacked'
         ? arr => this.y(_.sum(arr))
         : arr => this.y(_.max(arr))
-      const tooltipStyle = {
+    return {
+      style: {
         top: computeTop(_.map(hoveredData, 'y')) + 5,
-        left: this.x(this.props.hover) + 40
+        left: this.x(letter) + 40
+      },
+      content: `${letter}: ${_.map(hoveredData, 'y').join(', ')}`
       }
-      tooltip = (
-        <div className='tooltip' style={tooltipStyle}>
-          {this.props.hover}: {_.map(hoveredData, 'y').join(', ')}
-        </div>
-      )
-    }
-
+  },
+  render () {
     return (
       <div className={`barchart ${this.props.className}`}>
         <button onClick={this.toggle}>Toggle</button>
         {this.state.chart}
-        {tooltip}
+        {this.state.chart !== LOADING &&
+          this.props.hover &&
+          this.props.hover.map(letter => (
+            <Tooltip key={letter} {...this.computeTooltipProps(letter)} />
+          ))}
       </div>
     )
   },

@@ -9,7 +9,7 @@ import DemoPieChart from './DemoPieChart'
 import DemoText from './DemoText'
 import {incrementRenderCount} from '../actions'
 
-const {string, object, func} = PropTypes
+const {string, object, func, arrayOf} = PropTypes
 
 const Row = styled.div`
   margin-top: 20px;
@@ -65,17 +65,22 @@ const generateDataGroupCSS = props => {
   )
 }
 
+const generateHoverCss = letter =>
+  `
+  .data-${letter} {
+    opacity: 1;
+    -webkit-transition: opacity .2s ease-in;
+  }
+`
+
 const StyledDashboard = styled(Dashboard)`
   font: 11px sans-serif;
   ${props => generateDataGroupCSS(props)}
   .data {
-    opacity: ${props => (props.hover ? 0.3 : 1)};
+    opacity: ${props => (props.hover ? 0.25 : 1)};
     -webkit-transition: opacity .2s ease-in;
   }
-  .data-${props => props.hover} {
-    opacity: 1;
-    -webkit-transition: opacity .2s ease-in;
-  }
+  ${props => props.hover && props.hover.map(letter => generateHoverCss(letter))}
   .tooltip {
     position: absolute;
     z-index: 10;
@@ -91,7 +96,7 @@ const StyledDashboard = styled(Dashboard)`
 
 StyledDashboard.propTypes = {
   colors: object,
-  hover: string
+  hover: arrayOf(string)
 }
 
 const getColors = state => state.colors

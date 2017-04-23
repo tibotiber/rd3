@@ -1,3 +1,4 @@
+import _ from 'lodash'
 import {
   NEW_TEXT,
   SET_HOVER,
@@ -16,7 +17,7 @@ export function newText (text) {
 export function setHover (letter) {
   return {
     type: SET_HOVER,
-    letter
+    letter: !letter ? null : Array.isArray(letter) ? _.uniq(letter) : [letter]
   }
 }
 
