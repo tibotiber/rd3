@@ -79,8 +79,8 @@ const BarChart = React.createClass({
         {this.state.chart}
         {this.state.chart !== LOADING &&
           this.props.hover &&
-          this.props.hover.map(letter => (
-            <Tooltip key={letter} {...this.computeTooltipProps(letter)} />
+          this.props.hover.map((letter, index) => (
+            <Tooltip key={index} {...this.computeTooltipProps(letter)} />
           ))}
       </div>
     )
