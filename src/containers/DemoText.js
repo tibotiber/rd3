@@ -1,11 +1,12 @@
 import React, {PropTypes} from 'react'
 import {connect} from 'react-redux'
+import {createSelector} from 'reselect'
 import lorem from 'lorem-ipsum'
 import styled from 'styled-components'
 import Text from '../components/Text'
 import Pallet from '../components/Pallet'
 import {getColorWithDefaultSaturation} from '../utils/colors'
-import {newText, setColor} from '../actions'
+import {newText, setColor, incrementRenderCount} from '../actions'
 import {COLOR_PALLET} from '../constants'
 import toJS from '../toJS'
 
@@ -30,10 +31,15 @@ const DemoText = React.createClass({
     ),
     setUserColor: func,
     width: number,
-    height: number
+    height: number,
+    incrementRenderCount: func
   },
   componentDidMount () {
+    this.props.incrementRenderCount('component')
     this.props.generateText()
+  },
+  componentDidUpdate (prevProps, prevState) {
+    this.props.incrementRenderCount('component')
   },
   render () {
     return (
@@ -68,19 +74,41 @@ const DemoText = React.createClass({
   }
 })
 
+const getText = state => state.get('text')
+
+const selectUsers = createSelector(getText, text => {
+  return text.sortBy((v, k) => k).keySeq()
+})
+
+const selectTexts = createSelector(getText, text => {
+  return text.sortBy((v, k) => k).valueSeq()
+})
+
+const getColors = state => state.get('colors')
+
+const selectColors = createSelector(getColors, colors => {
+  return colors.sortBy((v, k) => k).valueSeq().map(color => {
+    return getColorWithDefaultSaturation(color)
+  })
+})
+
+const getPallet = state => COLOR_PALLET
+
+const selectPallet = createSelector(getPallet, pallet => {
+  return pallet.map(color => {
+    return {
+      name: color,
+      value: getColorWithDefaultSaturation(color)
+    }
+  })
+})
+
 const mapStateToProps = (state, ownProps) => {
   return {
-    users: state.get('text').sortBy((v, k) => k).keySeq(),
-    texts: state.get('text').sortBy((v, k) => k).valueSeq(),
-    colors: state.get('colors').sortBy((v, k) => k).valueSeq().map(color => {
-      return getColorWithDefaultSaturation(color)
-    }),
-    pallet: COLOR_PALLET.map(color => {
-      return {
-        name: color,
-        value: getColorWithDefaultSaturation(color)
-      }
-    })
+    users: selectUsers(state),
+    texts: selectTexts(state),
+    colors: selectColors(state),
+    pallet: selectPallet(state)
   }
 }
 
@@ -95,7 +123,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       )
     },
     updateText: text => dispatch(newText(text)),
-    setUserColor: (user, color) => dispatch(setColor(user, color))
+    setUserColor: (user, color) => dispatch(setColor(user, color)),
+    incrementRenderCount: mode =>
+      dispatch(incrementRenderCount('chat', mode))
   }
 }
 
