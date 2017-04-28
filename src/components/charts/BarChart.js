@@ -21,6 +21,21 @@ Tooltip.propTypes = {
   style: object
 }
 
+const Wrapper = styled.div`
+  position: relative;
+  display: inline-block;
+  .axis line,
+  .axis path {
+    fill: none;
+    stroke: #000;
+    shape-rendering: crispEdges;
+  }
+  .tooltip {
+    visibility: ${props => (props.hover ? 'visible' : 'hidden')};
+    -webkit-transition: top .2s ease-out, left .2s ease-out;
+  }
+`
+
 const BarChart = React.createClass({
   mixins: [Faux.mixins.core, Faux.mixins.anim],
   propTypes: {
@@ -31,7 +46,6 @@ const BarChart = React.createClass({
       })
     ),
     xDomain: array,
-    className: string,
     xLabel: string,
     yLabel: string,
     width: number,
@@ -74,7 +88,7 @@ const BarChart = React.createClass({
   },
   render () {
     return (
-      <div className={`barchart ${this.props.className}`}>
+      <Wrapper className='barchart' hover={this.props.hover}>
         <button onClick={this.toggle}>Toggle</button>
         {this.state.chart}
         {this.state.chart !== LOADING &&
@@ -82,7 +96,7 @@ const BarChart = React.createClass({
           this.props.hover.map((letter, index) => (
             <Tooltip key={index} {...this.computeTooltipProps(letter)} />
           ))}
-      </div>
+      </Wrapper>
     )
   },
   toggle () {
@@ -226,19 +240,4 @@ const BarChart = React.createClass({
   }
 })
 
-const StyledBarChart = styled(BarChart)`
-  position: relative;
-  display: inline-block;
-  .axis line,
-  .axis path {
-    fill: none;
-    stroke: #000;
-    shape-rendering: crispEdges;
-  }
-  .tooltip {
-    visibility: ${props => (props.hover ? 'visible' : 'hidden')};
-    -webkit-transition: top .2s ease-out, left .2s ease-out;
-  }
-`
-
-export default StyledBarChart
+export default BarChart

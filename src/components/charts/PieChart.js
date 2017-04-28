@@ -8,6 +8,16 @@ import {shallowEqual} from 'recompose'
 const {arrayOf, string, number, shape, func} = PropTypes
 const LOADING = 'loading...'
 
+const Wrapper = styled.div`
+  position: relative;
+  display: inline-block;
+  .tooltip {
+    width: ${props => props.width / 5}px;
+    left: ${props => props.width * 2 / 5}px;
+    top: ${props => props.height * 2 / 5}px;
+  }
+`
+
 const PieChart = React.createClass({
   mixins: [Faux.mixins.core, Faux.mixins.anim],
   propTypes: {
@@ -17,7 +27,6 @@ const PieChart = React.createClass({
         value: number
       })
     ),
-    className: string,
     width: number,
     height: number,
     thickness: number,
@@ -53,13 +62,13 @@ const PieChart = React.createClass({
   },
   render () {
     return (
-      <div className={`piechart ${this.props.className}`}>
+      <Wrapper className='piechart' width={this.props.width} height={this.props.height}>
         {this.state.chart}
         {this.state.tooltip &&
           <div className='tooltip'>
             {this.computeTooltipContent()}
           </div>}
-      </div>
+      </Wrapper>
     )
   },
   renderD3 (firstRender) {
@@ -131,14 +140,4 @@ const PieChart = React.createClass({
   }
 })
 
-const StyledPieChart = styled(PieChart)`
-  position: relative;
-  display: inline-block;
-  .tooltip {
-    width: ${props => props.width / 5}px;
-    left: ${props => props.width * 2 / 5}px;
-    top: ${props => props.height * 2 / 5}px;
-  }
-`
-
-export default StyledPieChart
+export default PieChart

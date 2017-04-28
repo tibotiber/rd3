@@ -1,7 +1,7 @@
 import React, {PropTypes} from 'react'
 import styled from 'styled-components'
 
-const {arrayOf, shape, string, func, object} = PropTypes
+const {arrayOf, shape, string, func} = PropTypes
 
 const List = styled.ul`
   list-style-type: none;
@@ -19,15 +19,6 @@ const ColorSquare = styled.li`
   margin-left: 5px;
   cursor: pointer;
 `
-
-ColorSquare.propTypes = {
-  color: shape({
-    name: string,
-    value: string
-  }),
-  pickColor: func,
-  scope: string
-}
 
 const PalletLabel = styled.li`
   display: inline-block;
@@ -52,8 +43,14 @@ const Pallet = props => {
 }
 
 Pallet.propTypes = {
-  colors: arrayOf(object),
-  scope: string
+  colors: arrayOf(
+    shape({
+      name: string,
+      value: string
+    })
+  ),
+  scope: string,
+  pickColor: func
 }
 
 export default Pallet

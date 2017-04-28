@@ -22,6 +22,20 @@ Tooltip.propTypes = {
   style: object
 }
 
+const Wrapper = styled.div`
+  position: relative;
+  display: inline-block;
+  .axis path,
+  .axis line {
+    fill: none;
+    stroke: #000;
+    shape-rendering: crispEdges;
+  }
+  .dot {
+    stroke: #ffffff;
+  }
+`
+
 const ScatterPlot = React.createClass({
   mixins: [Faux.mixins.core, Faux.mixins.anim],
   propTypes: {
@@ -33,7 +47,6 @@ const ScatterPlot = React.createClass({
         n: number
       })
     ),
-    className: string,
     width: number,
     height: number,
     xDomain: array,
@@ -76,10 +89,10 @@ const ScatterPlot = React.createClass({
   },
   render () {
     return (
-      <div className={`scatterplot ${this.props.className}`}>
+      <Wrapper className='scatterplot'>
         {this.state.chart}
         {this.state.tooltip && <Tooltip {...this.computeTooltipProps()} />}
-      </div>
+      </Wrapper>
     )
   },
   renderD3 (firstRender) {
@@ -173,18 +186,4 @@ const ScatterPlot = React.createClass({
   }
 })
 
-const StyledScatterPlot = styled(ScatterPlot)`
-  position: relative;
-  display: inline-block;
-  .axis path,
-  .axis line {
-    fill: none;
-    stroke: #000;
-    shape-rendering: crispEdges;
-  }
-  .dot {
-    stroke: #ffffff;
-  }
-`
-
-export default StyledScatterPlot
+export default ScatterPlot
