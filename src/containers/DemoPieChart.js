@@ -19,12 +19,10 @@ const selectHover = createSelector(
 const selectData = createSelector([getText, selectHover], (text, hover) => {
   return text.reduce((result, userText, user) => {
     const nbOfLetters = countLetters(userText, hover ? hover.toJS() : null)
-    if (nbOfLetters > 0) {
-      result.push({
-        name: user,
-        value: nbOfLetters
-      })
-    }
+    result.push({
+      name: user,
+      value: nbOfLetters
+    })
     return result
   }, [])
 })
