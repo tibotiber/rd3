@@ -7,6 +7,7 @@ import Pallet from '../components/Pallet'
 import {getColorWithDefaultSaturation} from '../utils/colors'
 import {newText, setColor} from '../actions'
 import {COLOR_PALLET} from '../constants'
+import toJS from '../toJS'
 
 const {arrayOf, shape, string, func, number} = PropTypes
 
@@ -69,10 +70,10 @@ const DemoText = React.createClass({
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    users: Object.keys(state.text).sort(),
-    texts: Object.keys(state.text).sort().map(user => state.text[user]),
-    colors: Object.keys(state.colors).sort().map(user => {
-      return getColorWithDefaultSaturation(state.colors[user])
+    users: state.get('text').sortBy((v, k) => k).keySeq(),
+    texts: state.get('text').sortBy((v, k) => k).valueSeq(),
+    colors: state.get('colors').sortBy((v, k) => k).valueSeq().map(color => {
+      return getColorWithDefaultSaturation(color)
     }),
     pallet: COLOR_PALLET.map(color => {
       return {
@@ -98,4 +99,4 @@ const mapDispatchToProps = (dispatch, ownProps) => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(DemoText)
+export default connect(mapStateToProps, mapDispatchToProps)(toJS(DemoText))

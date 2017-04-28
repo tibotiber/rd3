@@ -9,6 +9,7 @@ import DemoPieChart from './DemoPieChart'
 import DemoScatterPlot from './DemoScatterPlot'
 import DemoText from './DemoText'
 import {incrementRenderCount} from '../actions'
+import toJS from '../toJS'
 
 const {string, object, func, arrayOf} = PropTypes
 
@@ -100,15 +101,15 @@ StyledDashboard.propTypes = {
   hover: arrayOf(string)
 }
 
-const getColors = state => state.colors
+const getColors = state => state.get('colors')
 
 const selectColors = createSelector(getColors, colors => {
-  return _.mapValues(colors, color => getColorWithDefaultSaturation(color))
+  return colors.map(color => getColorWithDefaultSaturation(color))
 })
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    hover: state.hover,
+    hover: state.get('hover'),
     colors: selectColors(state)
   }
 }
@@ -120,4 +121,6 @@ const mapDispatchToProps = (dispatch, ownProps) => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(StyledDashboard)
+export default connect(mapStateToProps, mapDispatchToProps)(
+  toJS(StyledDashboard)
+)

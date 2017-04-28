@@ -1,10 +1,10 @@
 import React, {PropTypes} from 'react'
 import {connect} from 'react-redux'
 import {createSelector} from 'reselect'
-import _ from 'lodash'
 import PieChart from '../components/PieChart'
 import {countLetters} from '../utils/stringStats'
 import {incrementRenderCount} from '../actions'
+import toJS from '../toJS'
 
 const {arrayOf, number, shape, string, func} = PropTypes
 
@@ -33,23 +33,19 @@ DemoBarChart.propTypes = {
   height: number
 }
 
-const getText = state => state.text
+const getText = state => state.get('text')
 
 const selectData = createSelector(getText, text => {
-  return _.reduce(
-    text,
-    (result, userText, user) => {
-      const nbOfLetters = countLetters(userText)
-      if (nbOfLetters > 0) {
-        result.push({
-          name: user,
-          value: nbOfLetters
-        })
-      }
-      return result
-    },
-    []
-  )
+  return text.reduce((result, userText, user) => {
+    const nbOfLetters = countLetters(userText)
+    if (nbOfLetters > 0) {
+      result.push({
+        name: user,
+        value: nbOfLetters
+      })
+    }
+    return result
+  }, [])
 })
 
 const mapStateToProps = (state, ownProps) => {
@@ -65,4 +61,4 @@ const mapDispatchToProps = (dispatch, ownProps) => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(DemoBarChart)
+export default connect(mapStateToProps, mapDispatchToProps)(toJS(DemoBarChart))

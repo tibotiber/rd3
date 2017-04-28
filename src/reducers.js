@@ -1,4 +1,4 @@
-import {combineReducers} from 'redux'
+import {combineReducers} from 'redux-immutable'
 import {fromJS} from 'immutable'
 import {
   NEW_TEXT,
@@ -8,7 +8,7 @@ import {
   INCREMENT_RENDER_COUNT
 } from './constants'
 
-const defaultState = {
+export const initialState = fromJS({
   text: {},
   colors: {
     user1: 'blue',
@@ -17,16 +17,15 @@ const defaultState = {
   hover: null,
   tick: 0,
   renderCount: {}
-}
+})
 
 // ACTION REDUCER
 function newText (state, action) {
-  const text = fromJS(state)
-  return text.mergeDeep(action.text).toJS()
+  return state.mergeDeep(fromJS(action.text))
 }
 
 function setHover (state, action) {
-  return action.letter
+  return fromJS(action.letters)
 }
 
 function incrementTick (state, action) {
@@ -34,19 +33,18 @@ function incrementTick (state, action) {
 }
 
 function setColor (state, action) {
-  const colors = fromJS(state)
-  return colors.mergeDeep({[action.user]: action.color}).toJS()
+  return state.set(action.user, action.color)
 }
 
 function incrementRenderCount (state, action) {
-  const renderCount = fromJS(state)
-  return renderCount
-    .updateIn([action.component, action.mode], (value = 0) => value + 1)
-    .toJS()
+  return state.updateIn(
+    [action.component, action.mode],
+    (value = 0) => value + 1
+  )
 }
 
 // TOP LEVEL REDUCERS
-function text (state = defaultState.text, action) {
+function text (state, action) {
   switch (action.type) {
     case NEW_TEXT:
       return newText(state, action)
@@ -55,7 +53,7 @@ function text (state = defaultState.text, action) {
   }
 }
 
-function colors (state = defaultState.colors, action) {
+function colors (state, action) {
   switch (action.type) {
     case SET_COLOR:
       return setColor(state, action)
@@ -64,7 +62,7 @@ function colors (state = defaultState.colors, action) {
   }
 }
 
-function hover (state = defaultState.hover, action) {
+function hover (state, action) {
   switch (action.type) {
     case SET_HOVER:
       return setHover(state, action)
@@ -73,7 +71,7 @@ function hover (state = defaultState.hover, action) {
   }
 }
 
-function tick (state = defaultState.tick, action) {
+function tick (state, action) {
   switch (action.type) {
     case TICK:
       return incrementTick(state, action)
@@ -82,7 +80,7 @@ function tick (state = defaultState.tick, action) {
   }
 }
 
-function renderCount (state = defaultState.renderCount, action) {
+function renderCount (state, action) {
   switch (action.type) {
     case INCREMENT_RENDER_COUNT:
       return incrementRenderCount(state, action)
@@ -91,4 +89,7 @@ function renderCount (state = defaultState.renderCount, action) {
   }
 }
 
-export default combineReducers({text, colors, hover, tick, renderCount})
+export default combineReducers(
+  {text, colors, hover, tick, renderCount},
+  initialState
+)

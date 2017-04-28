@@ -1,10 +1,10 @@
 import React, {PropTypes} from 'react'
 import {connect} from 'react-redux'
 import {createSelector} from 'reselect'
-import _ from 'lodash'
 import ScatterPlot from '../components/ScatterPlot'
 import {ALPHABET, countLettersCoOccurrences} from '../utils/stringStats'
 import {setHover, incrementRenderCount} from '../actions'
+import toJS from '../toJS'
 
 const {arrayOf, shape, string, func, number} = PropTypes
 
@@ -41,24 +41,20 @@ DemoScatterPlot.propTypes = {
   groups: arrayOf(string)
 }
 
-const getText = state => state.text
+const getText = state => state.get('text')
 
 const selectData = createSelector(getText, text => {
-  return _.reduce(
-    text,
-    (result, userText, user) => {
-      return result.concat(
-        countLettersCoOccurrences(userText).map(o => {
-          return {group: user, x: o.letter1, y: o.letter2, n: o.count}
-        })
-      )
-    },
-    []
-  )
+  return text.reduce((result, userText, user) => {
+    return result.concat(
+      countLettersCoOccurrences(userText).map(o => {
+        return {group: user, x: o.letter1, y: o.letter2, n: o.count}
+      })
+    )
+  }, [])
 })
 
 const selectGroups = createSelector(getText, text => {
-  return _.keys(text)
+  return text.keySeq()
 })
 
 const mapStateToProps = (state, ownProps) => {
@@ -76,4 +72,6 @@ const mapDispatchToProps = (dispatch, ownProps) => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(DemoScatterPlot)
+export default connect(mapStateToProps, mapDispatchToProps)(
+  toJS(DemoScatterPlot)
+)

@@ -2,6 +2,7 @@ import React, {PropTypes} from 'react'
 import {connect} from 'react-redux'
 import styled from 'styled-components'
 import _ from 'lodash'
+import toJS from '../toJS'
 
 const {number, object, string, shape} = PropTypes
 
@@ -62,9 +63,9 @@ Ticker.propTypes = {
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    tick: state.tick,
-    renderCount: state.renderCount
+    tick: state.get('tick'),
+    renderCount: state.get('renderCount')
   }
 }
 
-export default connect(mapStateToProps)(Ticker)
+export default connect(mapStateToProps)(toJS(Ticker))

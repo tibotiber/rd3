@@ -17,7 +17,7 @@ export function newText (text) {
 export function setHover (letter) {
   return {
     type: SET_HOVER,
-    letter: !letter ? null : Array.isArray(letter) ? _.uniq(letter) : [letter]
+    letters: !letter ? null : Array.isArray(letter) ? _.uniq(letter) : [letter]
   }
 }
 

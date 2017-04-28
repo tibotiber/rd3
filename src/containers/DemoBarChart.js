@@ -5,6 +5,7 @@ import _ from 'lodash'
 import BarChart from '../components/BarChart'
 import {ALPHABET, countLettersOccurrences} from '../utils/stringStats'
 import {setHover, incrementRenderCount} from '../actions'
+import toJS from '../toJS'
 
 const {arrayOf, array, shape, string, func, number} = PropTypes
 
@@ -38,36 +39,32 @@ DemoBarChart.propTypes = {
   width: number
 }
 
-const getText = state => state.text
+const getText = state => state.get('text')
 
 const selectData = createSelector(getText, text => {
-  return _.reduce(
-    text,
-    (result, userText, user) => {
-      result.push({
-        name: user,
-        values: _.reduce(
-          countLettersOccurrences(userText),
-          (r, occurrences, letter) => {
-            r.push({
-              x: letter,
-              y: occurrences
-            })
-            return r
-          },
-          []
-        )
-      })
-      return result
-    },
-    []
-  )
+  return text.reduce((result, userText, user) => {
+    result.push({
+      name: user,
+      values: _.reduce(
+        countLettersOccurrences(userText),
+        (r, occurrences, letter) => {
+          r.push({
+            x: letter,
+            y: occurrences
+          })
+          return r
+        },
+        []
+      )
+    })
+    return result
+  }, [])
 })
 
 const mapStateToProps = (state, ownProps) => {
   return {
     data: selectData(state),
-    hover: state.hover
+    hover: state.get('hover')
   }
 }
 
@@ -79,4 +76,4 @@ const mapDispatchToProps = (dispatch, ownProps) => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(DemoBarChart)
+export default connect(mapStateToProps, mapDispatchToProps)(toJS(DemoBarChart))
