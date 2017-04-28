@@ -4,7 +4,7 @@ import styled from 'styled-components'
 import store from '../store'
 import Dashboard from './Dashboard'
 import Ticker from './Ticker'
-import Footer from '../components/Footer'
+import Footer from '../components/styled/Footer'
 
 const Div = styled.div`
   font: 11px sans-serif;

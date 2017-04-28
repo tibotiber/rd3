@@ -1,7 +1,7 @@
 import React, {PropTypes} from 'react'
 import {connect} from 'react-redux'
 import {createSelector} from 'reselect'
-import PieChart from '../components/PieChart'
+import PieChart from '../components/charts/PieChart'
 import {countLetters} from '../utils/stringStats'
 import {incrementRenderCount} from '../actions'
 import toJS from '../toJS'

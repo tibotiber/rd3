@@ -1,7 +1,7 @@
 import React, {PropTypes} from 'react'
 import {connect} from 'react-redux'
 import {createSelector} from 'reselect'
-import ScatterPlot from '../components/ScatterPlot'
+import ScatterPlot from '../components/charts/ScatterPlot'
 import {ALPHABET, countLettersCoOccurrences} from '../utils/stringStats'
 import {setHover, incrementRenderCount} from '../actions'
 import toJS from '../toJS'

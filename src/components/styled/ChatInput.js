@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 
-const Text = styled.textarea`
+const ChatInput = styled.textarea`
   border: solid 1px #ddd;
   border-left: 5px solid ${props => props.color || 'black'};
   padding-left: 15px;
@@ -10,4 +10,4 @@ const Text = styled.textarea`
   height: ${props => props.height}px;
 `
 
-export default Text
+export default ChatInput

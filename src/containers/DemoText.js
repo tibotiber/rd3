@@ -3,7 +3,7 @@ import {connect} from 'react-redux'
 import {createSelector} from 'reselect'
 import lorem from 'lorem-ipsum'
 import styled from 'styled-components'
-import Text from '../components/Text'
+import ChatInput from '../components/styled/ChatInput'
 import Pallet from '../components/Pallet'
 import {getColorWithDefaultSaturation} from '../utils/colors'
 import {newText, setColor, incrementRenderCount} from '../actions'
@@ -51,7 +51,7 @@ const DemoText = React.createClass({
           {this.props.users.map((user, index) => {
             return (
               <InlineDiv key={user}>
-                <Text
+                <ChatInput
                   value={this.props.texts[index]}
                   color={this.props.colors[index]}
                   width={this.props.width / 2}
