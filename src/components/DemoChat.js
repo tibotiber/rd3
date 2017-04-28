@@ -9,7 +9,7 @@ const InlineDiv = styled.div`
   display: inline-block;
 `
 
-const DemoText = React.createClass({
+const DemoChat = React.createClass({
   propTypes: {
     users: arrayOf(string),
     texts: arrayOf(string),
@@ -66,4 +66,4 @@ const DemoText = React.createClass({
   }
 })
 
-export default DemoText
+export default DemoChat

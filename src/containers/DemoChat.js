@@ -1,7 +1,7 @@
 import {connect} from 'react-redux'
 import {createSelector} from 'reselect'
 import lorem from 'lorem-ipsum'
-import DemoText from '../components/DemoText'
+import DemoChat from '../components/DemoChat'
 import {getColorWithDefaultSaturation} from '../utils/colors'
 import {newText, setColor, incrementRenderCount} from '../actions'
 import {COLOR_PALLET} from '../constants'
@@ -62,4 +62,4 @@ const mapDispatchToProps = (dispatch, ownProps) => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(toJS(DemoText))
+export default connect(mapStateToProps, mapDispatchToProps)(toJS(DemoChat))

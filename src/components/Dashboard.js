@@ -4,7 +4,7 @@ import _ from 'lodash'
 import DemoBarChart from '../containers/DemoBarChart'
 import DemoPieChart from '../containers/DemoPieChart'
 import DemoScatterPlot from '../containers/DemoScatterPlot'
-import DemoText from '../containers/DemoText'
+import DemoChat from '../containers/DemoChat'
 
 const {string, object, func, arrayOf} = PropTypes
 
@@ -42,7 +42,7 @@ const Dashboard = React.createClass({
             width={window.innerWidth / 3}
             height={window.innerHeight / 3}
           />
-          <DemoText
+          <DemoChat
             width={window.innerWidth * 2 / 3 - 100}
             height={window.innerHeight / 2}
           />
