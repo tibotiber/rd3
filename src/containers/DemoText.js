@@ -41,6 +41,9 @@ const DemoText = React.createClass({
   componentDidUpdate (prevProps, prevState) {
     this.props.incrementRenderCount('component')
   },
+  handleChange (user, e) {
+    this.props.updateText({[user]: e.target.value})
+  },
   render () {
     return (
       <InlineDiv style={{textAlign: 'center'}}>
@@ -49,12 +52,11 @@ const DemoText = React.createClass({
             return (
               <InlineDiv key={user}>
                 <Text
-                  user={user}
-                  text={this.props.texts[index]}
+                  value={this.props.texts[index]}
                   color={this.props.colors[index]}
                   width={this.props.width / 2}
                   height={this.props.height / 2}
-                  onChange={this.handleChange}
+                  onChange={e => this.handleChange(user, e)}
                 />
                 <Pallet
                   colors={this.props.pallet}
@@ -68,9 +70,6 @@ const DemoText = React.createClass({
         <button onClick={this.props.generateText}>Generate new text</button>
       </InlineDiv>
     )
-  },
-  handleChange (user, e) {
-    this.props.updateText({[user]: e.target.value})
   }
 })
 
