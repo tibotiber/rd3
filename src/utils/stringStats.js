@@ -9,8 +9,16 @@ export function countLettersOccurrences (str) {
   return occurrences
 }
 
-export function countLetters (str) {
-  return (str.match(/[a-zA-Z]/gi) || []).length
+export function countLetters (str, letter) {
+  if (!letter) {
+    return (str.match(/[a-zA-Z]/gi) || []).length
+  } else if (Array.isArray(letter)) {
+    const regex = new RegExp(`[${letter.join()}]`, 'gi')
+    return (str.match(regex) || []).length
+  } else {
+    const regex = new RegExp(letter, 'gi')
+    return (str.match(regex) || []).length
+  }
 }
 
 export function countLettersCoOccurrences (str) {

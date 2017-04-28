@@ -8,6 +8,12 @@ import {shallowEqual} from 'recompose'
 const {arrayOf, string, number, shape, func} = PropTypes
 const LOADING = 'loading...'
 
+const Title = styled.div`
+  text-align: center;
+  position: relative;
+  top: -${props => props.height * 1 / 5}px;
+`
+
 const Wrapper = styled.div`
   position: relative;
   display: inline-block;
@@ -68,6 +74,7 @@ const PieChart = React.createClass({
         height={this.props.height}
       >
         {this.state.chart}
+        <Title height={this.props.height}>{this.props.title}</Title>
         {this.state.tooltip &&
           <div className='tooltip'>
             {this.computeTooltipContent()}
@@ -111,15 +118,6 @@ const PieChart = React.createClass({
           .append('g')
           .attr('transform', `translate(${width / 2}, ${height / 2})`)
       : d3.select(faux).select('svg').select('g')
-
-    if (firstRender) {
-      svg
-        .append('text')
-        .attr('class', 'label')
-        .attr('y', height * 3 / 10)
-        .style('text-anchor', 'middle')
-        .text(this.props.title)
-    }
 
     let arcs = svg.selectAll('path').data(pie(data))
     arcs

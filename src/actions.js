@@ -4,7 +4,8 @@ import {
   SET_HOVER,
   TICK,
   SET_COLOR,
-  INCREMENT_RENDER_COUNT
+  INCREMENT_RENDER_COUNT,
+  PIECHART_TOGGLE_FILTER
 } from './constants'
 
 export function newText (text) {
@@ -40,5 +41,11 @@ export function incrementRenderCount (component, mode) {
     type: INCREMENT_RENDER_COUNT,
     component,
     mode
+  }
+}
+
+export function piechartToggleFilter () {
+  return {
+    type: PIECHART_TOGGLE_FILTER
   }
 }
