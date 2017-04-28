@@ -57,8 +57,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     },
     updateText: text => dispatch(newText(text)),
     setUserColor: (user, color) => dispatch(setColor(user, color)),
-    incrementRenderCount: mode =>
-      dispatch(incrementRenderCount('chat', mode))
+    incrementRenderCount: mode => dispatch(incrementRenderCount('chat', mode))
   }
 }
 

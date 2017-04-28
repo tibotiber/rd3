@@ -25,6 +25,4 @@ const mapDispatchToProps = (dispatch, ownProps) => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(
-  toJS(Dashboard)
-)
+export default connect(mapStateToProps, mapDispatchToProps)(toJS(Dashboard))

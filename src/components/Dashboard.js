@@ -66,7 +66,11 @@ const Dashboard = React.createClass({
   },
   render () {
     return (
-      <Wrapper className='dashboard' hover={this.props.hover} colors={this.props.colors}>
+      <Wrapper
+        className='dashboard'
+        hover={this.props.hover}
+        colors={this.props.colors}
+      >
         <Row>
           <DemoBarChart
             width={window.innerWidth / 2 - 10}

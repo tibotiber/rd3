@@ -62,7 +62,11 @@ const PieChart = React.createClass({
   },
   render () {
     return (
-      <Wrapper className='piechart' width={this.props.width} height={this.props.height}>
+      <Wrapper
+        className='piechart'
+        width={this.props.width}
+        height={this.props.height}
+      >
         {this.state.chart}
         {this.state.tooltip &&
           <div className='tooltip'>
