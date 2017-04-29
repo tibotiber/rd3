@@ -65,16 +65,16 @@ const ScatterPlot = React.createClass({
   },
   componentDidMount () {
     this.props.incrementRenderCount('component')
-    this.renderD3(true)
+    this.renderD3('render')
   },
   componentDidUpdate (prevProps, prevState) {
     this.props.incrementRenderCount('component')
     const dimensions = p => _.pick(p, ['width', 'height'])
     if (!shallowEqual(dimensions(this.props), dimensions(prevProps))) {
-      return this.renderD3(true)
+      return this.renderD3('resize')
     }
     if (!shallowEqual(this.props, prevProps)) {
-      this.renderD3(false)
+      this.renderD3('update')
     }
   },
   setTooltip (group, x, y, top, left) {
@@ -98,8 +98,14 @@ const ScatterPlot = React.createClass({
       </Wrapper>
     )
   },
-  renderD3 (firstRender) {
+  renderD3 (mode) {
     this.props.incrementRenderCount('d3')
+
+    // rendering mode
+    const render = mode === 'render'
+    const resize = mode === 'resize'
+
+    // d3 helpers
     const data = _.orderBy(_.cloneDeep(this.props.data), 'n', 'desc') // d3 mutates data
     const margin = {top: 20, right: 20, bottom: 50, left: 30}
     const width = this.props.width - margin.left - margin.right
@@ -120,20 +126,28 @@ const ScatterPlot = React.createClass({
     const yAxis = d3.svg.axis().scale(y).orient('left')
 
     // create a faux div and store its virtual DOM in state.chart
-    if (firstRender) {
-      this.connectedFauxDOM = {}
-    }
     let faux = this.connectFauxDOM('div', 'chart')
 
-    let svg = firstRender
-      ? d3
-          .select(faux)
-          .append('svg')
-          .attr('width', width + margin.left + margin.right)
-          .attr('height', height + margin.top + margin.bottom)
-          .append('g')
-          .attr('transform', `translate(${margin.left}, ${margin.top})`)
-      : d3.select(faux).select('svg').select('g')
+    let svg
+    if (render) {
+      svg = d3
+        .select(faux)
+        .append('svg')
+        .attr('width', width + margin.left + margin.right)
+        .attr('height', height + margin.top + margin.bottom)
+        .append('g')
+        .attr('transform', `translate(${margin.left}, ${margin.top})`)
+    } else if (resize) {
+      svg = d3
+        .select(faux)
+        .select('svg')
+        .attr('width', width + margin.left + margin.right)
+        .attr('height', height + margin.top + margin.bottom)
+        .select('g')
+        .attr('transform', `translate(${margin.left}, ${margin.top})`)
+    } else {
+      svg = d3.select(faux).select('svg').select('g')
+    }
 
     let dots = svg.selectAll('.dot').data(data, d => d.group + d.x + d.y)
 
@@ -165,17 +179,21 @@ const ScatterPlot = React.createClass({
         }, 200)
       })
 
-    dots.transition().attr('r', d => d.n * this.props.radiusFactor)
+    dots
+      .transition()
+      .attr('r', d => d.n * this.props.radiusFactor)
+      .attr('cx', d => x(d.x) + dx(d.group))
+      .attr('cy', d => y(d.y))
 
     dots.exit().transition().attr('r', 0).remove()
 
     this.animateFauxDOM(800)
 
-    if (firstRender) {
+    if (render) {
       svg
         .append('g')
         .attr('class', 'x axis')
-        .attr('transform', 'translate(0,' + height + ')')
+        .attr('transform', `translate(0, ${height})`)
         .call(xAxis)
         .append('text')
         .attr('class', 'label')
@@ -185,6 +203,14 @@ const ScatterPlot = React.createClass({
         .text(this.props.title)
 
       svg.append('g').attr('class', 'y axis').call(yAxis)
+    } else if (resize) {
+      svg
+        .select('g.x.axis')
+        .attr('transform', `translate(0, ${height})`)
+        .call(xAxis)
+        .select('text')
+        .attr('x', width / 2)
+      svg.select('g.y.axis').call(yAxis)
     } else {
       svg.select('g.x.axis').call(xAxis)
       svg.select('g.y.axis').call(yAxis)

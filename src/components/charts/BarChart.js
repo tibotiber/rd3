@@ -62,17 +62,17 @@ const BarChart = React.createClass({
   },
   componentDidMount () {
     this.props.incrementRenderCount('component')
-    this.renderD3(true)
+    this.renderD3('render')
   },
   componentDidUpdate (prevProps, prevState) {
     this.props.incrementRenderCount('component')
     const dimensions = p => _.pick(p, ['width', 'height'])
     if (!shallowEqual(dimensions(this.props), dimensions(prevProps))) {
-      return this.renderD3(true)
+      return this.renderD3('resize')
     }
     const stripProps = p => _.omit(p, ['hover'])
     if (!shallowEqual(stripProps(this.props), stripProps(prevProps))) {
-      this.renderD3(false)
+      this.renderD3('update')
     }
   },
   computeTooltipProps (letter) {
@@ -112,8 +112,14 @@ const BarChart = React.createClass({
       this.transitionStacked()
     }
   },
-  renderD3 (firstRender) {
+  renderD3 (mode) {
     this.props.incrementRenderCount('d3')
+
+    // rendering mode
+    const render = mode === 'render'
+    const resize = mode === 'resize'
+
+    // d3 helpers
     let data = _.cloneDeep(this.props.data) // stack() mutates data
     const n = this.props.data.length // number of layers
     const stack = d3.layout.stack().values(d => d.values)
@@ -135,20 +141,28 @@ const BarChart = React.createClass({
     const yAxis = d3.svg.axis().scale(y).orient('left')
 
     // create a faux div and store its virtual DOM in state.chart
-    if (firstRender) {
-      this.connectedFauxDOM = {}
-    }
     let faux = this.connectFauxDOM('div', 'chart')
 
-    let svg = firstRender
-      ? d3
-          .select(faux)
-          .append('svg')
-          .attr('width', width + margin.left + margin.right)
-          .attr('height', height + margin.top + margin.bottom)
-          .append('g')
-          .attr('transform', `translate(${margin.left}, ${margin.top})`)
-      : d3.select(faux).select('svg').select('g')
+    let svg
+    if (render) {
+      svg = d3
+        .select(faux)
+        .append('svg')
+        .attr('width', width + margin.left + margin.right)
+        .attr('height', height + margin.top + margin.bottom)
+        .append('g')
+        .attr('transform', `translate(${margin.left}, ${margin.top})`)
+    } else if (resize) {
+      svg = d3
+        .select(faux)
+        .select('svg')
+        .attr('width', width + margin.left + margin.right)
+        .attr('height', height + margin.top + margin.bottom)
+        .select('g')
+        .attr('transform', `translate(${margin.left}, ${margin.top})`)
+    } else {
+      svg = d3.select(faux).select('svg').select('g')
+    }
 
     let layer = svg.selectAll('.layer').data(layers)
     layer
@@ -178,19 +192,23 @@ const BarChart = React.createClass({
     if (this.state.look === 'stacked') {
       rect
         .transition()
-        .delay((d, i) => i * 10)
+        .delay((d, i) => (resize ? 0 : i * 10))
+        .attr('x', d => x(d.x))
         .attr('y', d => y(d.y0 + d.y))
+        .attr('width', x.rangeBand())
         .attr('height', d => y(d.y0) - y(d.y0 + d.y))
     } else {
       rect
         .transition()
-        .delay((d, i) => i * 10)
+        .delay((d, i) => (resize ? 0 : i * 10))
+        .attr('x', (d, i, j) => x(d.x) + x.rangeBand() / n * j)
         .attr('y', d => y(d.y))
+        .attr('width', x.rangeBand() / n)
         .attr('height', d => height - y(d.y))
     }
     this.animateFauxDOM(800)
 
-    if (firstRender) {
+    if (render) {
       svg
         .append('g')
         .attr('class', 'x axis')
@@ -214,6 +232,14 @@ const BarChart = React.createClass({
         .attr('y', -30)
         .style('text-anchor', 'end')
         .text(this.props.yLabel)
+    } else if (resize) {
+      svg
+        .select('g.x.axis')
+        .attr('transform', `translate(0, ${height})`)
+        .call(xAxis)
+        .select('text')
+        .attr('x', width)
+      svg.select('g.y.axis').call(yAxis)
     } else {
       svg.select('g.x.axis').call(xAxis)
       svg.select('g.y.axis').call(yAxis)

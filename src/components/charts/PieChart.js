@@ -47,16 +47,16 @@ const PieChart = React.createClass({
   },
   componentDidMount () {
     this.props.incrementRenderCount('component')
-    this.renderD3(true)
+    this.renderD3('render')
   },
   componentDidUpdate (prevProps, prevState) {
     this.props.incrementRenderCount('component')
     const dimensions = p => _.pick(p, ['width', 'height'])
     if (!shallowEqual(dimensions(this.props), dimensions(prevProps))) {
-      return this.renderD3(true)
+      return this.renderD3('resize')
     }
     if (!shallowEqual(this.props, prevProps)) {
-      this.renderD3(false)
+      this.renderD3('update')
     }
   },
   setTooltip (user) {
@@ -86,8 +86,14 @@ const PieChart = React.createClass({
       </Wrapper>
     )
   },
-  renderD3 (firstRender) {
+  renderD3 (mode) {
     this.props.incrementRenderCount('d3')
+
+    // rendering mode
+    const render = mode === 'render'
+    const resize = mode === 'resize'
+
+    // d3 helpers
     const width = this.props.width
     const height = this.props.height
     const outerRadius = Math.min(width, height) / 2 - 10
@@ -111,20 +117,28 @@ const PieChart = React.createClass({
     }
 
     // create a faux div and store its virtual DOM in state.chart
-    if (firstRender) {
-      this.connectedFauxDOM = {}
-    }
     let faux = this.connectFauxDOM('div', 'chart')
 
-    let svg = firstRender
-      ? d3
-          .select(faux)
-          .append('svg')
-          .attr('width', width)
-          .attr('height', height)
-          .append('g')
-          .attr('transform', `translate(${width / 2}, ${height / 2})`)
-      : d3.select(faux).select('svg').select('g')
+    let svg
+    if (render) {
+      svg = d3
+        .select(faux)
+        .append('svg')
+        .attr('width', width)
+        .attr('height', height)
+        .append('g')
+        .attr('transform', `translate(${width / 2}, ${height / 2})`)
+    } else if (resize) {
+      svg = d3
+        .select(faux)
+        .select('svg')
+        .attr('width', width)
+        .attr('height', height)
+        .select('g')
+        .attr('transform', `translate(${width / 2}, ${height / 2})`)
+    } else {
+      svg = d3.select(faux).select('svg').select('g')
+    }
 
     let arcs = svg.selectAll('path').data(pie(data))
     arcs
