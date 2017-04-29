@@ -20,7 +20,7 @@ const Wrapper = styled.div`
   .tooltip {
     width: ${props => props.width / 5}px;
     left: ${props => props.width * 2 / 5}px;
-    top: ${props => props.height * 2 / 5}px;
+    top: ${props => props.height * 3 / 5}px;
   }
 `
 
@@ -51,6 +51,10 @@ const PieChart = React.createClass({
   },
   componentDidUpdate (prevProps, prevState) {
     this.props.incrementRenderCount('component')
+    const dimensions = p => _.pick(p, ['width', 'height'])
+    if (!shallowEqual(dimensions(this.props), dimensions(prevProps))) {
+      return this.renderD3(true)
+    }
     if (!shallowEqual(this.props, prevProps)) {
       this.renderD3(false)
     }
@@ -86,7 +90,7 @@ const PieChart = React.createClass({
     this.props.incrementRenderCount('d3')
     const width = this.props.width
     const height = this.props.height
-    const outerRadius = height / 2 - 10
+    const outerRadius = Math.min(width, height) / 2 - 10
     const innerRadius = outerRadius - this.props.thickness
     let data = _.cloneDeep(this.props.data) // pie() mutates data
     var arc = d3.svg.arc().innerRadius(innerRadius).outerRadius(outerRadius)
@@ -107,6 +111,9 @@ const PieChart = React.createClass({
     }
 
     // create a faux div and store its virtual DOM in state.chart
+    if (firstRender) {
+      this.connectedFauxDOM = {}
+    }
     let faux = this.connectFauxDOM('div', 'chart')
 
     let svg = firstRender

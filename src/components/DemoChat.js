@@ -47,8 +47,8 @@ const DemoChat = React.createClass({
                 <ChatInput
                   value={this.props.texts[index]}
                   color={this.props.colors[index]}
-                  width={this.props.width / 2}
-                  height={this.props.height / 2}
+                  width={this.props.width / 2 - 40}
+                  height={this.props.height - 100}
                   onChange={e => this.handleChange(user, e)}
                 />
                 <Pallet

@@ -66,7 +66,11 @@ const BarChart = React.createClass({
   },
   componentDidUpdate (prevProps, prevState) {
     this.props.incrementRenderCount('component')
-    const stripProps = p => _.omit(p, ['hover', 'className'])
+    const dimensions = p => _.pick(p, ['width', 'height'])
+    if (!shallowEqual(dimensions(this.props), dimensions(prevProps))) {
+      return this.renderD3(true)
+    }
+    const stripProps = p => _.omit(p, ['hover'])
     if (!shallowEqual(stripProps(this.props), stripProps(prevProps))) {
       this.renderD3(false)
     }
@@ -119,7 +123,7 @@ const BarChart = React.createClass({
     )
     const margin = {top: 20, right: 10, bottom: 50, left: 50}
     const width = this.props.width - margin.left - margin.right
-    const height = this.props.height - margin.top - margin.bottom
+    const height = this.props.height - margin.top - margin.bottom - 32
     const x = d3.scale
       .ordinal()
       .domain(this.props.xDomain)
@@ -131,6 +135,9 @@ const BarChart = React.createClass({
     const yAxis = d3.svg.axis().scale(y).orient('left')
 
     // create a faux div and store its virtual DOM in state.chart
+    if (firstRender) {
+      this.connectedFauxDOM = {}
+    }
     let faux = this.connectFauxDOM('div', 'chart')
 
     let svg = firstRender

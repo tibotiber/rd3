@@ -5,6 +5,8 @@ import store from '../store'
 import Dashboard from './Dashboard'
 import Ticker from './Ticker'
 import Footer from '../components/styled/Footer'
+import '../../node_modules/react-grid-layout/css/styles.css'
+import '../../node_modules/react-resizable/css/styles.css'
 
 const Div = styled.div`
   font: 11px sans-serif;

@@ -4,21 +4,19 @@ import {ALPHABET} from '../utils/stringStats'
 
 const {arrayOf, array, shape, string, func, number} = PropTypes
 
-const DemoBarChart = props => {
-  return (
-    <BarChart
-      data={props.data}
-      xDomain={ALPHABET}
-      xLabel='Characters'
-      yLabel='Occurrences'
-      width={props.width}
-      height={props.height}
-      hover={props.hover}
-      setHover={props.setHover}
-      incrementRenderCount={props.incrementRenderCount}
-    />
-  )
-}
+const DemoBarChart = props => (
+  <BarChart
+    data={props.data}
+    xDomain={ALPHABET}
+    xLabel='Characters'
+    yLabel='Occurrences'
+    width={props.width}
+    height={props.height}
+    hover={props.hover}
+    setHover={props.setHover}
+    incrementRenderCount={props.incrementRenderCount}
+  />
+)
 
 DemoBarChart.propTypes = {
   data: arrayOf(

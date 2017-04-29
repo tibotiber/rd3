@@ -1,12 +1,19 @@
 import React, {PropTypes} from 'react'
 import styled from 'styled-components'
 import _ from 'lodash'
+import ReactGridLayout, {WidthProvider} from 'react-grid-layout'
 import DemoBarChart from '../containers/DemoBarChart'
 import DemoPieChart from '../containers/DemoPieChart'
 import DemoScatterPlot from '../containers/DemoScatterPlot'
 import DemoChat from '../containers/DemoChat'
+import WithMeasure from '../hocs/WithMeasure'
 
 const {string, object, func, arrayOf} = PropTypes
+const GridLayout = WidthProvider(ReactGridLayout)
+const MeasuredDemoBarChart = WithMeasure(DemoBarChart)
+const MeasuredDemoScatterPlot = WithMeasure(DemoScatterPlot)
+const MeasuredDemoPieChart = WithMeasure(DemoPieChart)
+const MeasuredDemoChat = WithMeasure(DemoChat)
 
 const generateDataGroupCSS = props => {
   return _.reduce(
@@ -27,7 +34,7 @@ const generateHoverCss = letter =>
   }
 `
 
-const Wrapper = styled.div`
+const Grid = styled(GridLayout)`
   ${props => generateDataGroupCSS(props)}
   .data {
     opacity: ${props => (props.hover ? 0.25 : 1)};
@@ -47,11 +54,6 @@ const Wrapper = styled.div`
   }
 `
 
-const Row = styled.div`
-  margin-top: 20px;
-  margin-bottom: 30px;
-`
-
 const Dashboard = React.createClass({
   propTypes: {
     colors: object,
@@ -60,38 +62,47 @@ const Dashboard = React.createClass({
   },
   componentDidMount () {
     this.props.incrementRenderCount('component')
+    window.addEventListener('resize', this.onWindowResize)
   },
   componentDidUpdate (prevProps, prevState) {
     this.props.incrementRenderCount('component')
   },
+  componentWillUnmount () {
+    window.removeEventListener('resize', this.onWindowResize)
+  },
+  onWindowResize (e) {
+    this.forceUpdate()
+  },
   render () {
+    const layout = [
+      {i: 'TL', x: 0, y: 0, w: 6, h: 6},
+      {i: 'TR', x: 6, y: 0, w: 6, h: 6},
+      {i: 'BL', x: 0, y: 6, w: 4, h: 6},
+      {i: 'BR', x: 4, y: 6, w: 8, h: 6}
+    ]
     return (
-      <Wrapper
+      <Grid
         className='dashboard'
         hover={this.props.hover}
         colors={this.props.colors}
+        layout={layout}
+        cols={12}
+        rowHeight={(window.innerHeight - 30) / 12}
+        margin={[0, 0]}
       >
-        <Row>
-          <DemoBarChart
-            width={window.innerWidth / 2 - 10}
-            height={window.innerHeight / 2}
-          />
-          <DemoScatterPlot
-            width={window.innerWidth / 2 - 10}
-            height={window.innerHeight / 2}
-          />
-        </Row>
-        <Row>
-          <DemoPieChart
-            width={window.innerWidth / 3}
-            height={window.innerHeight / 3}
-          />
-          <DemoChat
-            width={window.innerWidth * 2 / 3 - 100}
-            height={window.innerHeight / 2}
-          />
-        </Row>
-      </Wrapper>
+        <div key={'TL'}>
+          <MeasuredDemoBarChart />
+        </div>
+        <div key={'TR'}>
+          <MeasuredDemoScatterPlot />
+        </div>
+        <div key={'BL'}>
+          <MeasuredDemoPieChart />
+        </div>
+        <div key={'BR'}>
+          <MeasuredDemoChat />
+        </div>
+      </Grid>
     )
   }
 })

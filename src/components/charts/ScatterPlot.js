@@ -69,8 +69,11 @@ const ScatterPlot = React.createClass({
   },
   componentDidUpdate (prevProps, prevState) {
     this.props.incrementRenderCount('component')
-    const stripProps = p => _.omit(p, ['className'])
-    if (!shallowEqual(stripProps(this.props), stripProps(prevProps))) {
+    const dimensions = p => _.pick(p, ['width', 'height'])
+    if (!shallowEqual(dimensions(this.props), dimensions(prevProps))) {
+      return this.renderD3(true)
+    }
+    if (!shallowEqual(this.props, prevProps)) {
       this.renderD3(false)
     }
   },
@@ -117,6 +120,9 @@ const ScatterPlot = React.createClass({
     const yAxis = d3.svg.axis().scale(y).orient('left')
 
     // create a faux div and store its virtual DOM in state.chart
+    if (firstRender) {
+      this.connectedFauxDOM = {}
+    }
     let faux = this.connectFauxDOM('div', 'chart')
 
     let svg = firstRender
