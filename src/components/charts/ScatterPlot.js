@@ -85,9 +85,15 @@ const ScatterPlot = React.createClass({
   computeTooltipProps () {
     const {group, x, y, top, left} = this.state.tooltip
     const hoveredData = _.find(this.props.data, {group, x, y})
-    return {
-      content: `"${x}${y}": ${hoveredData.n} in ${hoveredData.group}`,
-      style: {top: top + 10, left: left + 10, position: 'fixed'}
+    if (hoveredData) {
+      return {
+        content: `"${x}${y}": ${hoveredData.n} in ${hoveredData.group}`,
+        style: {top: top + 10, left: left + 10, position: 'fixed'}
+      }
+    } else {
+      return {
+        style: {visibility: 'hidden'}
+      }
     }
   },
   render () {

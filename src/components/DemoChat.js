@@ -27,6 +27,12 @@ const DemoChat = React.createClass({
     height: number,
     incrementRenderCount: func
   },
+  getInitialState () {
+    return {
+      autoRefresh: false,
+      refreshPeriod: 3
+    }
+  },
   componentDidMount () {
     this.props.incrementRenderCount('component')
     this.props.generateText()
@@ -36,6 +42,17 @@ const DemoChat = React.createClass({
   },
   handleChange (user, e) {
     this.props.updateText({[user]: e.target.value})
+  },
+  toggleAutoRefresh () {
+    const autoRefresh = !this.state.autoRefresh
+    this.setState({autoRefresh})
+    if (autoRefresh) {
+      this.autoRefreshInterval = setInterval(() => {
+        this.props.generateText()
+      }, this.state.refreshPeriod * 1000)
+    } else {
+      clearInterval(this.autoRefreshInterval)
+    }
   },
   render () {
     return (
@@ -48,7 +65,7 @@ const DemoChat = React.createClass({
                   value={this.props.texts[index]}
                   color={this.props.colors[index]}
                   width={this.props.width / 2 - 40}
-                  height={this.props.height - 100}
+                  height={this.props.height - 120}
                   onChange={e => this.handleChange(user, e)}
                 />
                 <Pallet
@@ -61,6 +78,14 @@ const DemoChat = React.createClass({
           })}
         </div>
         <button onClick={this.props.generateText}>Generate new text</button>
+        <div style={{marginTop: 5}}>
+          <input
+            type='checkbox'
+            checked={this.state.autoRefresh}
+            onChange={this.toggleAutoRefresh}
+          />
+          Generate new text every {this.state.refreshPeriod}s
+        </div>
       </InlineDiv>
     )
   }
