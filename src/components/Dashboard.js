@@ -77,10 +77,10 @@ const Dashboard = React.createClass({
   },
   render () {
     const layout = [
-      {i: 'TL', x: 0, y: 0, w: 6, h: 6},
-      {i: 'TR', x: 6, y: 0, w: 6, h: 6},
-      {i: 'BL', x: 0, y: 6, w: 4, h: 6},
-      {i: 'BR', x: 4, y: 6, w: 8, h: 6}
+      {i: 'TL', x: 0, y: 0, w: 6, h: 7},
+      {i: 'TR', x: 6, y: 0, w: 6, h: 7},
+      {i: 'BL', x: 0, y: 7, w: 4, h: 5},
+      {i: 'BR', x: 4, y: 7, w: 8, h: 5}
     ]
     return (
       <Grid
