@@ -7,6 +7,8 @@ import DemoPieChart from '../containers/DemoPieChart'
 import DemoScatterPlot from '../containers/DemoScatterPlot'
 import DemoChat from '../containers/DemoChat'
 import WithMeasure from '../hocs/WithMeasure'
+import '../../node_modules/react-grid-layout/css/styles.css'
+import '../../node_modules/react-resizable/css/styles.css'
 
 const {string, object, func, arrayOf} = PropTypes
 const GridLayout = WidthProvider(ReactGridLayout)
