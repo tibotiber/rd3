@@ -2,6 +2,12 @@
   "name": "rd3",
   "version": "0.3.0",
   "private": true,
+  "license": "MIT",
+  "author": "Thibaut Tiberghien <thibaut@planecq.com>",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tibotiber/rd3.git"
+  },
   "dependencies": {
     "d3": "^3.5.17",
     "d3-scale-chromatic": "^1.1.1",
