@@ -25,15 +25,6 @@ Tooltip.propTypes = {
 const Wrapper = styled.div`
   position: relative;
   display: inline-block;
-  .axis path,
-  .axis line {
-    fill: none;
-    stroke: #000;
-    shape-rendering: crispEdges;
-  }
-  .dot {
-    stroke: #ffffff;
-  }
 `
 
 const ScatterPlot = React.createClass({
@@ -162,7 +153,8 @@ const ScatterPlot = React.createClass({
       .append('circle')
       .attr(
         'class',
-        d => `dot data-group data-group-${d.group} data data-${d.x} data-${d.y}`
+        d =>
+          `dot stroked-negative data-group data-group-${d.group} data data-${d.x} data-${d.y}`
       )
       .attr('r', 0)
       .attr('cx', d => x(d.x) + dx(d.group))

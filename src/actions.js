@@ -5,7 +5,8 @@ import {
   TICK,
   SET_COLOR,
   INCREMENT_RENDER_COUNT,
-  PIECHART_TOGGLE_FILTER
+  PIECHART_TOGGLE_FILTER,
+  SELECT_THEME
 } from './constants'
 
 export function newText (text) {
@@ -47,5 +48,12 @@ export function incrementRenderCount (component, mode) {
 export function piechartToggleFilter () {
   return {
     type: PIECHART_TOGGLE_FILTER
+  }
+}
+
+export function selectTheme (theme) {
+  return {
+    type: SELECT_THEME,
+    theme
   }
 }

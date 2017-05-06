@@ -24,12 +24,6 @@ Tooltip.propTypes = {
 const Wrapper = styled.div`
   position: relative;
   display: inline-block;
-  .axis line,
-  .axis path {
-    fill: none;
-    stroke: #000;
-    shape-rendering: crispEdges;
-  }
   .tooltip {
     visibility: ${props => (props.hover ? 'visible' : 'hidden')};
     -webkit-transition: top .2s ease-out, left .2s ease-out;
@@ -129,7 +123,7 @@ const BarChart = React.createClass({
     )
     const margin = {top: 20, right: 10, bottom: 50, left: 50}
     const width = this.props.width - margin.left - margin.right
-    const height = this.props.height - margin.top - margin.bottom - 32
+    const height = this.props.height - margin.top - margin.bottom - 18
     const x = d3.scale
       .ordinal()
       .domain(this.props.xDomain)

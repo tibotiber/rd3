@@ -6,7 +6,8 @@ import {
   TICK,
   SET_COLOR,
   INCREMENT_RENDER_COUNT,
-  PIECHART_TOGGLE_FILTER
+  PIECHART_TOGGLE_FILTER,
+  SELECT_THEME
 } from './constants'
 
 export const initialState = fromJS({
@@ -18,7 +19,8 @@ export const initialState = fromJS({
   hover: null,
   tick: 0,
   renderCount: {},
-  piechartFilterEnabled: true
+  piechartFilterEnabled: true,
+  theme: 'dark'
 })
 
 // ACTION REDUCER
@@ -47,6 +49,10 @@ function incrementRenderCount (state, action) {
 
 function piechartToggleFilter (state, action) {
   return !state
+}
+
+function selectTheme (state, action) {
+  return action.theme
 }
 
 // TOP LEVEL REDUCERS
@@ -104,7 +110,16 @@ function piechartFilterEnabled (state, action) {
   }
 }
 
+function theme (state, action) {
+  switch (action.type) {
+    case SELECT_THEME:
+      return selectTheme(state, action)
+    default:
+      return state
+  }
+}
+
 export default combineReducers(
-  {text, colors, hover, tick, renderCount, piechartFilterEnabled},
+  {text, colors, hover, tick, renderCount, piechartFilterEnabled, theme},
   initialState
 )

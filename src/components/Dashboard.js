@@ -1,5 +1,6 @@
 import React, {PropTypes} from 'react'
 import styled from 'styled-components'
+import {transparentize} from 'polished'
 import _ from 'lodash'
 import ReactGridLayout, {WidthProvider} from 'react-grid-layout'
 import DemoBarChart from '../containers/DemoBarChart'
@@ -37,6 +38,21 @@ const generateHoverCss = letter =>
 `
 
 const Grid = styled(GridLayout)`
+  .axis text {
+    fill: ${props => props.theme.color};
+  }
+  .axis path,
+  .axis line {
+    fill: none;
+    stroke: ${props => props.theme.color};
+    shape-rendering: crispEdges;
+  }
+  .stroked {
+    stroke: ${props => props.theme.color};
+  }
+  .stroked-negative {
+    stroke: ${props => props.theme.background};
+  }
   ${props => generateDataGroupCSS(props)}
   .data {
     opacity: ${props => (props.hover ? 0.25 : 1)};
@@ -47,12 +63,12 @@ const Grid = styled(GridLayout)`
     position: absolute;
     z-index: 10;
     display: inline-block;
-    border: solid 1px grey;
+    border: solid 1px ${props => props.theme.secondaryColor};
     border-radius: 2px;
     padding: 5px;
-    color: grey;
-    background-color: rgba(255, 255, 255, 0.75);
+    background-color: ${props => transparentize(0.2, props.theme.secondaryBackground)};
     text-align: center;
+    color: ${props => props.theme.secondaryColor};
   }
 `
 
@@ -89,7 +105,7 @@ const Dashboard = React.createClass({
         colors={this.props.colors}
         layout={layout}
         cols={12}
-        rowHeight={(window.innerHeight - 30) / 12}
+        rowHeight={(window.innerHeight - 29) / 12}
         margin={[0, 0]}
       >
         <div key={'TL'}>

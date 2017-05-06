@@ -7,13 +7,12 @@ const List = styled.ul`
   list-style-type: none;
   text-align: right;
   vertical-align: center;
-  margin-top: -10px;
+  margin-top: -8px;
   margin-right: 10px;
 `
 
 const ColorSquare = styled.li`
   display: inline-block;
-  border: solid 1px grey;
   width: 10px;
   height: 10px;
   margin-left: 5px;

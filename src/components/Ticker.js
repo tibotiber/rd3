@@ -1,6 +1,7 @@
 import React, {PropTypes} from 'react'
 import styled from 'styled-components'
 import _ from 'lodash'
+import {transparentize} from 'polished'
 
 const {number, object, string, shape} = PropTypes
 
@@ -10,9 +11,9 @@ const CodeBlock = styled.pre`
   right: 0;
   padding: 15px;
   margin: 5px;
-  border: dashed 2px grey;
-  color: grey;
-  background-color: rgba(255, 255, 255, 0.75);
+  border: dashed 2px ${props => props.theme.secondaryColor};
+  color: ${props => props.theme.secondaryColor};
+  background-color: ${props => transparentize(0.2, props.theme.secondaryBackground)};
 `
 
 const RenderCount = props => {
