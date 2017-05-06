@@ -30,7 +30,7 @@ const DemoChat = React.createClass({
   getInitialState () {
     return {
       autoRefresh: false,
-      refreshPeriod: 3
+      refreshPeriod: 2
     }
   },
   componentDidMount () {

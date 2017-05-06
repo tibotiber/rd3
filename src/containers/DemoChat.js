@@ -7,6 +7,11 @@ import {newText, setColor, incrementRenderCount} from '../actions'
 import {COLOR_PALLET} from '../constants'
 import toJS from '../toJS'
 
+const loremOption = {
+  count: 2,
+  units: 'sentences'
+}
+
 const getText = state => state.get('text')
 
 const selectUsers = createSelector(getText, text => {
@@ -50,8 +55,8 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     generateText: () => {
       dispatch(
         newText({
-          user1: lorem(),
-          user2: lorem()
+          user1: lorem(loremOption),
+          user2: lorem(loremOption)
         })
       )
     },
