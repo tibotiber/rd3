@@ -1,10 +1,16 @@
 import React from 'react'
 import {Provider} from 'react-redux'
-import store from '../store'
+import configureStore from '../configureStore'
 import ThemedApp from './ThemedApp'
 import Dashboard from './Dashboard'
 import Ticker from './Ticker'
 import Footer from '../components/styled/Footer'
+import {tick} from '../actions'
+
+const store = configureStore()
+
+// tick whole app every second to test pure rendering of charts
+setInterval(() => store.dispatch(tick()), 1000)
 
 const App = () => (
   <Provider store={store}>
