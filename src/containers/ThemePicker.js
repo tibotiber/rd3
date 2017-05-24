@@ -42,10 +42,8 @@ ThemePicker.propTypes = {
   selectTheme: func
 }
 
-const mapDispatchToProps = (dispatch, ownProps) => ({
-  selectTheme(theme) {
-    dispatch(selectTheme(theme))
-  }
-})
+const mapDispatchToProps = {
+  selectTheme
+}
 
 export default connect(null, mapDispatchToProps)(ThemePicker)
