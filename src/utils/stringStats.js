@@ -1,6 +1,6 @@
 export const ALPHABET = 'abcdefghijklmnopqrstuvwxyz'.split('')
 
-export function countLettersOccurrences (str) {
+export const countLettersOccurrences = str => {
   let occurrences = {}
   ALPHABET.forEach(l => {
     const letterRegex = new RegExp(l, 'gi')
@@ -9,7 +9,7 @@ export function countLettersOccurrences (str) {
   return occurrences
 }
 
-export function countLetters (str, letter) {
+export const countLetters = (str, letter) => {
   if (!letter) {
     return (str.match(/[a-zA-Z]/gi) || []).length
   } else if (Array.isArray(letter)) {
@@ -21,7 +21,7 @@ export function countLetters (str, letter) {
   }
 }
 
-export function countLettersCoOccurrences (str) {
+export const countLettersCoOccurrences = str => {
   let occurrences = []
   ALPHABET.forEach(l1 => {
     ALPHABET.forEach(l2 => {

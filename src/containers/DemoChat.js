@@ -41,29 +41,31 @@ const selectPallet = createSelector(getPallet, pallet => {
   })
 })
 
-const mapStateToProps = (state, ownProps) => {
-  return {
-    users: selectUsers(state),
-    texts: selectTexts(state),
-    colors: selectColors(state),
-    pallet: selectPallet(state)
-  }
-}
+const mapStateToProps = (state, ownProps) => ({
+  users: selectUsers(state),
+  texts: selectTexts(state),
+  colors: selectColors(state),
+  pallet: selectPallet(state)
+})
 
-const mapDispatchToProps = (dispatch, ownProps) => {
-  return {
-    generateText: () => {
-      dispatch(
-        newText({
-          user1: lorem(loremOption),
-          user2: lorem(loremOption)
-        })
-      )
-    },
-    updateText: text => dispatch(newText(text)),
-    setUserColor: (user, color) => dispatch(setColor(user, color)),
-    incrementRenderCount: mode => dispatch(incrementRenderCount('chat', mode))
+const mapDispatchToProps = (dispatch, ownProps) => ({
+  generateText () {
+    dispatch(
+      newText({
+        user1: lorem(loremOption),
+        user2: lorem(loremOption)
+      })
+    )
+  },
+  updateText (text) {
+    dispatch(newText(text))
+  },
+  setUserColor (user, color) {
+    dispatch(setColor(user, color))
+  },
+  incrementRenderCount (mode) {
+    dispatch(incrementRenderCount('chat', mode))
   }
-}
+})
 
 export default connect(mapStateToProps, mapDispatchToProps)(toJS(DemoChat))

@@ -24,8 +24,8 @@ class ThemePicker extends Component {
   handleSelectTheme = theme => e => {
     this.props.selectTheme(theme)
   }
-  
-  render () {
+
+  render() {
     return (
       <List>
         {_.keys(themes).map(theme => (
@@ -42,12 +42,10 @@ ThemePicker.propTypes = {
   selectTheme: func
 }
 
-const mapDispatchToProps = (dispatch, ownProps) => {
-  return {
-    selectTheme: theme => {
-      dispatch(selectTheme(theme))
-    }
+const mapDispatchToProps = (dispatch, ownProps) => ({
+  selectTheme(theme) {
+    dispatch(selectTheme(theme))
   }
-}
+})
 
 export default connect(null, mapDispatchToProps)(ThemePicker)

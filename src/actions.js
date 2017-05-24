@@ -9,51 +9,37 @@ import {
   SELECT_THEME
 } from './constants'
 
-export function newText (text) {
-  return {
-    type: NEW_TEXT,
-    text
-  }
-}
+export const newText = text => ({
+  type: NEW_TEXT,
+  text
+})
 
-export function setHover (letter) {
-  return {
-    type: SET_HOVER,
-    letters: !letter ? null : Array.isArray(letter) ? _.uniq(letter) : [letter]
-  }
-}
+export const setHover = letter => ({
+  type: SET_HOVER,
+  letters: !letter ? null : Array.isArray(letter) ? _.uniq(letter) : [letter]
+})
 
-export function tick () {
-  return {
-    type: TICK
-  }
-}
+export const tick = () => ({
+  type: TICK
+})
 
-export function setColor (user, color) {
-  return {
-    type: SET_COLOR,
-    user,
-    color
-  }
-}
+export const setColor = (user, color) => ({
+  type: SET_COLOR,
+  user,
+  color
+})
 
-export function incrementRenderCount (component, mode) {
-  return {
-    type: INCREMENT_RENDER_COUNT,
-    component,
-    mode
-  }
-}
+export const incrementRenderCount = (component, mode) => ({
+  type: INCREMENT_RENDER_COUNT,
+  component,
+  mode
+})
 
-export function piechartToggleFilter () {
-  return {
-    type: PIECHART_TOGGLE_FILTER
-  }
-}
+export const piechartToggleFilter = () => ({
+  type: PIECHART_TOGGLE_FILTER
+})
 
-export function selectTheme (theme) {
-  return {
-    type: SELECT_THEME,
-    theme
-  }
-}
+export const selectTheme = theme => ({
+  type: SELECT_THEME,
+  theme
+})

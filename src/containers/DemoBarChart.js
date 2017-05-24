@@ -28,19 +28,18 @@ const selectData = createSelector(getText, text => {
   }, [])
 })
 
-const mapStateToProps = (state, ownProps) => {
-  return {
-    data: selectData(state),
-    hover: state.get('hover')
-  }
-}
+const mapStateToProps = (state, ownProps) => ({
+  data: selectData(state),
+  hover: state.get('hover')
+})
 
-const mapDispatchToProps = (dispatch, ownProps) => {
-  return {
-    setHover: letter => dispatch(setHover(letter)),
-    incrementRenderCount: mode =>
-      dispatch(incrementRenderCount('barchart', mode))
+const mapDispatchToProps = (dispatch, ownProps) => ({
+  setHover (letter) {
+    dispatch(setHover(letter))
+  },
+  incrementRenderCount (mode) {
+    dispatch(incrementRenderCount('barchart', mode))
   }
-}
+})
 
 export default connect(mapStateToProps, mapDispatchToProps)(toJS(DemoBarChart))

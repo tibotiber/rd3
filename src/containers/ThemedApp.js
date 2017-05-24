@@ -41,10 +41,8 @@ const selectTheme = createSelector(getTheme, theme => {
   return themes[theme]
 })
 
-const mapStateToProps = (state, ownProps) => {
-  return {
-    theme: selectTheme(state)
-  }
-}
+const mapStateToProps = (state, ownProps) => ({
+  theme: selectTheme(state)
+})
 
 export default connect(mapStateToProps)(ThemedApp)

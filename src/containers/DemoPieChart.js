@@ -27,20 +27,19 @@ const selectData = createSelector([getText, selectHover], (text, hover) => {
   }, [])
 })
 
-const mapStateToProps = (state, ownProps) => {
-  return {
-    data: selectData(state),
-    hover: selectHover(state),
-    filter: state.get('piechartFilterEnabled')
-  }
-}
+const mapStateToProps = (state, ownProps) => ({
+  data: selectData(state),
+  hover: selectHover(state),
+  filter: state.get('piechartFilterEnabled')
+})
 
-const mapDispatchToProps = (dispatch, ownProps) => {
-  return {
-    incrementRenderCount: mode =>
-      dispatch(incrementRenderCount('piechart', mode)),
-    toggleFilter: () => dispatch(piechartToggleFilter())
+const mapDispatchToProps = (dispatch, ownProps) => ({
+  incrementRenderCount (mode) {
+    dispatch(incrementRenderCount('piechart', mode))
+  },
+  toggleFilter () {
+    dispatch(piechartToggleFilter())
   }
-}
+})
 
 export default connect(mapStateToProps, mapDispatchToProps)(toJS(DemoPieChart))

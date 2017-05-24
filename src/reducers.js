@@ -24,39 +24,39 @@ export const initialState = fromJS({
 })
 
 // ACTION REDUCER
-function newText (state, action) {
+const newText = (state, action) => {
   return state.mergeDeep(fromJS(action.text))
 }
 
-function setHover (state, action) {
+const setHover = (state, action) => {
   return fromJS(action.letters)
 }
 
-function incrementTick (state, action) {
+const incrementTick = (state, action) => {
   return state + 1
 }
 
-function setColor (state, action) {
+const setColor = (state, action) => {
   return state.set(action.user, action.color)
 }
 
-function incrementRenderCount (state, action) {
+const incrementRenderCount = (state, action) => {
   return state.updateIn(
     [action.component, action.mode],
     (value = 0) => value + 1
   )
 }
 
-function piechartToggleFilter (state, action) {
+const piechartToggleFilter = (state, action) => {
   return !state
 }
 
-function selectTheme (state, action) {
+const selectTheme = (state, action) => {
   return action.theme
 }
 
 // TOP LEVEL REDUCERS
-function text (state, action) {
+const text = (state, action) => {
   switch (action.type) {
     case NEW_TEXT:
       return newText(state, action)
@@ -65,7 +65,7 @@ function text (state, action) {
   }
 }
 
-function colors (state, action) {
+const colors = (state, action) => {
   switch (action.type) {
     case SET_COLOR:
       return setColor(state, action)
@@ -74,7 +74,7 @@ function colors (state, action) {
   }
 }
 
-function hover (state, action) {
+const hover = (state, action) => {
   switch (action.type) {
     case SET_HOVER:
       return setHover(state, action)
@@ -83,7 +83,7 @@ function hover (state, action) {
   }
 }
 
-function tick (state, action) {
+const tick = (state, action) => {
   switch (action.type) {
     case TICK:
       return incrementTick(state, action)
@@ -92,7 +92,7 @@ function tick (state, action) {
   }
 }
 
-function renderCount (state, action) {
+const renderCount = (state, action) => {
   switch (action.type) {
     case INCREMENT_RENDER_COUNT:
       return incrementRenderCount(state, action)
@@ -101,7 +101,7 @@ function renderCount (state, action) {
   }
 }
 
-function piechartFilterEnabled (state, action) {
+const piechartFilterEnabled = (state, action) => {
   switch (action.type) {
     case PIECHART_TOGGLE_FILTER:
       return piechartToggleFilter(state, action)
@@ -110,7 +110,7 @@ function piechartFilterEnabled (state, action) {
   }
 }
 
-function theme (state, action) {
+const theme = (state, action) => {
   switch (action.type) {
     case SELECT_THEME:
       return selectTheme(state, action)

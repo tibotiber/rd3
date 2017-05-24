@@ -11,18 +11,15 @@ const selectColors = createSelector(getColors, colors => {
   return colors.map(color => getColorWithDefaultSaturation(color))
 })
 
-const mapStateToProps = (state, ownProps) => {
-  return {
-    hover: state.get('hover'),
-    colors: selectColors(state)
-  }
-}
+const mapStateToProps = (state, ownProps) => ({
+  hover: state.get('hover'),
+  colors: selectColors(state)
+})
 
-const mapDispatchToProps = (dispatch, ownProps) => {
-  return {
-    incrementRenderCount: mode =>
-      dispatch(incrementRenderCount('dashboard', mode))
+const mapDispatchToProps = (dispatch, ownProps) => ({
+  incrementRenderCount (mode) {
+    dispatch(incrementRenderCount('dashboard', mode))
   }
-}
+})
 
 export default connect(mapStateToProps, mapDispatchToProps)(toJS(Dashboard))

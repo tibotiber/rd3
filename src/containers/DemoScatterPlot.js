@@ -21,20 +21,19 @@ const selectGroups = createSelector(getText, text => {
   return text.keySeq()
 })
 
-const mapStateToProps = (state, ownProps) => {
-  return {
-    data: selectData(state),
-    groups: selectGroups(state)
-  }
-}
+const mapStateToProps = (state, ownProps) => ({
+  data: selectData(state),
+  groups: selectGroups(state)
+})
 
-const mapDispatchToProps = (dispatch, ownProps) => {
-  return {
-    setHover: letter => dispatch(setHover(letter)),
-    incrementRenderCount: mode =>
-      dispatch(incrementRenderCount('scatterplot', mode))
+const mapDispatchToProps = (dispatch, ownProps) => ({
+  setHover (letter) {
+    dispatch(setHover(letter))
+  },
+  incrementRenderCount (mode) {
+    dispatch(incrementRenderCount('scatterplot', mode))
   }
-}
+})
 
 export default connect(mapStateToProps, mapDispatchToProps)(
   toJS(DemoScatterPlot)
