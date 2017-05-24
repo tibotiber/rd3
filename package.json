@@ -9,6 +9,7 @@
     "url": "https://github.com/tibotiber/rd3.git"
   },
   "dependencies": {
+    "babel-polyfill": "^6.23.0",
     "d3": "^3.5.17",
     "d3-scale-chromatic": "^1.1.1",
     "immutable": "^3.8.1",
