@@ -5,7 +5,6 @@ import {
   TICK,
   SET_COLOR,
   INCREMENT_RENDER_COUNT,
-  PIECHART_TOGGLE_FILTER,
   SELECT_THEME
 } from 'redux/constants'
 
@@ -33,10 +32,6 @@ export const incrementRenderCount = (component, mode) => ({
   type: INCREMENT_RENDER_COUNT,
   component,
   mode
-})
-
-export const piechartToggleFilter = () => ({
-  type: PIECHART_TOGGLE_FILTER
 })
 
 export const selectTheme = theme => ({

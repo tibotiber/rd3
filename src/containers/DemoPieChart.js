@@ -1,13 +1,14 @@
+import React from 'react'
 import {connect} from 'react-redux'
 import {createSelector} from 'reselect'
 import DemoPieChart from 'components/DemoPieChart'
 import {countLetters} from 'utils/stringStats'
-import {incrementRenderCount, piechartToggleFilter} from 'redux/actions'
+import {incrementRenderCount} from 'redux/actions'
 import toJS from 'hocs/toJS'
 
 const getText = state => state.get('text')
 const getHover = state => state.get('hover')
-const getFilterEnabled = state => state.get('piechartFilterEnabled')
+const getFilterEnabled = (state, ownProps) => ownProps.filter
 
 const selectHover = createSelector(
   [getHover, getFilterEnabled],
@@ -28,18 +29,43 @@ const selectData = createSelector([getText, selectHover], (text, hover) => {
 })
 
 const mapStateToProps = (state, ownProps) => ({
-  data: selectData(state),
-  hover: selectHover(state),
-  filter: state.get('piechartFilterEnabled')
+  data: selectData(state, ownProps),
+  hover: selectHover(state, ownProps)
 })
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
-  incrementRenderCount (mode) {
+  incrementRenderCount(mode) {
     dispatch(incrementRenderCount('piechart', mode))
-  },
-  toggleFilter () {
-    dispatch(piechartToggleFilter())
   }
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(toJS(DemoPieChart))
+const ConnectedPie = connect(mapStateToProps, mapDispatchToProps)(
+  toJS(DemoPieChart)
+)
+
+class AutoFilterPie extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      filterEnabled: true
+    }
+  }
+
+  toggleFilter = () => {
+    this.setState(state => ({
+      filterEnabled: !state.filterEnabled
+    }))
+  }
+
+  render() {
+    return (
+      <ConnectedPie
+        filter={this.state.filterEnabled}
+        toggleFilter={this.toggleFilter}
+        {...this.props}
+      />
+    )
+  }
+}
+
+export default AutoFilterPie
