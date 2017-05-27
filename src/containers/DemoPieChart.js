@@ -1,9 +1,9 @@
 import {connect} from 'react-redux'
 import {createSelector} from 'reselect'
-import DemoPieChart from '../components/DemoPieChart'
-import {countLetters} from '../utils/stringStats'
-import {incrementRenderCount, piechartToggleFilter} from '../actions'
-import toJS from '../toJS'
+import DemoPieChart from 'components/DemoPieChart'
+import {countLetters} from 'utils/stringStats'
+import {incrementRenderCount, piechartToggleFilter} from 'actions'
+import toJS from 'toJS'
 
 const getText = state => state.get('text')
 const getHover = state => state.get('hover')

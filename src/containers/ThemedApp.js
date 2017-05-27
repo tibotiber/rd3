@@ -2,8 +2,8 @@ import React, {PropTypes} from 'react'
 import {connect} from 'react-redux'
 import {createSelector} from 'reselect'
 import styled, {ThemeProvider, injectGlobal} from 'styled-components'
-import ThemePicker from './ThemePicker'
-import themes from '../utils/themes'
+import ThemePicker from 'containers/ThemePicker'
+import themes from 'utils/themes'
 
 const {object, array} = PropTypes
 

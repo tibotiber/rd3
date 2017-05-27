@@ -1,9 +1,9 @@
 import {connect} from 'react-redux'
 import {createSelector} from 'reselect'
-import DemoScatterPlot from '../components/DemoScatterPlot'
-import {countLettersCoOccurrences} from '../utils/stringStats'
-import {setHover, incrementRenderCount} from '../actions'
-import toJS from '../toJS'
+import DemoScatterPlot from 'components/DemoScatterPlot'
+import {countLettersCoOccurrences} from 'utils/stringStats'
+import {setHover, incrementRenderCount} from 'actions'
+import toJS from 'toJS'
 
 const getText = state => state.get('text')
 

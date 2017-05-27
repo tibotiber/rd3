@@ -1,6 +1,6 @@
 import React, {PropTypes} from 'react'
-import ScatterPlot from './charts/ScatterPlot'
-import {ALPHABET} from '../utils/stringStats'
+import ScatterPlot from 'components/charts/ScatterPlot'
+import {ALPHABET} from 'utils/stringStats'
 
 const {arrayOf, shape, string, func, number} = PropTypes
 

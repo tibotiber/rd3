@@ -1,7 +1,7 @@
 import React, {PropTypes} from 'react'
 import styled from 'styled-components'
-import ChatInput from './styled/ChatInput'
-import Pallet from './Pallet'
+import ChatInput from 'components/styled/ChatInput'
+import Pallet from 'components/Pallet'
 
 const {arrayOf, shape, string, func, number} = PropTypes
 

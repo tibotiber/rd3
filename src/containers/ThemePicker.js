@@ -2,8 +2,8 @@ import React, {PropTypes, Component} from 'react'
 import {connect} from 'react-redux'
 import styled from 'styled-components'
 import _ from 'lodash'
-import themes from '../utils/themes'
-import {selectTheme} from '../actions'
+import themes from 'utils/themes'
+import {selectTheme} from 'actions'
 
 const {func} = PropTypes
 
