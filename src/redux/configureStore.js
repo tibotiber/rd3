@@ -1,9 +1,9 @@
 import {createStore} from 'redux'
-import reducers, {initialState} from 'redux/reducers'
+import rootReducer, {initialState} from 'redux/reducers'
 
 const configureStore = () => {
   const store = createStore(
-    reducers,
+    rootReducer,
     initialState,
     window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
   )

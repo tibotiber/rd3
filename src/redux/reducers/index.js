@@ -19,7 +19,9 @@ export const initialState = fromJS({
   theme: 'dark'
 })
 
-export default combineReducers(
+const rootReducer = combineReducers(
   {text, colors, hover, tick, renderCount, theme},
   initialState
 )
+
+export default rootReducer
