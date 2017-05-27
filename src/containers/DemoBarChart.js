@@ -3,8 +3,8 @@ import {createSelector} from 'reselect'
 import _ from 'lodash'
 import DemoBarChart from 'components/DemoBarChart'
 import {countLettersOccurrences} from 'utils/stringStats'
-import {setHover, incrementRenderCount} from 'actions'
-import toJS from 'toJS'
+import {setHover, incrementRenderCount} from 'redux/actions'
+import toJS from 'hocs/toJS'
 
 const getText = state => state.get('text')
 

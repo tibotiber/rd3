@@ -8,7 +8,7 @@ import {
   INCREMENT_RENDER_COUNT,
   PIECHART_TOGGLE_FILTER,
   SELECT_THEME
-} from 'constants'
+} from 'redux/constants'
 
 export const initialState = fromJS({
   text: {},

@@ -2,8 +2,8 @@ import {connect} from 'react-redux'
 import {createSelector} from 'reselect'
 import Dashboard from 'components/Dashboard'
 import {getColorWithDefaultSaturation} from 'utils/colors'
-import {incrementRenderCount} from 'actions'
-import toJS from 'toJS'
+import {incrementRenderCount} from 'redux/actions'
+import toJS from 'hocs/toJS'
 
 const getColors = state => state.get('colors')
 

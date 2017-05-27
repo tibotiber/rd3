@@ -1,5 +1,5 @@
 import {connect} from 'react-redux'
-import toJS from 'toJS'
+import toJS from 'hocs/toJS'
 import Ticker from 'components/Ticker'
 
 const mapStateToProps = (state, ownProps) => ({

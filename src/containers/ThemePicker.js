@@ -3,7 +3,7 @@ import {connect} from 'react-redux'
 import styled from 'styled-components'
 import _ from 'lodash'
 import themes from 'utils/themes'
-import {selectTheme} from 'actions'
+import {selectTheme} from 'redux/actions'
 
 const {func} = PropTypes
 
