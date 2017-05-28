@@ -5,6 +5,7 @@ import styled, {ThemeProvider, injectGlobal} from 'styled-components'
 import ThemePicker from 'containers/ThemePicker'
 import {getTheme} from 'redux/selectors'
 
+/* eslint-disable no-unused-expressions */
 injectGlobal`
   body {
     margin: 0;
