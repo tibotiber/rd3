@@ -1,11 +1,11 @@
-import React, {PropTypes} from 'react'
+import React from 'react'
+import {arrayOf, string, number, shape, func} from 'prop-types'
 import Faux from 'react-faux-dom'
 import * as d3 from 'd3'
 import styled from 'styled-components'
 import _ from 'lodash'
 import {shallowEqual} from 'recompose'
 
-const {arrayOf, string, number, shape, func} = PropTypes
 const LOADING = 'loading...'
 
 const Title = styled.div`

@@ -1,7 +1,6 @@
-import React, {PropTypes} from 'react'
+import React from 'react'
+import {arrayOf, number, shape, string, func, bool} from 'prop-types'
 import PieChart from 'components/charts/PieChart'
-
-const {arrayOf, number, shape, string, func, bool} = PropTypes
 
 const DemoPieChart = ({
   data,

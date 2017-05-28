@@ -16,7 +16,8 @@
     "lodash": "^4.17.4",
     "lorem-ipsum": "^1.0.4",
     "polished": "^1.1.0",
-    "react": "^15.4.2",
+    "prop-types": "^15.5.10",
+    "react": "^15.5.4",
     "react-dom": "^15.4.2",
     "react-faux-dom": "^3.1.0",
     "react-grid-layout": "^0.14.6",
@@ -28,7 +29,7 @@
     "redux-immutable": "^4.0.0",
     "reselect": "^3.0.0",
     "serve": "^5.1.4",
-    "styled-components": "^1.4.4"
+    "styled-components": "^2.0.0"
   },
   "devDependencies": {
     "eslint": "^3.19.0",

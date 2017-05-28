@@ -1,11 +1,10 @@
-import React, {PropTypes, Component} from 'react'
+import React from 'react'
+import {func} from 'prop-types'
 import {connect} from 'react-redux'
 import styled from 'styled-components'
 import _ from 'lodash'
 import themes from 'utils/themes'
 import {selectTheme} from 'redux/actions'
-
-const {func} = PropTypes
 
 const List = styled.ul`
   position: absolute;
@@ -20,7 +19,7 @@ const Item = styled.li`
   cursor: pointer;
 `
 
-class ThemePicker extends Component {
+class ThemePicker extends React.Component {
   handleSelectTheme = theme => e => {
     this.props.selectTheme(theme)
   }

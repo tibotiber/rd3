@@ -1,8 +1,7 @@
-import React, {PropTypes} from 'react'
+import React from 'react'
+import {arrayOf, array, shape, string, func, number} from 'prop-types'
 import BarChart from 'components/charts/BarChart'
 import {ALPHABET} from 'utils/stringStats'
-
-const {arrayOf, array, shape, string, func, number} = PropTypes
 
 const DemoBarChart = ({
   data,
