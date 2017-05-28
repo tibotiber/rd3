@@ -4,17 +4,24 @@ import {ALPHABET} from 'utils/stringStats'
 
 const {arrayOf, shape, string, func, number} = PropTypes
 
-const DemoScatterPlot = props => (
+const DemoScatterPlot = ({
+  data,
+  setHover,
+  incrementRenderCount,
+  height,
+  width,
+  groups
+}) => (
   <ScatterPlot
-    data={props.data}
+    data={data}
     xDomain={ALPHABET}
     yDomain={ALPHABET}
-    groups={props.groups}
+    groups={groups}
     title='Characters co-occurrence side-by-side'
-    width={props.width}
-    height={props.height}
-    setHover={props.setHover}
-    incrementRenderCount={props.incrementRenderCount}
+    width={width}
+    height={height}
+    setHover={setHover}
+    incrementRenderCount={incrementRenderCount}
     radiusFactor={4}
   />
 )

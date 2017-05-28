@@ -14,16 +14,16 @@ injectGlobal`
 `
 
 const Root = styled.div`
-  background-color: ${props => props.theme.background};
-  color: ${props => props.theme.color};
+  background-color: ${({theme}) => theme.background};
+  color: ${({theme}) => theme.color};
   font: 11px sans-serif;
   padding: 8px;
 `
 
-const ThemedApp = props => (
-  <ThemeProvider theme={props.theme}>
+const ThemedApp = ({theme, children}) => (
+  <ThemeProvider theme={theme}>
     <Root>
-      {props.children}
+      {children}
       <ThemePicker />
     </Root>
   </ThemeProvider>

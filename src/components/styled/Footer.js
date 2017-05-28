@@ -4,7 +4,7 @@ const Footer = styled.div`
   text-align: center;
   a {
     text-decoration: none;
-    color: ${props => props.theme.secondaryColor}
+    color: ${({theme}) => theme.secondaryColor}
   }
   a:hover {
     text-decoration: underline;

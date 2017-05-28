@@ -11,16 +11,16 @@ const LOADING = 'loading...'
 const Title = styled.div`
   text-align: center;
   position: relative;
-  top: -${props => props.height * 1 / 5}px;
+  top: -${({height}) => height * 1 / 5}px;
 `
 
 const Wrapper = styled.div`
   position: relative;
   display: inline-block;
   .tooltip {
-    width: ${props => props.width / 5}px;
-    left: ${props => props.width * 2 / 5}px;
-    top: ${props => props.height * 3 / 5}px;
+    width: ${({width}) => width / 5}px;
+    left: ${({width}) => width * 2 / 5}px;
+    top: ${({height}) => height * 3 / 5}px;
   }
 `
 
@@ -71,15 +71,13 @@ const PieChart = React.createClass({
     return `${this.state.tooltip}: ${hoveredData}`
   },
   render () {
+    const {width, height, title} = this.props
+    const {chart, tooltip} = this.state
     return (
-      <Wrapper
-        className='piechart'
-        width={this.props.width}
-        height={this.props.height}
-      >
-        {this.state.chart}
-        <Title height={this.props.height}>{this.props.title}</Title>
-        {this.state.tooltip &&
+      <Wrapper className='piechart' width={width} height={height}>
+        {chart}
+        <Title height={height}>{title}</Title>
+        {tooltip &&
           <div className='tooltip'>
             {this.computeTooltipContent()}
           </div>}
@@ -87,17 +85,16 @@ const PieChart = React.createClass({
     )
   },
   renderD3 (mode) {
-    this.props.incrementRenderCount('d3')
+    const {incrementRenderCount, width, height, thickness} = this.props
+    incrementRenderCount('d3')
 
     // rendering mode
     const render = mode === 'render'
     const resize = mode === 'resize'
 
     // d3 helpers
-    const width = this.props.width
-    const height = this.props.height
     const outerRadius = Math.min(width, height) / 2 - 10
-    const innerRadius = outerRadius - this.props.thickness
+    const innerRadius = outerRadius - thickness
     let data = _.cloneDeep(this.props.data) // pie() mutates data
     var arc = d3.svg.arc().innerRadius(innerRadius).outerRadius(outerRadius)
     var pie = d3.layout

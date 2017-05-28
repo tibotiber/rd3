@@ -55,36 +55,43 @@ const DemoChat = React.createClass({
     }
   },
   render () {
+    const {
+      users,
+      texts,
+      colors,
+      width,
+      height,
+      pallet,
+      setUserColor,
+      generateText
+    } = this.props
+    const {autoRefresh, refreshPeriod} = this.state
     return (
       <InlineDiv style={{textAlign: 'center'}}>
         <div>
-          {this.props.users.map((user, index) => {
+          {users.map((user, index) => {
             return (
               <InlineDiv key={user}>
                 <ChatInput
-                  value={this.props.texts[index]}
-                  color={this.props.colors[index]}
-                  width={this.props.width / 2 - 40}
-                  height={this.props.height - 120}
+                  value={texts[index]}
+                  color={colors[index]}
+                  width={width / 2 - 40}
+                  height={height - 120}
                   onChange={e => this.handleChange(user, e)}
                 />
-                <Pallet
-                  colors={this.props.pallet}
-                  scope={user}
-                  pickColor={this.props.setUserColor}
-                />
+                <Pallet colors={pallet} scope={user} pickColor={setUserColor} />
               </InlineDiv>
             )
           })}
         </div>
-        <button onClick={this.props.generateText}>Generate new text</button>
+        <button onClick={generateText}>Generate new text</button>
         <div style={{marginTop: 5}}>
           <input
             type='checkbox'
-            checked={this.state.autoRefresh}
+            checked={autoRefresh}
             onChange={this.toggleAutoRefresh}
           />
-          Generate new text every {this.state.refreshPeriod}s
+          Generate new text every {refreshPeriod}s
         </div>
       </InlineDiv>
     )

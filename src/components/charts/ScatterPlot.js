@@ -9,10 +9,10 @@ import {shallowEqual} from 'recompose'
 const {arrayOf, string, number, shape, func, array, object} = PropTypes
 const LOADING = 'loading...'
 
-const Tooltip = props => {
+const Tooltip = ({style, content}) => {
   return (
-    <div className='tooltip' style={props.style}>
-      {props.content}
+    <div className='tooltip' style={style}>
+      {content}
     </div>
   )
 }
@@ -88,15 +88,27 @@ const ScatterPlot = React.createClass({
     }
   },
   render () {
+    const {chart, tooltip} = this.state
     return (
       <Wrapper className='scatterplot'>
-        {this.state.chart}
-        {this.state.tooltip && <Tooltip {...this.computeTooltipProps()} />}
+        {chart}
+        {tooltip && <Tooltip {...this.computeTooltipProps()} />}
       </Wrapper>
     )
   },
   renderD3 (mode) {
-    this.props.incrementRenderCount('d3')
+    const {
+      incrementRenderCount,
+      width,
+      height,
+      xDomain,
+      yDomain,
+      groups,
+      setHover,
+      radiusFactor,
+      title
+    } = this.props
+    incrementRenderCount('d3')
 
     // rendering mode
     const render = mode === 'render'
@@ -105,20 +117,17 @@ const ScatterPlot = React.createClass({
     // d3 helpers
     const data = _.orderBy(_.cloneDeep(this.props.data), 'n', 'desc') // d3 mutates data
     const margin = {top: 20, right: 20, bottom: 50, left: 30}
-    const width = this.props.width - margin.left - margin.right
-    const height = this.props.height - margin.top - margin.bottom
+    const graphWidth = width - margin.left - margin.right
+    const graphHeight = height - margin.top - margin.bottom
     const x = d3.scale
       .ordinal()
-      .domain(this.props.xDomain)
-      .rangeRoundPoints([0, width])
-    const dx = d3.scale
-      .ordinal()
-      .domain(this.props.groups)
-      .rangeRoundPoints([-2, 2])
+      .domain(xDomain)
+      .rangeRoundPoints([0, graphWidth])
+    const dx = d3.scale.ordinal().domain(groups).rangeRoundPoints([-2, 2])
     const y = d3.scale
       .ordinal()
-      .domain(this.props.yDomain)
-      .rangeRoundPoints([height, 0])
+      .domain(yDomain)
+      .rangeRoundPoints([graphHeight, 0])
     const xAxis = d3.svg.axis().scale(x).orient('bottom')
     const yAxis = d3.svg.axis().scale(y).orient('left')
 
@@ -130,16 +139,16 @@ const ScatterPlot = React.createClass({
       svg = d3
         .select(faux)
         .append('svg')
-        .attr('width', width + margin.left + margin.right)
-        .attr('height', height + margin.top + margin.bottom)
+        .attr('width', width)
+        .attr('height', height)
         .append('g')
         .attr('transform', `translate(${margin.left}, ${margin.top})`)
     } else if (resize) {
       svg = d3
         .select(faux)
         .select('svg')
-        .attr('width', width + margin.left + margin.right)
-        .attr('height', height + margin.top + margin.bottom)
+        .attr('width', width)
+        .attr('height', height)
         .select('g')
         .attr('transform', `translate(${margin.left}, ${margin.top})`)
     } else {
@@ -161,7 +170,7 @@ const ScatterPlot = React.createClass({
       .attr('cy', d => y(d.y))
       .on('mouseover', d => {
         clearTimeout(this.unsetHoverTimeout)
-        this.props.setHover([d.x, d.y])
+        setHover([d.x, d.y])
         this.setTooltip(
           d.group,
           d.x,
@@ -172,14 +181,14 @@ const ScatterPlot = React.createClass({
       })
       .on('mouseout', d => {
         this.unsetHoverTimeout = setTimeout(() => {
-          this.props.setHover(null)
+          setHover(null)
           this.setTooltip(null)
         }, 200)
       })
 
     dots
       .transition()
-      .attr('r', d => d.n * this.props.radiusFactor)
+      .attr('r', d => d.n * radiusFactor)
       .attr('cx', d => x(d.x) + dx(d.group))
       .attr('cy', d => y(d.y))
 
@@ -191,23 +200,23 @@ const ScatterPlot = React.createClass({
       svg
         .append('g')
         .attr('class', 'x axis')
-        .attr('transform', `translate(0, ${height})`)
+        .attr('transform', `translate(0, ${graphHeight})`)
         .call(xAxis)
         .append('text')
         .attr('class', 'label')
-        .attr('x', width / 2)
+        .attr('x', graphWidth / 2)
         .attr('y', 35)
         .style('text-anchor', 'middle')
-        .text(this.props.title)
+        .text(title)
 
       svg.append('g').attr('class', 'y axis').call(yAxis)
     } else if (resize) {
       svg
         .select('g.x.axis')
-        .attr('transform', `translate(0, ${height})`)
+        .attr('transform', `translate(0, ${graphHeight})`)
         .call(xAxis)
         .select('text')
-        .attr('x', width / 2)
+        .attr('x', graphWidth / 2)
       svg.select('g.y.axis').call(yAxis)
     } else {
       svg.select('g.x.axis').call(xAxis)

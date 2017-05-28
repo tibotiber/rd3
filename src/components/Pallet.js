@@ -26,15 +26,15 @@ const PalletLabel = styled.li`
   margin-right: 5px;
 `
 
-const Pallet = props => {
+const Pallet = ({colors, scope, pickColor}) => {
   return (
     <List>
-      <PalletLabel>{props.scope}</PalletLabel>
-      {props.colors.map(color => (
+      <PalletLabel>{scope}</PalletLabel>
+      {colors.map(color => (
         <ColorSquare
           key={color.name}
           style={{backgroundColor: color.value}}
-          onClick={e => props.pickColor(props.scope, color.name)}
+          onClick={e => pickColor(scope, color.name)}
         />
       ))}
     </List>

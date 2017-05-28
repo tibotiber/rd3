@@ -11,19 +11,19 @@ const CodeBlock = styled.pre`
   right: 0;
   padding: 15px;
   margin: 5px;
-  border: dashed 2px ${props => props.theme.secondaryColor};
-  color: ${props => props.theme.secondaryColor};
-  background-color: ${props => transparentize(0.2, props.theme.secondaryBackground)};
+  border: dashed 2px ${({theme}) => theme.secondaryColor};
+  color: ${({theme}) => theme.secondaryColor};
+  background-color: ${({theme}) => transparentize(0.2, theme.secondaryBackground)};
 `
 
-const RenderCount = props => {
+const RenderCount = ({component, counts}) => {
   return (
     <div>
-      {props.component}
+      {component}
       :
       {' '}
-      {props.counts.component}
-      {props.counts.d3 ? ' / ' + props.counts.d3 : ''}
+      {counts.component}
+      {counts.d3 ? ' / ' + counts.d3 : ''}
     </div>
   )
 }
@@ -36,12 +36,12 @@ RenderCount.propTypes = {
   })
 }
 
-const Ticker = props => {
+const Ticker = ({tick, renderCount}) => {
   return (
     <CodeBlock>
-      <div>tick: {props.tick}</div>
+      <div>tick: {tick}</div>
       {_.values(
-        _.mapValues(props.renderCount, (counts, component) => {
+        _.mapValues(renderCount, (counts, component) => {
           return (
             <RenderCount
               key={component}

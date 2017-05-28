@@ -1,15 +1,15 @@
 import styled from 'styled-components'
 
 const ChatInput = styled.textarea`
-  border: solid 1px ${props => props.theme.border};
-  border-left: 5px solid ${props => props.color};
+  border: solid 1px ${({theme}) => theme.border};
+  border-left: 5px solid ${({color}) => color};
   padding-left: 15px;
   margin: 10px;
   padding: 5px;
-  width: ${props => props.width}px;
-  height: ${props => props.height}px;
-  background-color: ${props => props.theme.background};
-  color: ${props => props.theme.color};
+  width: ${({width}) => width}px;
+  height: ${({height}) => height}px;
+  background-color: ${({theme}) => theme.background};
+  color: ${({theme}) => theme.color};
 `
 
 export default ChatInput

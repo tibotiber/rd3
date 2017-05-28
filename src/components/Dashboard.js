@@ -18,9 +18,9 @@ const MeasuredDemoScatterPlot = WithMeasure(DemoScatterPlot)
 const MeasuredDemoPieChart = WithMeasure(DemoPieChart)
 const MeasuredDemoChat = WithMeasure(DemoChat)
 
-const generateDataGroupCSS = props => {
+const generateDataGroupCSS = colors => {
   return _.reduce(
-    props.colors,
+    colors,
     (result, color, user) => {
       result += `.data-group-${user} { fill: ${color}; }`
       return result
@@ -39,36 +39,36 @@ const generateHoverCss = letter =>
 
 const Grid = styled(GridLayout)`
   .axis text {
-    fill: ${props => props.theme.color};
+    fill: ${({theme}) => theme.color};
   }
   .axis path,
   .axis line {
     fill: none;
-    stroke: ${props => props.theme.color};
+    stroke: ${({theme}) => theme.color};
     shape-rendering: crispEdges;
   }
   .stroked {
-    stroke: ${props => props.theme.color};
+    stroke: ${({theme}) => theme.color};
   }
   .stroked-negative {
-    stroke: ${props => props.theme.background};
+    stroke: ${({theme}) => theme.background};
   }
-  ${props => generateDataGroupCSS(props)}
+  ${({colors}) => generateDataGroupCSS(colors)}
   .data {
-    opacity: ${props => (props.hover ? 0.25 : 1)};
+    opacity: ${({hover}) => (hover ? 0.25 : 1)};
     -webkit-transition: opacity .2s ease-in;
   }
-  ${props => props.hover && props.hover.map(letter => generateHoverCss(letter))}
+  ${({hover}) => hover && hover.map(letter => generateHoverCss(letter))}
   .tooltip {
     position: absolute;
     z-index: 10;
     display: inline-block;
-    border: solid 1px ${props => props.theme.secondaryColor};
+    border: solid 1px ${({theme}) => theme.secondaryColor};
     border-radius: 2px;
     padding: 5px;
-    background-color: ${props => transparentize(0.2, props.theme.secondaryBackground)};
+    background-color: ${({theme}) => transparentize(0.2, theme.secondaryBackground)};
     text-align: center;
-    color: ${props => props.theme.secondaryColor};
+    color: ${({theme}) => theme.secondaryColor};
   }
 `
 
@@ -92,6 +92,7 @@ const Dashboard = React.createClass({
     this.forceUpdate()
   },
   render () {
+    const {hover, colors} = this.props
     const layout = [
       {i: 'TL', x: 0, y: 0, w: 6, h: 7},
       {i: 'TR', x: 6, y: 0, w: 6, h: 7},
@@ -101,8 +102,8 @@ const Dashboard = React.createClass({
     return (
       <Grid
         className='dashboard'
-        hover={this.props.hover}
-        colors={this.props.colors}
+        hover={hover}
+        colors={colors}
         layout={layout}
         cols={12}
         rowHeight={(window.innerHeight - 29) / 12}

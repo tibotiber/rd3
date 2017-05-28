@@ -4,17 +4,24 @@ import {ALPHABET} from 'utils/stringStats'
 
 const {arrayOf, array, shape, string, func, number} = PropTypes
 
-const DemoBarChart = props => (
+const DemoBarChart = ({
+  data,
+  hover,
+  setHover,
+  incrementRenderCount,
+  height,
+  width
+}) => (
   <BarChart
-    data={props.data}
+    data={data}
     xDomain={ALPHABET}
     xLabel='Characters'
     yLabel='Occurrences'
-    width={props.width}
-    height={props.height}
-    hover={props.hover}
-    setHover={props.setHover}
-    incrementRenderCount={props.incrementRenderCount}
+    width={width}
+    height={height}
+    hover={hover}
+    setHover={setHover}
+    incrementRenderCount={incrementRenderCount}
   />
 )
 

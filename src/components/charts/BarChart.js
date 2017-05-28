@@ -8,10 +8,10 @@ import {shallowEqual} from 'recompose'
 const {arrayOf, array, string, number, func, shape, object} = PropTypes
 const LOADING = 'loading...'
 
-const Tooltip = props => {
+const Tooltip = ({style, content}) => {
   return (
-    <div className='tooltip' style={props.style}>
-      {props.content}
+    <div className='tooltip' style={style}>
+      {content}
     </div>
   )
 }
@@ -25,7 +25,7 @@ const Wrapper = styled.div`
   position: relative;
   display: inline-block;
   .tooltip {
-    visibility: ${props => (props.hover ? 'visible' : 'hidden')};
+    visibility: ${({hover}) => (hover ? 'visible' : 'hidden')};
     -webkit-transition: top .2s ease-out, left .2s ease-out;
   }
 `
@@ -85,13 +85,15 @@ const BarChart = React.createClass({
     }
   },
   render () {
+    const {hover} = this.props
+    const {chart} = this.state
     return (
-      <Wrapper className='barchart' hover={this.props.hover}>
+      <Wrapper className='barchart' hover={hover}>
         <button onClick={this.toggle}>Toggle</button>
-        {this.state.chart}
-        {this.state.chart !== LOADING &&
-          this.props.hover &&
-          this.props.hover.map((letter, index) => (
+        {chart}
+        {chart !== LOADING &&
+          hover &&
+          hover.map((letter, index) => (
             <Tooltip key={index} {...this.computeTooltipProps(letter)} />
           ))}
       </Wrapper>
@@ -107,7 +109,16 @@ const BarChart = React.createClass({
     }
   },
   renderD3 (mode) {
-    this.props.incrementRenderCount('d3')
+    const {
+      incrementRenderCount,
+      width,
+      height,
+      xDomain,
+      xLabel,
+      yLabel,
+      setHover
+    } = this.props
+    incrementRenderCount('d3')
 
     // rendering mode
     const render = mode === 'render'
@@ -115,21 +126,21 @@ const BarChart = React.createClass({
 
     // d3 helpers
     let data = _.cloneDeep(this.props.data) // stack() mutates data
-    const n = this.props.data.length // number of layers
+    const n = data.length // number of layers
     const stack = d3.layout.stack().values(d => d.values)
     const layers = stack(data)
     const yStackMax = d3.max(layers, layer =>
       d3.max(layer.values, d => d.y0 + d.y)
     )
     const margin = {top: 20, right: 10, bottom: 50, left: 50}
-    const width = this.props.width - margin.left - margin.right
-    const height = this.props.height - margin.top - margin.bottom - 18
+    const graphWidth = width - margin.left - margin.right
+    const graphHeight = height - margin.top - margin.bottom - 18
     const x = d3.scale
       .ordinal()
-      .domain(this.props.xDomain)
-      .rangeRoundBands([0, width], 0.08)
+      .domain(xDomain)
+      .rangeRoundBands([0, graphWidth], 0.08)
     this.x = x
-    const y = d3.scale.linear().domain([0, yStackMax]).range([height, 0])
+    const y = d3.scale.linear().domain([0, yStackMax]).range([graphHeight, 0])
     this.y = y
     const xAxis = d3.svg.axis().scale(x).orient('bottom')
     const yAxis = d3.svg.axis().scale(y).orient('left')
@@ -142,16 +153,16 @@ const BarChart = React.createClass({
       svg = d3
         .select(faux)
         .append('svg')
-        .attr('width', width + margin.left + margin.right)
-        .attr('height', height + margin.top + margin.bottom)
+        .attr('width', width)
+        .attr('height', height)
         .append('g')
         .attr('transform', `translate(${margin.left}, ${margin.top})`)
     } else if (resize) {
       svg = d3
         .select(faux)
         .select('svg')
-        .attr('width', width + margin.left + margin.right)
-        .attr('height', height + margin.top + margin.bottom)
+        .attr('width', width)
+        .attr('height', height)
         .select('g')
         .attr('transform', `translate(${margin.left}, ${margin.top})`)
     } else {
@@ -170,18 +181,15 @@ const BarChart = React.createClass({
       .append('rect')
       .attr('class', d => `data data-${d.x}`)
       .attr('x', d => x(d.x))
-      .attr('y', height)
+      .attr('y', graphHeight)
       .attr('width', x.rangeBand())
       .attr('height', 0)
       .on('mouseover', d => {
         clearTimeout(this.unsetHoverTimeout)
-        this.props.setHover(d.x)
+        setHover(d.x)
       })
       .on('mouseout', d => {
-        this.unsetHoverTimeout = setTimeout(
-          () => this.props.setHover(null),
-          200
-        )
+        this.unsetHoverTimeout = setTimeout(() => setHover(null), 200)
       })
     if (this.state.look === 'stacked') {
       rect
@@ -198,7 +206,7 @@ const BarChart = React.createClass({
         .attr('x', (d, i, j) => x(d.x) + x.rangeBand() / n * j)
         .attr('y', d => y(d.y))
         .attr('width', x.rangeBand() / n)
-        .attr('height', d => height - y(d.y))
+        .attr('height', d => graphHeight - y(d.y))
     }
     this.animateFauxDOM(800)
 
@@ -206,14 +214,14 @@ const BarChart = React.createClass({
       svg
         .append('g')
         .attr('class', 'x axis')
-        .attr('transform', `translate(0, ${height})`)
+        .attr('transform', `translate(0, ${graphHeight})`)
         .call(xAxis)
         .append('text')
         .attr('class', 'label')
-        .attr('x', width)
+        .attr('x', graphWidth)
         .attr('y', 35)
         .style('text-anchor', 'end')
-        .text(this.props.xLabel)
+        .text(xLabel)
 
       svg
         .append('g')
@@ -225,14 +233,14 @@ const BarChart = React.createClass({
         .attr('transform', 'rotate(-90)')
         .attr('y', -30)
         .style('text-anchor', 'end')
-        .text(this.props.yLabel)
+        .text(yLabel)
     } else if (resize) {
       svg
         .select('g.x.axis')
-        .attr('transform', `translate(0, ${height})`)
+        .attr('transform', `translate(0, ${graphHeight})`)
         .call(xAxis)
         .select('text')
-        .attr('x', width)
+        .attr('x', graphWidth)
       svg.select('g.y.axis').call(yAxis)
     } else {
       svg.select('g.x.axis').call(xAxis)
@@ -248,7 +256,7 @@ const BarChart = React.createClass({
         .attr('width', x.rangeBand() / n)
         .transition()
         .attr('y', d => y(d.y))
-        .attr('height', d => height - y(d.y))
+        .attr('height', d => graphHeight - y(d.y))
       this.animateFauxDOM(2000)
     }
 

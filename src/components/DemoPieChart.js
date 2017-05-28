@@ -3,26 +3,30 @@ import PieChart from 'components/charts/PieChart'
 
 const {arrayOf, number, shape, string, func, bool} = PropTypes
 
-const DemoPieChart = props => {
-  const filteredData = props.hover
-    ? ` (letter${props.hover.length > 1 ? 's' : ''}: ${props.hover.join(', ')})`
+const DemoPieChart = ({
+  data,
+  incrementRenderCount,
+  width,
+  height,
+  filter,
+  toggleFilter,
+  hover
+}) => {
+  const filteredData = hover
+    ? ` (letter${hover.length > 1 ? 's' : ''}: ${hover.join(', ')})`
     : ''
   return (
     <div style={{display: 'inline-block'}}>
       <div>
-        <input
-          type='checkbox'
-          checked={props.filter}
-          onChange={props.toggleFilter}
-        />
+        <input type='checkbox' checked={filter} onChange={toggleFilter} />
         Refresh with filtered data?
       </div>
       <PieChart
-        data={props.data}
-        width={props.width}
-        height={props.height}
+        data={data}
+        width={width}
+        height={height}
         thickness={30}
-        incrementRenderCount={props.incrementRenderCount}
+        incrementRenderCount={incrementRenderCount}
         title={`Text volume by user${filteredData}`}
       />
     </div>
