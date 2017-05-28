@@ -12,18 +12,20 @@ const DemoScatterPlot = ({
   width,
   groups
 }) => (
-  <ScatterPlot
-    data={data}
-    xDomain={ALPHABET}
-    yDomain={ALPHABET}
-    groups={groups}
-    title='Characters co-occurrence side-by-side'
-    width={width}
-    height={height}
-    setHover={setHover}
-    incrementRenderCount={incrementRenderCount}
-    radiusFactor={4}
-  />
+  <div style={{width: '100%', height: '100%'}}>
+    <ScatterPlot
+      data={data}
+      xDomain={ALPHABET}
+      yDomain={ALPHABET}
+      groups={groups}
+      title='Characters co-occurrence side-by-side'
+      width={width}
+      height={height}
+      setHover={setHover}
+      incrementRenderCount={incrementRenderCount}
+      radiusFactor={4}
+    />
+  </div>
 )
 
 DemoScatterPlot.propTypes = {

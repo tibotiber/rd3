@@ -12,17 +12,19 @@ const DemoBarChart = ({
   height,
   width
 }) => (
-  <BarChart
-    data={data}
-    xDomain={ALPHABET}
-    xLabel='Characters'
-    yLabel='Occurrences'
-    width={width}
-    height={height}
-    hover={hover}
-    setHover={setHover}
-    incrementRenderCount={incrementRenderCount}
-  />
+  <div style={{width: '100%', height: '100%'}}>
+    <BarChart
+      data={data}
+      xDomain={ALPHABET}
+      xLabel='Characters'
+      yLabel='Occurrences'
+      width={width}
+      height={height}
+      hover={hover}
+      setHover={setHover}
+      incrementRenderCount={incrementRenderCount}
+    />
+  </div>
 )
 
 DemoBarChart.propTypes = {

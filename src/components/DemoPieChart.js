@@ -16,7 +16,7 @@ const DemoPieChart = ({
     ? ` (letter${hover.length > 1 ? 's' : ''}: ${hover.join(', ')})`
     : ''
   return (
-    <div style={{display: 'inline-block'}}>
+    <div style={{width: '100%', height: '100%', display: 'inline-block'}}>
       <div>
         <input type='checkbox' checked={filter} onChange={toggleFilter} />
         Refresh with filtered data?

@@ -67,7 +67,7 @@ const DemoChat = React.createClass({
     } = this.props
     const {autoRefresh, refreshPeriod} = this.state
     return (
-      <InlineDiv style={{textAlign: 'center'}}>
+      <InlineDiv style={{width: '100%', height: '100%', textAlign: 'center'}}>
         <div>
           {users.map((user, index) => {
             return (

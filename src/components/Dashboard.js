@@ -9,14 +9,15 @@ import DemoBarChart from 'containers/DemoBarChart'
 import DemoPieChart from 'containers/DemoPieChart'
 import DemoScatterPlot from 'containers/DemoScatterPlot'
 import DemoChat from 'containers/DemoChat'
-import WithMeasure from 'hocs/WithMeasure'
+import withMeasure from 'hocs/withMeasure'
 
 const {string, object, func, arrayOf} = PropTypes
 const GridLayout = WidthProvider(ReactGridLayout)
-const MeasuredDemoBarChart = WithMeasure(DemoBarChart)
-const MeasuredDemoScatterPlot = WithMeasure(DemoScatterPlot)
-const MeasuredDemoPieChart = WithMeasure(DemoPieChart)
-const MeasuredDemoChat = WithMeasure(DemoChat)
+const dimensions = ['width', 'height']
+const MeasuredDemoBarChart = withMeasure(dimensions)(DemoBarChart)
+const MeasuredDemoScatterPlot = withMeasure(dimensions)(DemoScatterPlot)
+const MeasuredDemoPieChart = withMeasure(dimensions)(DemoPieChart)
+const MeasuredDemoChat = withMeasure(dimensions)(DemoChat)
 
 const generateDataGroupCSS = colors => {
   return _.reduce(
