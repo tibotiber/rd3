@@ -8,8 +8,8 @@ const InlineDiv = styled.div`
   display: inline-block;
 `
 
-const DemoChat = React.createClass({
-  propTypes: {
+class DemoChat extends React.Component {
+  static propTypes = {
     users: arrayOf(string),
     texts: arrayOf(string),
     colors: arrayOf(string),
@@ -25,24 +25,27 @@ const DemoChat = React.createClass({
     width: number,
     height: number,
     incrementRenderCount: func
-  },
-  getInitialState () {
-    return {
-      autoRefresh: false,
-      refreshPeriod: 2
-    }
-  },
+  }
+
+  state = {
+    autoRefresh: false,
+    refreshPeriod: 2
+  }
+
   componentDidMount () {
     this.props.incrementRenderCount('component')
     this.props.generateText()
-  },
+  }
+
   componentDidUpdate (prevProps, prevState) {
     this.props.incrementRenderCount('component')
-  },
-  handleChange (user, e) {
+  }
+
+  handleChange = user => e => {
     this.props.updateText({[user]: e.target.value})
-  },
-  toggleAutoRefresh () {
+  }
+
+  toggleAutoRefresh = () => {
     const autoRefresh = !this.state.autoRefresh
     this.setState({autoRefresh})
     if (autoRefresh) {
@@ -52,7 +55,8 @@ const DemoChat = React.createClass({
     } else {
       clearInterval(this.autoRefreshInterval)
     }
-  },
+  }
+
   render () {
     const {
       users,
@@ -76,7 +80,7 @@ const DemoChat = React.createClass({
                   color={colors[index]}
                   width={width / 2 - 40}
                   height={height - 120}
-                  onChange={e => this.handleChange(user, e)}
+                  onChange={this.handleChange(user)}
                 />
                 <Pallet colors={pallet} scope={user} pickColor={setUserColor} />
               </InlineDiv>
@@ -95,6 +99,6 @@ const DemoChat = React.createClass({
       </InlineDiv>
     )
   }
-})
+}
 
 export default DemoChat

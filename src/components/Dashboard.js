@@ -73,26 +73,31 @@ const Grid = styled(GridLayout)`
   }
 `
 
-const Dashboard = React.createClass({
-  propTypes: {
+class Dashboard extends React.Component {
+  static propTypes = {
     colors: object,
     hover: arrayOf(string),
     incrementRenderCount: func
-  },
-  componentDidMount () {
+  }
+
+  componentDidMount() {
     this.props.incrementRenderCount('component')
     window.addEventListener('resize', this.onWindowResize)
-  },
-  componentDidUpdate (prevProps, prevState) {
+  }
+
+  componentDidUpdate(prevProps, prevState) {
     this.props.incrementRenderCount('component')
-  },
-  componentWillUnmount () {
+  }
+
+  componentWillUnmount() {
     window.removeEventListener('resize', this.onWindowResize)
-  },
-  onWindowResize (e) {
+  }
+
+  onWindowResize = e => {
     this.forceUpdate()
-  },
-  render () {
+  }
+
+  render() {
     const {hover, colors} = this.props
     const layout = [
       {i: 'TL', x: 0, y: 0, w: 6, h: 7},
@@ -102,7 +107,7 @@ const Dashboard = React.createClass({
     ]
     return (
       <Grid
-        className='dashboard'
+        className={'dashboard'}
         hover={hover}
         colors={colors}
         layout={layout}
@@ -125,6 +130,6 @@ const Dashboard = React.createClass({
       </Grid>
     )
   }
-})
+}
 
 export default Dashboard

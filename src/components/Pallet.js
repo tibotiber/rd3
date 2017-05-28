@@ -25,19 +25,26 @@ const PalletLabel = styled.li`
   margin-right: 5px;
 `
 
-const Pallet = ({colors, scope, pickColor}) => {
-  return (
-    <List>
-      <PalletLabel>{scope}</PalletLabel>
-      {colors.map(color => (
-        <ColorSquare
-          key={color.name}
-          style={{backgroundColor: color.value}}
-          onClick={e => pickColor(scope, color.name)}
-        />
-      ))}
-    </List>
-  )
+class Pallet extends React.Component {
+  handleColorPicked = (scope, color) => e => {
+    this.props.pickColor(scope, color)
+  }
+
+  render() {
+    const {colors, scope} = this.props
+    return (
+      <List>
+        <PalletLabel>{scope}</PalletLabel>
+        {colors.map(color => (
+          <ColorSquare
+            key={color.name}
+            style={{backgroundColor: color.value}}
+            onClick={this.handleColorPicked(scope, color.name)}
+          />
+        ))}
+      </List>
+    )
+  }
 }
 
 Pallet.propTypes = {
