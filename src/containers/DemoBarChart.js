@@ -5,10 +5,9 @@ import DemoBarChart from 'components/DemoBarChart'
 import {countLettersOccurrences} from 'utils/stringStats'
 import {setHover, incrementRenderCount} from 'redux/actions'
 import toJS from 'hocs/toJS'
+import {getText, getHover} from 'redux/selectors'
 
-const getText = state => state.get('text')
-
-const selectData = createSelector(getText, text => {
+const getData = createSelector(getText, text => {
   return text.reduce((result, userText, user) => {
     result.push({
       name: user,
@@ -29,8 +28,8 @@ const selectData = createSelector(getText, text => {
 })
 
 const mapStateToProps = (state, ownProps) => ({
-  data: selectData(state),
-  hover: state.get('hover')
+  data: getData(state),
+  hover: getHover(state)
 })
 
 const mapDispatchToProps = (dispatch, ownProps) => ({

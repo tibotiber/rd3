@@ -5,46 +5,30 @@ import DemoChat from 'components/DemoChat'
 import {getColorWithDefaultSaturation, COLOR_PALLET} from 'utils/colors'
 import {newText, setColor, incrementRenderCount} from 'redux/actions'
 import toJS from 'hocs/toJS'
+import {getUsers, getTexts, getSaturatedColorsArray} from 'redux/selectors'
 
 const loremOption = {
   count: 2,
   units: 'sentences'
 }
 
-const getText = state => state.get('text')
-
-const selectUsers = createSelector(getText, text => {
-  return text.sortBy((v, k) => k).keySeq()
-})
-
-const selectTexts = createSelector(getText, text => {
-  return text.sortBy((v, k) => k).valueSeq()
-})
-
-const getColors = state => state.get('colors')
-
-const selectColors = createSelector(getColors, colors => {
-  return colors.sortBy((v, k) => k).valueSeq().map(color => {
-    return getColorWithDefaultSaturation(color)
-  })
-})
-
-const getPallet = state => COLOR_PALLET
-
-const selectPallet = createSelector(getPallet, pallet => {
-  return pallet.map(color => {
-    return {
-      name: color,
-      value: getColorWithDefaultSaturation(color)
-    }
-  })
-})
+const getPallet = createSelector(
+  () => COLOR_PALLET,
+  pallet => {
+    return pallet.map(color => {
+      return {
+        name: color,
+        value: getColorWithDefaultSaturation(color)
+      }
+    })
+  }
+)
 
 const mapStateToProps = (state, ownProps) => ({
-  users: selectUsers(state),
-  texts: selectTexts(state),
-  colors: selectColors(state),
-  pallet: selectPallet(state)
+  users: getUsers(state),
+  texts: getTexts(state),
+  colors: getSaturatedColorsArray(state),
+  pallet: getPallet(state)
 })
 
 const mapDispatchToProps = (dispatch, ownProps) => ({

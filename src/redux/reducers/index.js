@@ -1,11 +1,11 @@
 import {combineReducers} from 'redux-immutable'
 import {fromJS} from 'immutable'
-import text from 'redux/reducers/text'
-import colors from 'redux/reducers/colors'
-import hover from 'redux/reducers/hover'
-import tick from 'redux/reducers/tick'
-import renderCount from 'redux/reducers/renderCount'
-import theme from 'redux/reducers/theme'
+import text from './text'
+import colors from './colors'
+import hover from './hover'
+import tick from './tick'
+import renderCount from './renderCount'
+import theme from './theme'
 
 export const initialState = fromJS({
   text: {},

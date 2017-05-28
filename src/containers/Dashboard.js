@@ -1,19 +1,12 @@
 import {connect} from 'react-redux'
-import {createSelector} from 'reselect'
 import Dashboard from 'components/Dashboard'
-import {getColorWithDefaultSaturation} from 'utils/colors'
 import {incrementRenderCount} from 'redux/actions'
 import toJS from 'hocs/toJS'
-
-const getColors = state => state.get('colors')
-
-const selectColors = createSelector(getColors, colors => {
-  return colors.map(color => getColorWithDefaultSaturation(color))
-})
+import {getHover, getSaturatedColors} from 'redux/selectors'
 
 const mapStateToProps = (state, ownProps) => ({
-  hover: state.get('hover'),
-  colors: selectColors(state)
+  hover: getHover(state),
+  colors: getSaturatedColors(state)
 })
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
