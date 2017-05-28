@@ -9,6 +9,9 @@
     "userDataDir": "${workspaceRoot}/.chrome",
     "sourceMapPathOverrides": {
       "webpack:///src/*": "${webRoot}/*"
-    }
+    },
+    "skipFiles": [
+      "node_modules/**/*.js"
+    ]
   }]
 }
