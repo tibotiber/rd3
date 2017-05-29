@@ -32,12 +32,12 @@ class DemoChat extends React.Component {
     refreshPeriod: 2
   }
 
-  componentDidMount () {
+  componentDidMount() {
     this.props.incrementRenderCount('component')
     this.props.generateText()
   }
 
-  componentDidUpdate (prevProps, prevState) {
+  componentDidUpdate(prevProps, prevState) {
     this.props.incrementRenderCount('component')
   }
 
@@ -46,18 +46,20 @@ class DemoChat extends React.Component {
   }
 
   toggleAutoRefresh = () => {
-    const autoRefresh = !this.state.autoRefresh
-    this.setState({autoRefresh})
-    if (autoRefresh) {
-      this.autoRefreshInterval = setInterval(() => {
-        this.props.generateText()
-      }, this.state.refreshPeriod * 1000)
-    } else {
-      clearInterval(this.autoRefreshInterval)
-    }
+    this.setState(state => {
+      const autoRefresh = !state.autoRefresh
+      if (autoRefresh) {
+        this.autoRefreshInterval = setInterval(() => {
+          this.props.generateText()
+        }, state.refreshPeriod * 1000)
+      } else {
+        clearInterval(this.autoRefreshInterval)
+      }
+      return {autoRefresh}
+    })
   }
 
-  render () {
+  render() {
     const {
       users,
       texts,
@@ -90,7 +92,7 @@ class DemoChat extends React.Component {
         <button onClick={generateText}>Generate new text</button>
         <div style={{marginTop: 5}}>
           <input
-            type='checkbox'
+            type="checkbox"
             checked={autoRefresh}
             onChange={this.toggleAutoRefresh}
           />

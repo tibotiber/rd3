@@ -70,9 +70,9 @@ class ScatterPlot extends React.Component {
   }
 
   setTooltip = (group, x, y, top, left) => {
-    this.setState({
+    this.setState(state => ({
       tooltip: group ? {group, x, y, top, left} : null
-    })
+    }))
   }
 
   computeTooltipProps = () => {

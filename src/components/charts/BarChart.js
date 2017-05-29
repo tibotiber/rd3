@@ -104,10 +104,10 @@ class BarChart extends React.Component {
 
   toggle = () => {
     if (this.state.look === 'stacked') {
-      this.setState({look: 'grouped'})
+      this.setState(state => ({look: 'grouped'}))
       this.transitionGrouped()
     } else {
-      this.setState({look: 'stacked'})
+      this.setState(state => ({look: 'stacked'}))
       this.transitionStacked()
     }
   }

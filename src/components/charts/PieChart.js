@@ -61,9 +61,7 @@ class PieChart extends React.Component {
   }
 
   setTooltip = user => {
-    this.setState({
-      tooltip: user
-    })
+    this.setState(state => ({tooltip: user}))
   }
 
   computeTooltipContent = () => {
