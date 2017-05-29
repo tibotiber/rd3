@@ -1,6 +1,6 @@
 import React from 'react'
 import {arrayOf, array, string, number, func, shape, object} from 'prop-types'
-import Faux from 'react-faux-dom'
+import {withFauxDOM} from 'react-faux-dom'
 import * as d3 from 'd3'
 import styled from 'styled-components'
 import _ from 'lodash'
@@ -31,7 +31,6 @@ const Wrapper = styled.div`
 `
 
 const BarChart = React.createClass({
-  mixins: [Faux.mixins.core, Faux.mixins.anim],
   propTypes: {
     data: arrayOf(
       shape({
@@ -275,4 +274,4 @@ const BarChart = React.createClass({
   }
 })
 
-export default BarChart
+export default withFauxDOM(BarChart)

@@ -1,6 +1,6 @@
 import React from 'react'
 import {arrayOf, string, number, shape, func, array, object} from 'prop-types'
-import Faux from 'react-faux-dom'
+import {withFauxDOM} from 'react-faux-dom'
 import * as d3 from 'd3'
 import {event as currentEvent} from 'd3'
 import styled from 'styled-components'
@@ -28,7 +28,6 @@ const Wrapper = styled.div`
 `
 
 const ScatterPlot = React.createClass({
-  mixins: [Faux.mixins.core, Faux.mixins.anim],
   propTypes: {
     data: arrayOf(
       shape({
@@ -225,4 +224,4 @@ const ScatterPlot = React.createClass({
   }
 })
 
-export default ScatterPlot
+export default withFauxDOM(ScatterPlot)

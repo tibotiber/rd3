@@ -1,6 +1,6 @@
 import React from 'react'
 import {arrayOf, string, number, shape, func} from 'prop-types'
-import Faux from 'react-faux-dom'
+import {withFauxDOM} from 'react-faux-dom'
 import * as d3 from 'd3'
 import styled from 'styled-components'
 import _ from 'lodash'
@@ -25,7 +25,6 @@ const Wrapper = styled.div`
 `
 
 const PieChart = React.createClass({
-  mixins: [Faux.mixins.core, Faux.mixins.anim],
   propTypes: {
     data: arrayOf(
       shape({
@@ -160,4 +159,4 @@ const PieChart = React.createClass({
   }
 })
 
-export default PieChart
+export default withFauxDOM(PieChart)
