@@ -24,8 +24,8 @@ const Wrapper = styled.div`
   }
 `
 
-const PieChart = React.createClass({
-  propTypes: {
+class PieChart extends React.Component {
+  static propTypes = {
     data: arrayOf(
       shape({
         name: string,
@@ -37,18 +37,19 @@ const PieChart = React.createClass({
     thickness: number,
     incrementRenderCount: func,
     title: string
-  },
-  getInitialState () {
-    return {
-      chart: LOADING,
-      tooltip: null
-    }
-  },
-  componentDidMount () {
+  }
+
+  state = {
+    chart: LOADING,
+    tooltip: null
+  }
+
+  componentDidMount() {
     this.props.incrementRenderCount('component')
     this.renderD3('render')
-  },
-  componentDidUpdate (prevProps, prevState) {
+  }
+
+  componentDidUpdate(prevProps, prevState) {
     this.props.incrementRenderCount('component')
     const dimensions = p => _.pick(p, ['width', 'height'])
     if (!shallowEqual(dimensions(this.props), dimensions(prevProps))) {
@@ -57,33 +58,37 @@ const PieChart = React.createClass({
     if (!shallowEqual(this.props, prevProps)) {
       this.renderD3('update')
     }
-  },
-  setTooltip (user) {
+  }
+
+  setTooltip = user => {
     this.setState({
       tooltip: user
     })
-  },
-  computeTooltipContent () {
+  }
+
+  computeTooltipContent = () => {
     const hoveredData = _.find(this.props.data, {
       name: this.state.tooltip
     }).value
     return `${this.state.tooltip}: ${hoveredData}`
-  },
-  render () {
+  }
+
+  render() {
     const {width, height, title} = this.props
     const {chart, tooltip} = this.state
     return (
-      <Wrapper className='piechart' width={width} height={height}>
+      <Wrapper className="piechart" width={width} height={height}>
         {chart}
         <Title height={height}>{title}</Title>
         {tooltip &&
-          <div className='tooltip'>
+          <div className="tooltip">
             {this.computeTooltipContent()}
           </div>}
       </Wrapper>
     )
-  },
-  renderD3 (mode) {
+  }
+
+  renderD3 = mode => {
     const {incrementRenderCount, width, height, thickness} = this.props
     incrementRenderCount('d3')
 
@@ -106,7 +111,7 @@ const PieChart = React.createClass({
 
     // arc transitions, see https://bl.ocks.org/mbostock/1346410
     // do not use arrow function here as scope is the path element
-    function arcTween (a) {
+    function arcTween(a) {
       const i = d3.interpolate(this._current, a)
       this._current = i(0)
       return t => arc(i(t))
@@ -142,7 +147,7 @@ const PieChart = React.createClass({
       .append('path')
       .attr('class', (d, i) => `data-group data-group-${data[i].name}`)
       .attr('d', arc)
-      .each(function (d) {
+      .each(function(d) {
         // store the initial angles for transitions
         // do not use arrow function here as scope is the path element
         this._current = d
@@ -157,6 +162,6 @@ const PieChart = React.createClass({
     arcs.transition().attrTween('d', arcTween)
     this.animateFauxDOM(800)
   }
-})
+}
 
 export default withFauxDOM(PieChart)

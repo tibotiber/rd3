@@ -11,7 +11,7 @@ const LOADING = 'loading...'
 
 const Tooltip = ({style, content}) => {
   return (
-    <div className='tooltip' style={style}>
+    <div className="tooltip" style={style}>
       {content}
     </div>
   )
@@ -27,8 +27,8 @@ const Wrapper = styled.div`
   display: inline-block;
 `
 
-const ScatterPlot = React.createClass({
-  propTypes: {
+class ScatterPlot extends React.Component {
+  static propTypes = {
     data: arrayOf(
       shape({
         group: string,
@@ -46,18 +46,19 @@ const ScatterPlot = React.createClass({
     groups: arrayOf(string),
     radiusFactor: number,
     setHover: func
-  },
-  getInitialState () {
-    return {
-      chart: LOADING,
-      tooltip: null
-    }
-  },
-  componentDidMount () {
+  }
+
+  state = {
+    chart: LOADING,
+    tooltip: null
+  }
+
+  componentDidMount() {
     this.props.incrementRenderCount('component')
     this.renderD3('render')
-  },
-  componentDidUpdate (prevProps, prevState) {
+  }
+
+  componentDidUpdate(prevProps, prevState) {
     this.props.incrementRenderCount('component')
     const dimensions = p => _.pick(p, ['width', 'height'])
     if (!shallowEqual(dimensions(this.props), dimensions(prevProps))) {
@@ -66,13 +67,15 @@ const ScatterPlot = React.createClass({
     if (!shallowEqual(this.props, prevProps)) {
       this.renderD3('update')
     }
-  },
-  setTooltip (group, x, y, top, left) {
+  }
+
+  setTooltip = (group, x, y, top, left) => {
     this.setState({
       tooltip: group ? {group, x, y, top, left} : null
     })
-  },
-  computeTooltipProps () {
+  }
+
+  computeTooltipProps = () => {
     const {group, x, y, top, left} = this.state.tooltip
     const hoveredData = _.find(this.props.data, {group, x, y})
     if (hoveredData) {
@@ -85,17 +88,19 @@ const ScatterPlot = React.createClass({
         style: {visibility: 'hidden'}
       }
     }
-  },
-  render () {
+  }
+
+  render() {
     const {chart, tooltip} = this.state
     return (
-      <Wrapper className='scatterplot'>
+      <Wrapper className="scatterplot">
         {chart}
         {tooltip && <Tooltip {...this.computeTooltipProps()} />}
       </Wrapper>
     )
-  },
-  renderD3 (mode) {
+  }
+
+  renderD3 = mode => {
     const {
       incrementRenderCount,
       width,
@@ -222,6 +227,6 @@ const ScatterPlot = React.createClass({
       svg.select('g.y.axis').call(yAxis)
     }
   }
-})
+}
 
 export default withFauxDOM(ScatterPlot)

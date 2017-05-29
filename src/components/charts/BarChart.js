@@ -10,7 +10,7 @@ const LOADING = 'loading...'
 
 const Tooltip = ({style, content}) => {
   return (
-    <div className='tooltip' style={style}>
+    <div className="tooltip" style={style}>
       {content}
     </div>
   )
@@ -30,8 +30,8 @@ const Wrapper = styled.div`
   }
 `
 
-const BarChart = React.createClass({
-  propTypes: {
+class BarChart extends React.Component {
+  static propTypes = {
     data: arrayOf(
       shape({
         name: string,
@@ -46,18 +46,19 @@ const BarChart = React.createClass({
     hover: arrayOf(string),
     setHover: func,
     incrementRenderCount: func
-  },
-  getInitialState () {
-    return {
-      look: 'stacked',
-      chart: LOADING
-    }
-  },
-  componentDidMount () {
+  }
+
+  state = {
+    look: 'stacked',
+    chart: LOADING
+  }
+
+  componentDidMount() {
     this.props.incrementRenderCount('component')
     this.renderD3('render')
-  },
-  componentDidUpdate (prevProps, prevState) {
+  }
+
+  componentDidUpdate(prevProps, prevState) {
     this.props.incrementRenderCount('component')
     const dimensions = p => _.pick(p, ['width', 'height'])
     if (!shallowEqual(dimensions(this.props), dimensions(prevProps))) {
@@ -67,8 +68,9 @@ const BarChart = React.createClass({
     if (!shallowEqual(stripProps(this.props), stripProps(prevProps))) {
       this.renderD3('update')
     }
-  },
-  computeTooltipProps (letter) {
+  }
+
+  computeTooltipProps = letter => {
     const hoveredData = _.map(this.props.data, 'values').map(l =>
       _.find(l, {x: letter})
     )
@@ -82,12 +84,13 @@ const BarChart = React.createClass({
       },
       content: `${letter}: ${_.map(hoveredData, 'y').join(', ')}`
     }
-  },
-  render () {
+  }
+
+  render() {
     const {hover} = this.props
     const {chart} = this.state
     return (
-      <Wrapper className='barchart' hover={hover}>
+      <Wrapper className="barchart" hover={hover}>
         <button onClick={this.toggle}>Toggle</button>
         {chart}
         {chart !== LOADING &&
@@ -97,8 +100,9 @@ const BarChart = React.createClass({
           ))}
       </Wrapper>
     )
-  },
-  toggle () {
+  }
+
+  toggle = () => {
     if (this.state.look === 'stacked') {
       this.setState({look: 'grouped'})
       this.transitionGrouped()
@@ -106,8 +110,9 @@ const BarChart = React.createClass({
       this.setState({look: 'stacked'})
       this.transitionStacked()
     }
-  },
-  renderD3 (mode) {
+  }
+
+  renderD3 = mode => {
     const {
       incrementRenderCount,
       width,
@@ -272,6 +277,6 @@ const BarChart = React.createClass({
       this.animateFauxDOM(2000)
     }
   }
-})
+}
 
 export default withFauxDOM(BarChart)
