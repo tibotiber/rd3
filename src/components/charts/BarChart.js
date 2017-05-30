@@ -1,10 +1,17 @@
 import React from 'react'
-import {arrayOf, array, string, number, func, shape, object} from 'prop-types'
+import {arrayOf, string, number, func, object} from 'prop-types'
 import {withFauxDOM} from 'react-faux-dom'
-import * as d3 from 'd3'
 import styled from 'styled-components'
 import _ from 'lodash'
 import {shallowEqual} from 'recompose'
+const d3 = {
+  ...require('d3-shape'),
+  ...require('d3-array'),
+  ...require('d3-scale'),
+  ...require('d3-axis'),
+  ...require('d3-selection'),
+  ...require('d3-transition')
+}
 
 const LOADING = 'loading...'
 
@@ -32,13 +39,7 @@ const Wrapper = styled.div`
 
 class BarChart extends React.Component {
   static propTypes = {
-    data: arrayOf(
-      shape({
-        name: string,
-        values: array
-      })
-    ),
-    xDomain: array,
+    data: arrayOf(object),
     xLabel: string,
     yLabel: string,
     width: number,
@@ -71,18 +72,16 @@ class BarChart extends React.Component {
   }
 
   computeTooltipProps = letter => {
-    const hoveredData = _.map(this.props.data, 'values').map(l =>
-      _.find(l, {x: letter})
-    )
+    const hoveredData = _.omit(_.find(this.props.data, {x: letter}), 'x')
     const computeTop = this.state.look === 'stacked'
       ? arr => this.y(_.sum(arr))
       : arr => this.y(_.max(arr))
     return {
       style: {
-        top: computeTop(_.map(hoveredData, 'y')) + 5,
+        top: computeTop(_.values(hoveredData)) + 5,
         left: this.x(letter) + 40
       },
-      content: `${letter}: ${_.map(hoveredData, 'y').join(', ')}`
+      content: `${letter}: ${_.values(hoveredData).join(', ')}`
     }
   }
 
@@ -117,7 +116,6 @@ class BarChart extends React.Component {
       incrementRenderCount,
       width,
       height,
-      xDomain,
       xLabel,
       yLabel,
       setHover
@@ -130,24 +128,23 @@ class BarChart extends React.Component {
 
     // d3 helpers
     let data = _.cloneDeep(this.props.data) // stack() mutates data
-    const n = data.length // number of layers
-    const stack = d3.layout.stack().values(d => d.values)
-    const layers = stack(data)
-    const yStackMax = d3.max(layers, layer =>
-      d3.max(layer.values, d => d.y0 + d.y)
-    )
+    const groups = _.without(_.keys(data[0]), 'x')
+    const n = groups.length // number of layers
+    const layers = d3.stack().keys(groups)(data)
+    const yStackMax = d3.max(layers, layer => d3.max(layer, d => d[1]))
     const margin = {top: 20, right: 10, bottom: 50, left: 50}
     const graphWidth = width - margin.left - margin.right
     const graphHeight = height - margin.top - margin.bottom - 18
-    const x = d3.scale
-      .ordinal()
-      .domain(xDomain)
-      .rangeRoundBands([0, graphWidth], 0.08)
+    const x = d3
+      .scaleBand()
+      .domain(data.map(d => d.x))
+      .rangeRound([0, graphWidth])
+      .paddingInner(0.08)
     this.x = x
-    const y = d3.scale.linear().domain([0, yStackMax]).range([graphHeight, 0])
+    const y = d3.scaleLinear().domain([0, yStackMax]).range([graphHeight, 0])
     this.y = y
-    const xAxis = d3.svg.axis().scale(x).orient('bottom')
-    const yAxis = d3.svg.axis().scale(y).orient('left')
+    const xAxis = d3.axisBottom().scale(x)
+    const yAxis = d3.axisLeft().scale(y)
 
     // create a faux div and store its virtual DOM in state.chart
     let faux = this.connectFauxDOM('div', 'chart')
@@ -174,43 +171,49 @@ class BarChart extends React.Component {
     }
 
     let layer = svg.selectAll('.layer').data(layers)
-    layer
+    layer = layer
       .enter()
       .append('g')
-      .attr('class', d => `layer data-group data-group-${d.name}`)
+      .attr('class', d => `layer data-group data-group-${d.key}`)
+      .merge(layer)
 
-    let rect = layer.selectAll('rect').data(d => d.values)
-    rect
+    let rect = layer.selectAll('rect').data(d => d)
+    rect = rect
       .enter()
       .append('rect')
-      .attr('class', d => `data data-${d.x}`)
-      .attr('x', d => x(d.x))
+      .attr('class', d => `data data-${d.data.x}`)
+      .attr('x', d => x(d.data.x))
       .attr('y', graphHeight)
-      .attr('width', x.rangeBand())
+      .attr('width', x.bandwidth())
       .attr('height', 0)
       .on('mouseover', d => {
         clearTimeout(this.unsetHoverTimeout)
-        setHover(d.x)
+        setHover(d.data.x)
       })
       .on('mouseout', d => {
         this.unsetHoverTimeout = setTimeout(() => setHover(null), 200)
       })
+      .merge(rect)
+
     if (this.state.look === 'stacked') {
       rect
         .transition()
         .delay((d, i) => (resize ? 0 : i * 10))
-        .attr('x', d => x(d.x))
-        .attr('y', d => y(d.y0 + d.y))
-        .attr('width', x.rangeBand())
-        .attr('height', d => y(d.y0) - y(d.y0 + d.y))
+        .attr('x', d => x(d.data.x))
+        .attr('y', d => y(d[1]))
+        .attr('width', x.bandwidth())
+        .attr('height', d => y(d[0]) - y(d[1]))
     } else {
       rect
         .transition()
         .delay((d, i) => (resize ? 0 : i * 10))
-        .attr('x', (d, i, j) => x(d.x) + x.rangeBand() / n * j)
-        .attr('y', d => y(d.y))
-        .attr('width', x.rangeBand() / n)
-        .attr('height', d => graphHeight - y(d.y))
+        .attr('x', function(d, i) {
+          let layerIndex = this.parentNode.__data__.index
+          return x(d.data.x) + x.bandwidth() / n * layerIndex
+        })
+        .attr('y', d => y(d[1] - d[0]))
+        .attr('width', x.bandwidth() / n)
+        .attr('height', d => graphHeight - y(d[1] - d[0]))
     }
     this.animateFauxDOM(800)
 
@@ -256,11 +259,14 @@ class BarChart extends React.Component {
         .transition()
         .duration(500)
         // .delay((d, i) => i * 10)
-        .attr('x', (d, i, j) => x(d.x) + x.rangeBand() / n * j)
-        .attr('width', x.rangeBand() / n)
+        .attr('x', function(d, i) {
+          let layerIndex = this.parentNode.__data__.index
+          return x(d.data.x) + x.bandwidth() / n * layerIndex
+        })
+        .attr('width', x.bandwidth() / n)
         .transition()
-        .attr('y', d => y(d.y))
-        .attr('height', d => graphHeight - y(d.y))
+        .attr('y', d => y(d[1] - d[0]))
+        .attr('height', d => graphHeight - y(d[1] - d[0]))
       this.animateFauxDOM(2000)
     }
 
@@ -269,11 +275,11 @@ class BarChart extends React.Component {
         .transition()
         .duration(500)
         // .delay((d, i) => i * 10)
-        .attr('y', d => y(d.y0 + d.y))
-        .attr('height', d => y(d.y0) - y(d.y0 + d.y))
+        .attr('y', d => y(d[1]))
+        .attr('height', d => y(d[0]) - y(d[1]))
         .transition()
-        .attr('x', d => x(d.x))
-        .attr('width', x.rangeBand())
+        .attr('x', d => x(d.data.x))
+        .attr('width', x.bandwidth())
       this.animateFauxDOM(2000)
     }
   }

@@ -1,20 +1,18 @@
 import React from 'react'
-import {arrayOf, array, shape, string, func, number} from 'prop-types'
+import {arrayOf, string, func, number, object} from 'prop-types'
 import BarChart from 'components/charts/BarChart'
-import {ALPHABET} from 'utils/stringStats'
 
 const DemoBarChart = ({
   data,
+  width,
+  height,
   hover,
   setHover,
-  incrementRenderCount,
-  height,
-  width
+  incrementRenderCount
 }) => (
   <div style={{width: '100%', height: '100%'}}>
     <BarChart
       data={data}
-      xDomain={ALPHABET}
       xLabel='Characters'
       yLabel='Occurrences'
       width={width}
@@ -27,12 +25,7 @@ const DemoBarChart = ({
 )
 
 DemoBarChart.propTypes = {
-  data: arrayOf(
-    shape({
-      name: string,
-      values: array
-    })
-  ),
+  data: arrayOf(object),
   hover: arrayOf(string),
   setHover: func,
   incrementRenderCount: func,

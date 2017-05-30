@@ -1,10 +1,16 @@
 import React from 'react'
 import {arrayOf, string, number, shape, func} from 'prop-types'
 import {withFauxDOM} from 'react-faux-dom'
-import * as d3 from 'd3'
 import styled from 'styled-components'
 import _ from 'lodash'
 import {shallowEqual} from 'recompose'
+const d3 = {
+  ...require('d3-scale'),
+  ...require('d3-selection'),
+  ...require('d3-transition'),
+  ...require('d3-shape'),
+  ...require('d3-interpolate')
+}
 
 const LOADING = 'loading...'
 
@@ -98,8 +104,8 @@ class PieChart extends React.Component {
     const outerRadius = Math.min(width, height) / 2 - 10
     const innerRadius = outerRadius - thickness
     let data = _.cloneDeep(this.props.data) // pie() mutates data
-    var arc = d3.svg.arc().innerRadius(innerRadius).outerRadius(outerRadius)
-    var pie = d3.layout
+    var arc = d3.arc().innerRadius(innerRadius).outerRadius(outerRadius)
+    var pie = d3
       .pie()
       .value(d => d.value)
       .sort(null)

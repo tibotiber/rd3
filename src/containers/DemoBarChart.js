@@ -1,30 +1,23 @@
 import {connect} from 'react-redux'
 import {createSelector} from 'reselect'
-import _ from 'lodash'
 import DemoBarChart from 'components/DemoBarChart'
-import {countLettersOccurrences} from 'utils/stringStats'
+import {countLetters, ALPHABET} from 'utils/stringStats'
 import {setHover, incrementRenderCount} from 'redux/actions'
 import toJS from 'hocs/toJS'
 import {getText, getHover} from 'redux/selectors'
 
 const getData = createSelector(getText, text => {
-  return text.reduce((result, userText, user) => {
-    result.push({
-      name: user,
-      values: _.reduce(
-        countLettersOccurrences(userText),
-        (r, occurrences, letter) => {
-          r.push({
-            x: letter,
-            y: occurrences
-          })
-          return r
-        },
-        []
-      )
-    })
-    return result
-  }, [])
+  return ALPHABET.map(l => {
+    return text.reduce(
+      (result, userText, user) => {
+        return {
+          ...result,
+          [user]: countLetters(userText, l)
+        }
+      },
+      {x: l}
+    )
+  })
 })
 
 const mapStateToProps = (state, ownProps) => ({

@@ -1,11 +1,15 @@
 import React from 'react'
 import {arrayOf, string, number, shape, func, array, object} from 'prop-types'
 import {withFauxDOM} from 'react-faux-dom'
-import * as d3 from 'd3'
-import {event as currentEvent} from 'd3'
 import styled from 'styled-components'
 import _ from 'lodash'
 import {shallowEqual} from 'recompose'
+const d3 = {
+  ...require('d3-scale'),
+  ...require('d3-axis'),
+  ...require('d3-selection'),
+  ...require('d3-transition')
+}
 
 const LOADING = 'loading...'
 
@@ -69,19 +73,19 @@ class ScatterPlot extends React.Component {
     }
   }
 
-  setTooltip = (group, x, y, top, left) => {
+  setTooltip = (group, x, y) => {
     this.setState(state => ({
-      tooltip: group ? {group, x, y, top, left} : null
+      tooltip: group ? {group, x, y} : null
     }))
   }
 
   computeTooltipProps = () => {
-    const {group, x, y, top, left} = this.state.tooltip
+    const {group, x, y} = this.state.tooltip
     const hoveredData = _.find(this.props.data, {group, x, y})
     if (hoveredData) {
       return {
         content: `"${x}${y}": ${hoveredData.n} in ${hoveredData.group}`,
-        style: {top: top + 10, left: left + 10, position: 'fixed'}
+        style: {top: this.y(y) - 18, left: this.x(x) - 8}
       }
     } else {
       return {
@@ -123,17 +127,13 @@ class ScatterPlot extends React.Component {
     const margin = {top: 20, right: 20, bottom: 50, left: 30}
     const graphWidth = width - margin.left - margin.right
     const graphHeight = height - margin.top - margin.bottom
-    const x = d3.scale
-      .ordinal()
-      .domain(xDomain)
-      .rangeRoundPoints([0, graphWidth])
-    const dx = d3.scale.ordinal().domain(groups).rangeRoundPoints([-2, 2])
-    const y = d3.scale
-      .ordinal()
-      .domain(yDomain)
-      .rangeRoundPoints([graphHeight, 0])
-    const xAxis = d3.svg.axis().scale(x).orient('bottom')
-    const yAxis = d3.svg.axis().scale(y).orient('left')
+    const x = d3.scalePoint().domain(xDomain).rangeRound([0, graphWidth])
+    this.x = x
+    const dx = d3.scalePoint().domain(groups).rangeRound([-2, 2])
+    const y = d3.scalePoint().domain(yDomain).rangeRound([graphHeight, 0])
+    this.y = y
+    const xAxis = d3.axisBottom().scale(x)
+    const yAxis = d3.axisLeft().scale(y)
 
     // create a faux div and store its virtual DOM in state.chart
     let faux = this.connectFauxDOM('div', 'chart')
@@ -160,8 +160,7 @@ class ScatterPlot extends React.Component {
     }
 
     let dots = svg.selectAll('.dot').data(data, d => d.group + d.x + d.y)
-
-    dots
+    dots = dots
       .enter()
       .append('circle')
       .attr(
@@ -175,13 +174,7 @@ class ScatterPlot extends React.Component {
       .on('mouseover', d => {
         clearTimeout(this.unsetHoverTimeout)
         setHover([d.x, d.y])
-        this.setTooltip(
-          d.group,
-          d.x,
-          d.y,
-          currentEvent.pageY,
-          currentEvent.pageX
-        )
+        this.setTooltip(d.group, d.x, d.y)
       })
       .on('mouseout', d => {
         this.unsetHoverTimeout = setTimeout(() => {
@@ -189,6 +182,7 @@ class ScatterPlot extends React.Component {
           this.setTooltip(null)
         }, 200)
       })
+      .merge(dots)
 
     dots
       .transition()
