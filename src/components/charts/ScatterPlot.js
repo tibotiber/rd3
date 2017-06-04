@@ -53,7 +53,6 @@ class ScatterPlot extends React.Component {
   }
 
   state = {
-    chart: LOADING,
     tooltip: null
   }
 
@@ -68,7 +67,8 @@ class ScatterPlot extends React.Component {
     if (!shallowEqual(dimensions(this.props), dimensions(prevProps))) {
       return this.renderD3('resize')
     }
-    if (!shallowEqual(this.props, prevProps)) {
+    const stripProps = p => _.pick(p, ['data', 'xDomain', 'yDomain', 'title', 'radiusFactor'])
+    if (!shallowEqual(stripProps(this.props), stripProps(prevProps))) {
       this.renderD3('update')
     }
   }
@@ -95,11 +95,10 @@ class ScatterPlot extends React.Component {
   }
 
   render() {
-    const {chart, tooltip} = this.state
     return (
       <Wrapper className="scatterplot">
-        {chart}
-        {tooltip && <Tooltip {...this.computeTooltipProps()} />}
+        {this.props.chart}
+        {this.state.tooltip && <Tooltip {...this.computeTooltipProps()} />}
       </Wrapper>
     )
   }
@@ -114,7 +113,9 @@ class ScatterPlot extends React.Component {
       groups,
       setHover,
       radiusFactor,
-      title
+      title,
+      connectFauxDOM,
+      animateFauxDOM
     } = this.props
     incrementRenderCount('d3')
 
@@ -136,7 +137,7 @@ class ScatterPlot extends React.Component {
     const yAxis = d3.axisLeft().scale(y)
 
     // create a faux div and store its virtual DOM in state.chart
-    let faux = this.connectFauxDOM('div', 'chart')
+    let faux = connectFauxDOM('div', 'chart')
 
     let svg
     if (render) {
@@ -192,7 +193,7 @@ class ScatterPlot extends React.Component {
 
     dots.exit().transition().attr('r', 0).remove()
 
-    this.animateFauxDOM(800)
+    animateFauxDOM(800)
 
     if (render) {
       svg
@@ -221,6 +222,10 @@ class ScatterPlot extends React.Component {
       svg.select('g.y.axis').call(yAxis)
     }
   }
+}
+
+ScatterPlot.defaultProps = {
+  chart: LOADING
 }
 
 export default withFauxDOM(ScatterPlot)

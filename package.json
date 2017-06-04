@@ -19,7 +19,7 @@
     "prop-types": "^15.5.10",
     "react": "^15.5.4",
     "react-dom": "^15.4.2",
-    "react-faux-dom": "^4.0.0",
+    "react-faux-dom": "^4.0.3",
     "react-grid-layout": "^0.14.6",
     "react-measure": "^1.4.7",
     "react-redux": "^5.0.3",

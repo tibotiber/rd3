@@ -46,7 +46,6 @@ class PieChart extends React.Component {
   }
 
   state = {
-    chart: LOADING,
     tooltip: null
   }
 
@@ -61,7 +60,8 @@ class PieChart extends React.Component {
     if (!shallowEqual(dimensions(this.props), dimensions(prevProps))) {
       return this.renderD3('resize')
     }
-    if (!shallowEqual(this.props, prevProps)) {
+    const stripProps = p => _.pick(p, ['data', 'thickness', 'title'])
+    if (!shallowEqual(stripProps(this.props), stripProps(prevProps))) {
       this.renderD3('update')
     }
   }
@@ -78,13 +78,12 @@ class PieChart extends React.Component {
   }
 
   render() {
-    const {width, height, title} = this.props
-    const {chart, tooltip} = this.state
+    const {width, height, title, chart} = this.props
     return (
       <Wrapper className="piechart" width={width} height={height}>
         {chart}
         <Title height={height}>{title}</Title>
-        {tooltip &&
+        {this.state.tooltip &&
           <div className="tooltip">
             {this.computeTooltipContent()}
           </div>}
@@ -93,7 +92,7 @@ class PieChart extends React.Component {
   }
 
   renderD3 = mode => {
-    const {incrementRenderCount, width, height, thickness} = this.props
+    const {incrementRenderCount, width, height, thickness, connectFauxDOM, animateFauxDOM} = this.props
     incrementRenderCount('d3')
 
     // rendering mode
@@ -122,7 +121,7 @@ class PieChart extends React.Component {
     }
 
     // create a faux div and store its virtual DOM in state.chart
-    let faux = this.connectFauxDOM('div', 'chart')
+    let faux = connectFauxDOM('div', 'chart')
 
     let svg
     if (render) {
@@ -164,8 +163,12 @@ class PieChart extends React.Component {
         this.unsetTooltipTimeout = setTimeout(() => this.setTooltip(null), 200)
       })
     arcs.transition().attrTween('d', arcTween)
-    this.animateFauxDOM(800)
+    animateFauxDOM(800)
   }
+}
+
+PieChart.defaultProps = {
+  chart: LOADING
 }
 
 export default withFauxDOM(PieChart)

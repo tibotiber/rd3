@@ -50,8 +50,7 @@ class BarChart extends React.Component {
   }
 
   state = {
-    look: 'stacked',
-    chart: LOADING
+    look: 'stacked'
   }
 
   componentDidMount() {
@@ -65,7 +64,7 @@ class BarChart extends React.Component {
     if (!shallowEqual(dimensions(this.props), dimensions(prevProps))) {
       return this.renderD3('resize')
     }
-    const stripProps = p => _.omit(p, ['hover'])
+    const stripProps = p => _.pick(p, ['data', 'xLabel', 'yLabel'])
     if (!shallowEqual(stripProps(this.props), stripProps(prevProps))) {
       this.renderD3('update')
     }
@@ -86,8 +85,7 @@ class BarChart extends React.Component {
   }
 
   render() {
-    const {hover} = this.props
-    const {chart} = this.state
+    const {hover, chart} = this.props
     return (
       <Wrapper className="barchart" hover={hover}>
         <button onClick={this.toggle}>Toggle</button>
@@ -118,7 +116,9 @@ class BarChart extends React.Component {
       height,
       xLabel,
       yLabel,
-      setHover
+      setHover,
+      connectFauxDOM,
+      animateFauxDOM
     } = this.props
     incrementRenderCount('d3')
 
@@ -147,7 +147,7 @@ class BarChart extends React.Component {
     const yAxis = d3.axisLeft().scale(y)
 
     // create a faux div and store its virtual DOM in state.chart
-    let faux = this.connectFauxDOM('div', 'chart')
+    let faux = connectFauxDOM('div', 'chart')
 
     let svg
     if (render) {
@@ -215,7 +215,7 @@ class BarChart extends React.Component {
         .attr('width', x.bandwidth() / n)
         .attr('height', d => graphHeight - y(d[1] - d[0]))
     }
-    this.animateFauxDOM(800)
+    animateFauxDOM(800)
 
     if (render) {
       svg
@@ -267,7 +267,7 @@ class BarChart extends React.Component {
         .transition()
         .attr('y', d => y(d[1] - d[0]))
         .attr('height', d => graphHeight - y(d[1] - d[0]))
-      this.animateFauxDOM(2000)
+      animateFauxDOM(2000)
     }
 
     this.transitionStacked = () => {
@@ -280,9 +280,13 @@ class BarChart extends React.Component {
         .transition()
         .attr('x', d => x(d.data.x))
         .attr('width', x.bandwidth())
-      this.animateFauxDOM(2000)
+      animateFauxDOM(2000)
     }
   }
+}
+
+BarChart.defaultProps = {
+  chart: LOADING
 }
 
 export default withFauxDOM(BarChart)
