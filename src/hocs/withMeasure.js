@@ -1,3 +1,4 @@
+/* NOTE: this is compatible with react-measure up to 1.4.7 only */
 import React from 'react'
 import Measure from 'react-measure'
 
