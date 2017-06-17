@@ -107,7 +107,7 @@ class Dashboard extends React.Component {
     ]
     return (
       <Grid
-        className={'dashboard'}
+        className="dashboard"
         hover={hover}
         colors={colors}
         layout={layout}
@@ -115,16 +115,16 @@ class Dashboard extends React.Component {
         rowHeight={(window.innerHeight - 29) / 12}
         margin={[0, 0]}
       >
-        <div key={'TL'}>
+        <div key="TL">
           <MeasuredDemoBarChart />
         </div>
-        <div key={'TR'}>
+        <div key="TR">
           <MeasuredDemoScatterPlot />
         </div>
-        <div key={'BL'}>
+        <div key="BL">
           <MeasuredDemoPieChart />
         </div>
-        <div key={'BR'}>
+        <div key="BR">
           <MeasuredDemoChat />
         </div>
       </Grid>

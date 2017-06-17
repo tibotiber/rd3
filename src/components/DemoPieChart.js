@@ -1,16 +1,9 @@
 import React from 'react'
-import {arrayOf, number, shape, string, func, bool} from 'prop-types'
+import {arrayOf, string, func, bool} from 'prop-types'
 import PieChart from 'components/charts/PieChart'
 
-const DemoPieChart = ({
-  data,
-  incrementRenderCount,
-  width,
-  height,
-  filter,
-  toggleFilter,
-  hover
-}) => {
+const DemoPieChart = props => {
+  const {hover, filter, toggleFilter, ...otherProps} = props
   const filteredData = hover
     ? ` (letter${hover.length > 1 ? 's' : ''}: ${hover.join(', ')})`
     : ''
@@ -21,27 +14,15 @@ const DemoPieChart = ({
         Refresh with filtered data?
       </div>
       <PieChart
-        data={data}
-        width={width}
-        height={height}
         thickness={30}
-        incrementRenderCount={incrementRenderCount}
         title={`Text volume by user${filteredData}`}
+        {...otherProps}
       />
     </div>
   )
 }
 
 DemoPieChart.propTypes = {
-  data: arrayOf(
-    shape({
-      name: string,
-      value: number
-    })
-  ),
-  incrementRenderCount: func,
-  width: number,
-  height: number,
   filter: bool,
   toggleFilter: func,
   hover: arrayOf(string)
