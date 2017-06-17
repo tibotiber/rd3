@@ -6,12 +6,16 @@ import {transparentize} from 'polished'
 
 const {number, object, string, shape, func} = PropTypes
 
-const CodeBlock = styled.pre`
+const Toggle = styled.span`
   position: absolute;
   top: 0;
   right: 0;
-  padding: 15px;
   margin: 5px;
+  cursor: pointer;
+`
+
+const CodeBlock = Toggle.withComponent('pre').extend`
+  padding: 15px;
   border: dashed 2px ${({theme}) => theme.secondaryColor};
   color: ${({theme}) => theme.secondaryColor};
   background-color: ${({theme}) => transparentize(0.2, theme.secondaryBackground)};
@@ -40,6 +44,10 @@ class Ticker extends React.PureComponent {
     tick: func
   }
 
+  state = {
+    displayPanel: false
+  }
+
   componentDidMount() {
     this.tickInterval = setInterval(this.props.tick, 1000)
   }
@@ -48,24 +56,28 @@ class Ticker extends React.PureComponent {
     clearInterval(this.tickInterval)
   }
 
+  toggleDisplay = e => {
+    this.setState(state => ({displayPanel: !state.displayPanel}))
+  }
+
   render() {
     const {tickValue, renderCount} = this.props
-    return (
-      <CodeBlock>
-        <div>tick: {tickValue}</div>
-        {_.values(
-          _.mapValues(renderCount, (counts, component) => {
-            return (
-              <RenderCount
-                key={component}
-                component={component}
-                counts={counts}
-              />
-            )
-          })
-        )}
-      </CodeBlock>
-    )
+    return this.state.displayPanel
+      ? <CodeBlock onClick={this.toggleDisplay}>
+          <div>tick: {tickValue}</div>
+          {_.values(
+            _.mapValues(renderCount, (counts, component) => {
+              return (
+                <RenderCount
+                  key={component}
+                  component={component}
+                  counts={counts}
+                />
+              )
+            })
+          )}
+        </CodeBlock>
+      : <Toggle onClick={this.toggleDisplay}>Show Render Counts</Toggle>
   }
 }
 
