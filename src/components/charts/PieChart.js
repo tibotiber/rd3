@@ -3,8 +3,8 @@ import PropTypes from 'prop-types'
 import {withFauxDOM} from 'react-faux-dom'
 import styled from 'styled-components'
 import _ from 'lodash'
-import {shallowEqual} from 'recompose'
 import Tooltip from 'components/Tooltip'
+import withD3Renderer from 'hocs/withD3Renderer'
 const d3 = {
   ...require('d3-scale'),
   ...require('d3-selection'),
@@ -13,7 +13,7 @@ const d3 = {
   ...require('d3-interpolate')
 }
 
-const {arrayOf, string, number, shape, func} = PropTypes
+const {arrayOf, string, number, shape} = PropTypes
 const LOADING = 'loading...'
 
 const Title = styled.div`
@@ -43,29 +43,11 @@ class PieChart extends React.Component {
     width: number,
     height: number,
     thickness: number,
-    incrementRenderCount: func,
     title: string
   }
 
   state = {
     tooltip: null
-  }
-
-  componentDidMount() {
-    this.props.incrementRenderCount('component')
-    this.renderD3('render')
-  }
-
-  componentDidUpdate(prevProps, prevState) {
-    this.props.incrementRenderCount('component')
-    const dimensions = p => _.pick(p, ['width', 'height'])
-    if (!shallowEqual(dimensions(this.props), dimensions(prevProps))) {
-      return this.renderD3('resize')
-    }
-    const stripProps = p => _.pick(p, ['data', 'thickness', 'title'])
-    if (!shallowEqual(stripProps(this.props), stripProps(prevProps))) {
-      this.renderD3('update')
-    }
   }
 
   setTooltip = user => {
@@ -93,14 +75,12 @@ class PieChart extends React.Component {
 
   renderD3 = mode => {
     const {
-      incrementRenderCount,
       width,
       height,
       thickness,
       connectFauxDOM,
       animateFauxDOM
     } = this.props
-    incrementRenderCount('d3')
 
     // rendering mode
     const render = mode === 'render'
@@ -178,4 +158,6 @@ PieChart.defaultProps = {
   chart: LOADING
 }
 
-export default withFauxDOM(PieChart)
+export default withFauxDOM(
+  withD3Renderer({updateOn: ['data', 'thickness', 'title']})(PieChart)
+)

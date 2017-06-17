@@ -3,8 +3,8 @@ import PropTypes from 'prop-types'
 import {withFauxDOM} from 'react-faux-dom'
 import styled from 'styled-components'
 import _ from 'lodash'
-import {shallowEqual} from 'recompose'
 import Tooltip from 'components/Tooltip'
+import withD3Renderer from 'hocs/withD3Renderer'
 const d3 = {
   ...require('d3-shape'),
   ...require('d3-array'),
@@ -34,29 +34,11 @@ class BarChart extends React.Component {
     width: number,
     height: number,
     hover: arrayOf(string),
-    setHover: func,
-    incrementRenderCount: func
+    setHover: func
   }
 
   state = {
     look: 'stacked'
-  }
-
-  componentDidMount() {
-    this.props.incrementRenderCount('component')
-    this.renderD3('render')
-  }
-
-  componentDidUpdate(prevProps, prevState) {
-    this.props.incrementRenderCount('component')
-    const dimensions = p => _.pick(p, ['width', 'height'])
-    if (!shallowEqual(dimensions(this.props), dimensions(prevProps))) {
-      return this.renderD3('resize')
-    }
-    const stripProps = p => _.pick(p, ['data', 'xLabel', 'yLabel'])
-    if (!shallowEqual(stripProps(this.props), stripProps(prevProps))) {
-      this.renderD3('update')
-    }
   }
 
   computeTooltipProps = letter => {
@@ -100,7 +82,6 @@ class BarChart extends React.Component {
 
   renderD3 = mode => {
     const {
-      incrementRenderCount,
       width,
       height,
       xLabel,
@@ -109,7 +90,6 @@ class BarChart extends React.Component {
       connectFauxDOM,
       animateFauxDOM
     } = this.props
-    incrementRenderCount('d3')
 
     // rendering mode
     const render = mode === 'render'
@@ -278,4 +258,6 @@ BarChart.defaultProps = {
   chart: LOADING
 }
 
-export default withFauxDOM(BarChart)
+export default withFauxDOM(
+  withD3Renderer({updateOn: ['data', 'xLabel', 'yLabel']})(BarChart)
+)

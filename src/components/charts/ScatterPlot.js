@@ -3,8 +3,8 @@ import PropTypes from 'prop-types'
 import {withFauxDOM} from 'react-faux-dom'
 import styled from 'styled-components'
 import _ from 'lodash'
-import {shallowEqual} from 'recompose'
 import Tooltip from 'components/Tooltip'
+import withD3Renderer from 'hocs/withD3Renderer'
 const d3 = {
   ...require('d3-scale'),
   ...require('d3-axis'),
@@ -34,7 +34,6 @@ class ScatterPlot extends React.Component {
     height: number,
     xDomain: array,
     yDomain: array,
-    incrementRenderCount: func,
     title: string,
     groups: arrayOf(string),
     radiusFactor: number,
@@ -43,24 +42,6 @@ class ScatterPlot extends React.Component {
 
   state = {
     tooltip: null
-  }
-
-  componentDidMount() {
-    this.props.incrementRenderCount('component')
-    this.renderD3('render')
-  }
-
-  componentDidUpdate(prevProps, prevState) {
-    this.props.incrementRenderCount('component')
-    const dimensions = p => _.pick(p, ['width', 'height'])
-    if (!shallowEqual(dimensions(this.props), dimensions(prevProps))) {
-      return this.renderD3('resize')
-    }
-    const stripProps = p =>
-      _.pick(p, ['data', 'xDomain', 'yDomain', 'title', 'radiusFactor'])
-    if (!shallowEqual(stripProps(this.props), stripProps(prevProps))) {
-      this.renderD3('update')
-    }
   }
 
   setTooltip = (group, x, y) => {
@@ -95,7 +76,6 @@ class ScatterPlot extends React.Component {
 
   renderD3 = mode => {
     const {
-      incrementRenderCount,
       width,
       height,
       xDomain,
@@ -107,7 +87,6 @@ class ScatterPlot extends React.Component {
       connectFauxDOM,
       animateFauxDOM
     } = this.props
-    incrementRenderCount('d3')
 
     // rendering mode
     const render = mode === 'render'
@@ -218,4 +197,8 @@ ScatterPlot.defaultProps = {
   chart: LOADING
 }
 
-export default withFauxDOM(ScatterPlot)
+export default withFauxDOM(
+  withD3Renderer({
+    updateOn: ['data', 'xDomain', 'yDomain', 'title', 'radiusFactor']
+  })(ScatterPlot)
+)
