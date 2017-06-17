@@ -8,6 +8,9 @@
     "type": "git",
     "url": "https://github.com/tibotiber/rd3.git"
   },
+  "engines": { 
+    "node": ">=6.9.0" 
+  },
   "dependencies": {
     "babel-polyfill": "^6.23.0",
     "d3": "^4.9.1",
