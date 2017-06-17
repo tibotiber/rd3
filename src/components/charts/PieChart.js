@@ -1,5 +1,5 @@
 import React from 'react'
-import {arrayOf, string, number, shape, func} from 'prop-types'
+import PropTypes from 'prop-types'
 import {withFauxDOM} from 'react-faux-dom'
 import styled from 'styled-components'
 import _ from 'lodash'
@@ -12,6 +12,7 @@ const d3 = {
   ...require('d3-interpolate')
 }
 
+const {arrayOf, string, number, shape, func} = PropTypes
 const LOADING = 'loading...'
 
 const Title = styled.div`
@@ -92,7 +93,14 @@ class PieChart extends React.Component {
   }
 
   renderD3 = mode => {
-    const {incrementRenderCount, width, height, thickness, connectFauxDOM, animateFauxDOM} = this.props
+    const {
+      incrementRenderCount,
+      width,
+      height,
+      thickness,
+      connectFauxDOM,
+      animateFauxDOM
+    } = this.props
     incrementRenderCount('d3')
 
     // rendering mode

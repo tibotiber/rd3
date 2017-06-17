@@ -1,8 +1,10 @@
 import React from 'react'
-import {arrayOf, shape, string, func, number} from 'prop-types'
+import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import ChatInput from 'components/styled/ChatInput'
 import Pallet from 'components/Pallet'
+
+const {arrayOf, shape, string, func, number} = PropTypes
 
 const InlineDiv = styled.div`
   display: inline-block;

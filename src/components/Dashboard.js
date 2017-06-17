@@ -1,5 +1,5 @@
 import React from 'react'
-import {string, object, func, arrayOf} from 'prop-types'
+import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import {transparentize} from 'polished'
 import _ from 'lodash'
@@ -12,6 +12,7 @@ import DemoScatterPlot from 'containers/DemoScatterPlot'
 import DemoChat from 'containers/DemoChat'
 import withMeasure from 'hocs/withMeasure'
 
+const {string, object, func, arrayOf} = PropTypes
 const GridLayout = WidthProvider(ReactGridLayout)
 const dimensions = ['width', 'height']
 const MeasuredDemoBarChart = withMeasure(dimensions)(DemoBarChart)

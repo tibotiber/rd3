@@ -1,5 +1,5 @@
 import React from 'react'
-import {arrayOf, string, number, shape, func, array, object} from 'prop-types'
+import PropTypes from 'prop-types'
 import {withFauxDOM} from 'react-faux-dom'
 import styled from 'styled-components'
 import _ from 'lodash'
@@ -11,6 +11,7 @@ const d3 = {
   ...require('d3-transition')
 }
 
+const {arrayOf, string, number, shape, func, array, object} = PropTypes
 const LOADING = 'loading...'
 
 const Tooltip = ({style, content}) => {
@@ -67,7 +68,8 @@ class ScatterPlot extends React.Component {
     if (!shallowEqual(dimensions(this.props), dimensions(prevProps))) {
       return this.renderD3('resize')
     }
-    const stripProps = p => _.pick(p, ['data', 'xDomain', 'yDomain', 'title', 'radiusFactor'])
+    const stripProps = p =>
+      _.pick(p, ['data', 'xDomain', 'yDomain', 'title', 'radiusFactor'])
     if (!shallowEqual(stripProps(this.props), stripProps(prevProps))) {
       this.renderD3('update')
     }

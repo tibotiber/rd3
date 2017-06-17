@@ -1,8 +1,10 @@
 import React from 'react'
-import {number, object, string, shape} from 'prop-types'
+import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import _ from 'lodash'
 import {transparentize} from 'polished'
+
+const {number, object, string, shape} = PropTypes
 
 const CodeBlock = styled.pre`
   position: absolute;

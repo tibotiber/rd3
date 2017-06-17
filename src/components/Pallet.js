@@ -1,6 +1,8 @@
 import React from 'react'
-import {arrayOf, shape, string, func} from 'prop-types'
+import PropTypes from 'prop-types'
 import styled from 'styled-components'
+
+const {arrayOf, shape, string, func} = PropTypes
 
 const List = styled.ul`
   list-style-type: none;

@@ -1,5 +1,5 @@
 import React from 'react'
-import {arrayOf, string, number, func, object} from 'prop-types'
+import PropTypes from 'prop-types'
 import {withFauxDOM} from 'react-faux-dom'
 import styled from 'styled-components'
 import _ from 'lodash'
@@ -13,6 +13,7 @@ const d3 = {
   ...require('d3-transition')
 }
 
+const {arrayOf, string, number, func, object} = PropTypes
 const LOADING = 'loading...'
 
 const Tooltip = ({style, content}) => {
