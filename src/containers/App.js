@@ -5,12 +5,8 @@ import ThemedApp from 'containers/ThemedApp'
 import Dashboard from 'containers/Dashboard'
 import Ticker from 'containers/Ticker'
 import Footer from 'components/styled/Footer'
-import {tick} from 'redux/actions'
 
 const store = configureStore()
-
-// tick whole app every second to test pure rendering of charts
-setInterval(() => store.dispatch(tick()), 1000)
 
 const App = () => (
   <Provider store={store}>
