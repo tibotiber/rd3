@@ -4,6 +4,7 @@ import {withFauxDOM} from 'react-faux-dom'
 import styled from 'styled-components'
 import _ from 'lodash'
 import {shallowEqual} from 'recompose'
+import Tooltip from 'components/Tooltip'
 const d3 = {
   ...require('d3-shape'),
   ...require('d3-array'),
@@ -15,19 +16,6 @@ const d3 = {
 
 const {arrayOf, string, number, func, object} = PropTypes
 const LOADING = 'loading...'
-
-const Tooltip = ({style, content}) => {
-  return (
-    <div className="tooltip" style={style}>
-      {content}
-    </div>
-  )
-}
-
-Tooltip.propTypes = {
-  content: string,
-  style: object
-}
 
 const Wrapper = styled.div`
   position: relative;

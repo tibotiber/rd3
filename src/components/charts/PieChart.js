@@ -4,6 +4,7 @@ import {withFauxDOM} from 'react-faux-dom'
 import styled from 'styled-components'
 import _ from 'lodash'
 import {shallowEqual} from 'recompose'
+import Tooltip from 'components/Tooltip'
 const d3 = {
   ...require('d3-scale'),
   ...require('d3-selection'),
@@ -85,9 +86,7 @@ class PieChart extends React.Component {
         {chart}
         <Title height={height}>{title}</Title>
         {this.state.tooltip &&
-          <div className="tooltip">
-            {this.computeTooltipContent()}
-          </div>}
+          <Tooltip content={this.computeTooltipContent()} />}
       </Wrapper>
     )
   }
