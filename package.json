@@ -39,7 +39,7 @@
     "eslint-plugin-promise": "^3.5.0",
     "eslint-plugin-react": "^6.10.3",
     "eslint-plugin-standard": "^3.0.1",
-    "prettier-eslint-cli": "^3.4.2"
+    "prettier-eslint-cli": "^4.1.1"
   },
   "scripts": {
     "start": "serve -s build",
@@ -47,6 +47,7 @@
     "build": "NODE_PATH=./src react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
+    "lint-check": "prettier-eslint --list-different \"src/**/*.js\"",
     "lint": "prettier-eslint --write \"src/**/*.js\""
   }
 }
