@@ -28,5 +28,6 @@ deployment:
     tag: /v[0-9]+(\.[0-9]+)*/
     owner: tibotiber
     commands:
-     - now -p -t ${NOW_TOKEN} build
-     - now -t ${NOW_TOKEN} alias
+      - cp now.json build/
+      - now -p -t ${NOW_TOKEN} build
+      - now -t ${NOW_TOKEN} alias
