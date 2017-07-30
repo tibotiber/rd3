@@ -1,3 +1,4 @@
+// see http://redux.js.org/docs/recipes/UsingImmutableJS.html#use-a-higher-order-component-to-convert-your-smart-components-immutablejs-props-to-your-dumb-components-javascript-props
 import React from 'react'
 import {Iterable} from 'immutable'
 
