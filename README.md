@@ -1,5 +1,3 @@
-[![CircleCI](https://circleci.com/gh/tibotiber/rd3.svg?style=svg)](https://circleci.com/gh/tibotiber/rd3)
-
 # RD3 - Playground for React & D3.js
 **[Live demo](https://rd3.now.sh)**
 
